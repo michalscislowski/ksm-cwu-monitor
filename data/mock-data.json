@@ -1,0 +1,301 @@
+{
+  "metadata": {
+    "generated_at": "2025-01-13T12:00:00Z",
+    "description": "Przykładowe dane testowe dla 5 węzłów KSM Przylesie",
+    "based_on": "Historyczne wskaźniki GJ/m³ z lat 2016-2025"
+  },
+
+  "nodes": [
+    {
+      "id": "WC-001",
+      "name": "Jana Pawła II 2-2a",
+      "address": "ul. Jana Pawła II 2-2a, 75-452 Koszalin",
+      "apartments_count": 48,
+      "mtcv_type": "Caleffi 116",
+      "mtcv_count": 6,
+      "building_volume_m3": 12500
+    },
+    {
+      "id": "WC-002",
+      "name": "Lelewela 13",
+      "address": "ul. Lelewela 13, 75-448 Koszalin",
+      "apartments_count": 36,
+      "mtcv_type": "MTCV",
+      "mtcv_count": 4,
+      "building_volume_m3": 9200
+    },
+    {
+      "id": "WC-003",
+      "name": "Kołłątaja 10",
+      "address": "ul. Kołłątaja 10, 75-450 Koszalin",
+      "apartments_count": 60,
+      "mtcv_type": "Caleffi 116",
+      "mtcv_count": 8,
+      "building_volume_m3": 15800
+    },
+    {
+      "id": "WC-004",
+      "name": "Śniadeckich 17",
+      "address": "ul. Śniadeckich 17, 75-453 Koszalin",
+      "apartments_count": 42,
+      "mtcv_type": "MTCV",
+      "mtcv_count": 5,
+      "building_volume_m3": 11000
+    },
+    {
+      "id": "WC-005",
+      "name": "Staszica 9",
+      "address": "ul. Staszica 9, 75-449 Koszalin",
+      "apartments_count": 54,
+      "mtcv_type": "Caleffi 116",
+      "mtcv_count": 7,
+      "building_volume_m3": 14200
+    }
+  ],
+
+  "efficiency_current": {
+    "WC-001": {
+      "timestamp": "2025-01-13T14:30:00Z",
+      "iez": {
+        "value": 94,
+        "trend": "stable",
+        "trend_change": -2
+      },
+      "deviations": {
+        "delta_t": { "percent_of_optimal": 87, "status": "warning" },
+        "return_temp": { "percent_of_optimal": 92, "status": "ok" },
+        "flow_balance": { "percent_of_optimal": 78, "status": "critical" }
+      },
+      "losses": {
+        "vs_optimal_percent": 6,
+        "vs_last_week_percent": -3,
+        "vs_last_year_percent": 8
+      },
+      "benchmark": { "percentile": 45, "category": "B" }
+    },
+    "WC-002": {
+      "timestamp": "2025-01-13T14:30:00Z",
+      "iez": {
+        "value": 102,
+        "trend": "rising",
+        "trend_change": 4
+      },
+      "deviations": {
+        "delta_t": { "percent_of_optimal": 98, "status": "ok" },
+        "return_temp": { "percent_of_optimal": 96, "status": "ok" },
+        "flow_balance": { "percent_of_optimal": 94, "status": "ok" }
+      },
+      "losses": {
+        "vs_optimal_percent": -2,
+        "vs_last_week_percent": 4,
+        "vs_last_year_percent": -5
+      },
+      "benchmark": { "percentile": 82, "category": "A" }
+    },
+    "WC-003": {
+      "timestamp": "2025-01-13T14:30:00Z",
+      "iez": {
+        "value": 99,
+        "trend": "stable",
+        "trend_change": 1
+      },
+      "deviations": {
+        "delta_t": { "percent_of_optimal": 95, "status": "ok" },
+        "return_temp": { "percent_of_optimal": 91, "status": "ok" },
+        "flow_balance": { "percent_of_optimal": 89, "status": "warning" }
+      },
+      "losses": {
+        "vs_optimal_percent": 1,
+        "vs_last_week_percent": 2,
+        "vs_last_year_percent": 3
+      },
+      "benchmark": { "percentile": 71, "category": "A" }
+    },
+    "WC-004": {
+      "timestamp": "2025-01-13T14:30:00Z",
+      "iez": {
+        "value": 78,
+        "trend": "falling",
+        "trend_change": -8
+      },
+      "deviations": {
+        "delta_t": { "percent_of_optimal": 65, "status": "critical" },
+        "return_temp": { "percent_of_optimal": 72, "status": "critical" },
+        "flow_balance": { "percent_of_optimal": 68, "status": "critical" }
+      },
+      "losses": {
+        "vs_optimal_percent": 22,
+        "vs_last_week_percent": -8,
+        "vs_last_year_percent": 18
+      },
+      "benchmark": { "percentile": 12, "category": "C" }
+    },
+    "WC-005": {
+      "timestamp": "2025-01-13T14:30:00Z",
+      "iez": {
+        "value": 91,
+        "trend": "rising",
+        "trend_change": 3
+      },
+      "deviations": {
+        "delta_t": { "percent_of_optimal": 88, "status": "warning" },
+        "return_temp": { "percent_of_optimal": 94, "status": "ok" },
+        "flow_balance": { "percent_of_optimal": 85, "status": "warning" }
+      },
+      "losses": {
+        "vs_optimal_percent": 9,
+        "vs_last_week_percent": 3,
+        "vs_last_year_percent": 2
+      },
+      "benchmark": { "percentile": 38, "category": "B" }
+    }
+  },
+
+  "daily_profile": {
+    "WC-001": {
+      "date": "2025-01-13",
+      "hours": [
+        { "hour": 0, "iez": 98, "load": "low", "deviation_delta_t": 95, "deviation_return_temp": 97 },
+        { "hour": 1, "iez": 99, "load": "low", "deviation_delta_t": 96, "deviation_return_temp": 98 },
+        { "hour": 2, "iez": 100, "load": "low", "deviation_delta_t": 97, "deviation_return_temp": 98 },
+        { "hour": 3, "iez": 101, "load": "low", "deviation_delta_t": 98, "deviation_return_temp": 99 },
+        { "hour": 4, "iez": 100, "load": "low", "deviation_delta_t": 97, "deviation_return_temp": 98 },
+        { "hour": 5, "iez": 96, "load": "medium", "deviation_delta_t": 92, "deviation_return_temp": 95 },
+        { "hour": 6, "iez": 88, "load": "high", "deviation_delta_t": 82, "deviation_return_temp": 88 },
+        { "hour": 7, "iez": 82, "load": "peak", "deviation_delta_t": 75, "deviation_return_temp": 82 },
+        { "hour": 8, "iez": 85, "load": "peak", "deviation_delta_t": 78, "deviation_return_temp": 85 },
+        { "hour": 9, "iez": 90, "load": "high", "deviation_delta_t": 84, "deviation_return_temp": 90 },
+        { "hour": 10, "iez": 94, "load": "medium", "deviation_delta_t": 88, "deviation_return_temp": 93 },
+        { "hour": 11, "iez": 96, "load": "medium", "deviation_delta_t": 91, "deviation_return_temp": 95 },
+        { "hour": 12, "iez": 95, "load": "medium", "deviation_delta_t": 90, "deviation_return_temp": 94 },
+        { "hour": 13, "iez": 97, "load": "medium", "deviation_delta_t": 93, "deviation_return_temp": 96 },
+        { "hour": 14, "iez": 98, "load": "low", "deviation_delta_t": 94, "deviation_return_temp": 97 },
+        { "hour": 15, "iez": 97, "load": "medium", "deviation_delta_t": 93, "deviation_return_temp": 96 },
+        { "hour": 16, "iez": 93, "load": "medium", "deviation_delta_t": 88, "deviation_return_temp": 92 },
+        { "hour": 17, "iez": 86, "load": "high", "deviation_delta_t": 80, "deviation_return_temp": 86 },
+        { "hour": 18, "iez": 82, "load": "peak", "deviation_delta_t": 74, "deviation_return_temp": 82 },
+        { "hour": 19, "iez": 84, "load": "peak", "deviation_delta_t": 77, "deviation_return_temp": 84 },
+        { "hour": 20, "iez": 88, "load": "high", "deviation_delta_t": 82, "deviation_return_temp": 88 },
+        { "hour": 21, "iez": 93, "load": "medium", "deviation_delta_t": 88, "deviation_return_temp": 92 },
+        { "hour": 22, "iez": 96, "load": "low", "deviation_delta_t": 92, "deviation_return_temp": 95 },
+        { "hour": 23, "iez": 97, "load": "low", "deviation_delta_t": 94, "deviation_return_temp": 96 }
+      ],
+      "summary": {
+        "best_hours": [2, 3, 4, 14, 23],
+        "worst_hours": [7, 8, 18, 19],
+        "avg_iez": 93,
+        "min_iez": 82,
+        "max_iez": 101
+      }
+    }
+  },
+
+  "history_30_days": {
+    "WC-001": [
+      { "date": "2024-12-14", "iez": 91, "category": "B" },
+      { "date": "2024-12-15", "iez": 89, "category": "B" },
+      { "date": "2024-12-16", "iez": 92, "category": "B" },
+      { "date": "2024-12-17", "iez": 94, "category": "B" },
+      { "date": "2024-12-18", "iez": 93, "category": "B" },
+      { "date": "2024-12-19", "iez": 90, "category": "B" },
+      { "date": "2024-12-20", "iez": 88, "category": "B" },
+      { "date": "2024-12-21", "iez": 86, "category": "B" },
+      { "date": "2024-12-22", "iez": 87, "category": "B" },
+      { "date": "2024-12-23", "iez": 85, "category": "B" },
+      { "date": "2024-12-24", "iez": 92, "category": "B" },
+      { "date": "2024-12-25", "iez": 96, "category": "A" },
+      { "date": "2024-12-26", "iez": 97, "category": "A" },
+      { "date": "2024-12-27", "iez": 95, "category": "A" },
+      { "date": "2024-12-28", "iez": 93, "category": "B" },
+      { "date": "2024-12-29", "iez": 91, "category": "B" },
+      { "date": "2024-12-30", "iez": 89, "category": "B" },
+      { "date": "2024-12-31", "iez": 94, "category": "B" },
+      { "date": "2025-01-01", "iez": 98, "category": "A" },
+      { "date": "2025-01-02", "iez": 96, "category": "A" },
+      { "date": "2025-01-03", "iez": 94, "category": "B" },
+      { "date": "2025-01-04", "iez": 92, "category": "B" },
+      { "date": "2025-01-05", "iez": 90, "category": "B" },
+      { "date": "2025-01-06", "iez": 91, "category": "B" },
+      { "date": "2025-01-07", "iez": 93, "category": "B" },
+      { "date": "2025-01-08", "iez": 95, "category": "A" },
+      { "date": "2025-01-09", "iez": 96, "category": "A" },
+      { "date": "2025-01-10", "iez": 94, "category": "B" },
+      { "date": "2025-01-11", "iez": 93, "category": "B" },
+      { "date": "2025-01-12", "iez": 95, "category": "A" },
+      { "date": "2025-01-13", "iez": 94, "category": "B" }
+    ]
+  },
+
+  "alerts": {
+    "WC-001": [
+      {
+        "id": "ALR-2025-0113-001",
+        "type": "deviation_critical",
+        "severity": "warning",
+        "created_at": "2025-01-13T08:15:00Z",
+        "message": "Przepływ cyrkulacji poniżej 80% optimum przez 4h",
+        "status": "active"
+      }
+    ],
+    "WC-004": [
+      {
+        "id": "ALR-2025-0112-001",
+        "type": "efficiency_drop",
+        "severity": "critical",
+        "created_at": "2025-01-12T10:00:00Z",
+        "message": "IEZ poniżej 80 przez 24h - wymaga natychmiastowej uwagi",
+        "status": "active"
+      },
+      {
+        "id": "ALR-2025-0111-001",
+        "type": "trend_negative",
+        "severity": "warning",
+        "created_at": "2025-01-11T06:00:00Z",
+        "message": "IEZ spadł o 12 punktów w ciągu ostatnich 5 dni",
+        "status": "active"
+      }
+    ]
+  },
+
+  "recommendations": {
+    "WC-001": [
+      {
+        "id": "REC-001-001",
+        "priority": "high",
+        "category": "mtcv_adjustment",
+        "title": "Sprawdź nastawę MTCV na pionie 3",
+        "description": "ΔT odbiega od optimum szczególnie w godzinach 7:00-9:00 i 17:00-20:00. Sugeruje to nieprawidłową nastawę zaworu termostatycznego.",
+        "expected_improvement": { "iez_points": 5 },
+        "affected_hours": [7, 8, 17, 18, 19, 20]
+      },
+      {
+        "id": "REC-001-002",
+        "priority": "medium",
+        "category": "hydraulic_balance",
+        "title": "Zrównoważenie hydrauliczne instalacji",
+        "description": "Przepływ cyrkulacji regularnie spada poniżej optimum. Zalecane sprawdzenie równoważenia hydraulicznego.",
+        "expected_improvement": { "iez_points": 3 },
+        "affected_hours": []
+      }
+    ],
+    "WC-004": [
+      {
+        "id": "REC-004-001",
+        "priority": "high",
+        "category": "maintenance",
+        "title": "Pilny przegląd techniczny węzła",
+        "description": "Wszystkie parametry znacząco odbiegają od optimum. Zalecany kompleksowy przegląd wymiennika i zaworów.",
+        "expected_improvement": { "iez_points": 15 },
+        "affected_hours": []
+      }
+    ]
+  },
+
+  "ranking": [
+    { "position": 1, "node_id": "WC-002", "name": "Lelewela 13", "category": "A", "avg_iez": 102, "trend": "rising" },
+    { "position": 2, "node_id": "WC-003", "name": "Kołłątaja 10", "category": "A", "avg_iez": 99, "trend": "stable" },
+    { "position": 3, "node_id": "WC-001", "name": "Jana Pawła II 2-2a", "category": "B", "avg_iez": 94, "trend": "stable" },
+    { "position": 4, "node_id": "WC-005", "name": "Staszica 9", "category": "B", "avg_iez": 91, "trend": "rising" },
+    { "position": 5, "node_id": "WC-004", "name": "Śniadeckich 17", "category": "C", "avg_iez": 78, "trend": "falling" }
+  ]
+}
