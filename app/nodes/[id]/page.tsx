@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, DataSourceBadge } from '@/components/ui/Badge';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import { IEZGauge } from '@/components/node-detail/IEZGauge';
 import { OperationalIndicatorsPanel } from '@/components/node-detail/OperationalIndicatorsPanel';
 import { MonthlyForecastPanel } from '@/components/node-detail/MonthlyForecastPanel';
@@ -78,9 +79,59 @@ export default async function NodeDetailPage({ params }: PageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* IEZ Gauge */}
         <Card className="animate-in stagger-2">
-          <CardHeader dataSource="mec">Indeks Efektywności (IEZ)</CardHeader>
+          <CardHeader dataSource="mec">
+            <span className="flex items-center gap-2">
+              Indeks Efektywności (IEZ)
+              <InfoTooltip
+                position="bottom"
+                content={
+                  <div className="space-y-3">
+                    <p className="font-semibold text-foreground">Indeks Efektywności Zużycia (IEZ)</p>
+
+                    <div className="text-foreground-muted text-sm space-y-2">
+                      <p>
+                        <span className="font-medium text-foreground">Co to jest IEZ?</span><br />
+                        IEZ to syntetyczny wskaźnik pokazujący ogólną efektywność węzła cieplnego w skali 0-100.
+                        Łączy informacje z danych historycznych (GJ/m³ z rozliczeń) z bieżącymi wskaźnikami operacyjnymi.
+                      </p>
+
+                      <p>
+                        <span className="font-medium text-foreground">Skąd się bierze?</span><br />
+                        IEZ = (wskaźnik optymalny / wskaźnik rzeczywisty) × 100<br />
+                        gdzie wskaźnik = GJ zużyte / m³ CWU pobranej przez mieszkańców.<br />
+                        Optymalny wskaźnik dla CWU to około 0.22 GJ/m³.
+                      </p>
+
+                      <p>
+                        <span className="font-medium text-foreground">Interpretacja:</span><br />
+                        • <span className="text-success">IEZ ≥90 (Kat. A)</span> — węzeł pracuje bardzo efektywnie<br />
+                        • <span className="text-efficiency">IEZ 75-89 (Kat. B)</span> — dobra efektywność, możliwa optymalizacja<br />
+                        • <span className="text-critical">IEZ &lt;75 (Kat. C)</span> — niska efektywność, wymaga interwencji
+                      </p>
+
+                      <p>
+                        <span className="font-medium text-foreground">Co wpływa na IEZ?</span><br />
+                        • Nastawy zaworów MTCV na pionach CWU<br />
+                        • Sprawność wymiennika ciepła<br />
+                        • Równoważenie hydrauliczne instalacji<br />
+                        • Wydajność i harmonogram pompy cyrkulacyjnej<br />
+                        • Izolacja przewodów cyrkulacyjnych
+                      </p>
+
+                      <p>
+                        <span className="font-medium text-foreground">Różnica IEZ vs WWC/SH/ES:</span><br />
+                        IEZ to wskaźnik ogólny oparty na danych rozliczeniowych (znany po miesiącu).
+                        WWC, SH, ES to wskaźniki operacyjne z bieżących pomiarów — pokazują CO konkretnie
+                        wymaga regulacji.
+                      </p>
+                    </div>
+                  </div>
+                }
+              />
+            </span>
+          </CardHeader>
           <CardBody className="flex justify-center py-6">
-            <IEZGauge iez={node.efficiency.iez} size="lg" />
+            <IEZGauge iez={node.efficiency.iez} size="lg" showTooltip={false} />
           </CardBody>
         </Card>
 
