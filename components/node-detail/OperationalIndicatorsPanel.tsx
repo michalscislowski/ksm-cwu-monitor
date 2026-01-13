@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { OperationalIndicators, IndicatorStatus } from '@/lib/types';
 
 interface OperationalIndicatorsPanelProps {
@@ -14,9 +15,10 @@ interface IndicatorBarProps {
   status: IndicatorStatus;
   interpretation: string;
   action?: string;
+  tooltip: React.ReactNode;
 }
 
-function IndicatorBar({ label, shortLabel, value, status, interpretation, action }: IndicatorBarProps) {
+function IndicatorBar({ label, shortLabel, value, status, interpretation, action, tooltip }: IndicatorBarProps) {
   const statusConfig: Record<IndicatorStatus, { color: string; bgColor: string; barColor: string }> = {
     optimal: { color: 'text-success', bgColor: 'bg-success/10', barColor: 'bg-success' },
     good: { color: 'text-efficiency', bgColor: 'bg-efficiency/10', barColor: 'bg-efficiency' },
@@ -35,6 +37,7 @@ function IndicatorBar({ label, shortLabel, value, status, interpretation, action
             {shortLabel}
           </span>
           <span className="text-sm font-medium text-foreground">{label}</span>
+          <InfoTooltip content={tooltip} position="right" />
         </div>
         <span className={`text-2xl font-mono font-bold ${config.color}`}>
           {value}%
@@ -95,6 +98,20 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
             status={indicators.wwc.status}
             interpretation={indicators.wwc.interpretation}
             action={indicators.wwc.action}
+            tooltip={
+              <div className="space-y-2">
+                <p className="font-semibold text-foreground">Wskaźnik Wymiany Ciepła (WWC)</p>
+                <p className="text-foreground-muted">
+                  Pokazuje jak efektywnie wymiennik ciepła przekazuje energię z sieci ciepłowniczej do instalacji budynku.
+                </p>
+                <p className="text-foreground-muted">
+                  <span className="font-medium">Wzór:</span> WWC = (ΔT rzeczywiste / ΔT projektowe) × 100%
+                </p>
+                <p className="text-foreground-muted text-xs">
+                  Niski WWC oznacza, że woda wraca do sieci zbyt ciepła - sprawdź nastawy zaworów MTCV.
+                </p>
+              </div>
+            }
           />
 
           <IndicatorBar
@@ -104,6 +121,20 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
             status={indicators.sh.status}
             interpretation={indicators.sh.interpretation}
             action={indicators.sh.action}
+            tooltip={
+              <div className="space-y-2">
+                <p className="font-semibold text-foreground">Stabilność Hydrauliczna (SH)</p>
+                <p className="text-foreground-muted">
+                  Mierzy jak równomiernie pracuje instalacja w ciągu doby - czy ΔT jest stabilne czy mocno się waha.
+                </p>
+                <p className="text-foreground-muted">
+                  <span className="font-medium">Wzór:</span> SH = 100% - (odchylenie ΔT / średnie ΔT) × 100%
+                </p>
+                <p className="text-foreground-muted text-xs">
+                  Niska stabilność wskazuje na nierównomierne obciążenie pionów - wymaga równoważenia hydraulicznego.
+                </p>
+              </div>
+            }
           />
 
           <IndicatorBar
@@ -113,6 +144,20 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
             status={indicators.es.status}
             interpretation={indicators.es.interpretation}
             action={indicators.es.action}
+            tooltip={
+              <div className="space-y-2">
+                <p className="font-semibold text-foreground">Efektywność Szczytowa (ES)</p>
+                <p className="text-foreground-muted">
+                  Porównuje efektywność instalacji w godzinach szczytu (6-9, 17-20) z okresem niskiego obciążenia.
+                </p>
+                <p className="text-foreground-muted">
+                  <span className="font-medium">Wzór:</span> ES = (WWC w szczycie / WWC w nocy) × 100%
+                </p>
+                <p className="text-foreground-muted text-xs">
+                  Niska ES oznacza, że system nie nadąża ze szczytowym zapotrzebowaniem - sprawdź pompę cyrkulacyjną.
+                </p>
+              </div>
+            }
           />
         </div>
 
