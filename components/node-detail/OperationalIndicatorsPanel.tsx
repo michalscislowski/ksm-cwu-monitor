@@ -37,7 +37,7 @@ function IndicatorBar({ label, shortLabel, value, status, interpretation, action
             {shortLabel}
           </span>
           <span className="text-sm font-medium text-foreground">{label}</span>
-          <InfoTooltip content={tooltip} position="right" />
+          <InfoTooltip content={tooltip} />
         </div>
         <span className={`text-2xl font-mono font-bold ${config.color}`}>
           {value}%

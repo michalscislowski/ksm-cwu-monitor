@@ -83,7 +83,6 @@ export default async function NodeDetailPage({ params }: PageProps) {
             <span className="flex items-center gap-2">
               Indeks Efektywności (IEZ)
               <InfoTooltip
-                position="bottom"
                 content={
                   <div className="space-y-3">
                     <p className="font-semibold text-foreground">Indeks Efektywności Zużycia (IEZ)</p>

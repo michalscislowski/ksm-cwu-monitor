@@ -172,7 +172,7 @@ export function IEZGauge({ iez, size = 'lg', showTooltip = true }: IEZGaugeProps
           </span>
           <span className="text-foreground-muted text-sm -mt-1 flex items-center gap-1">
             ze 100
-            {showTooltip && <InfoTooltip content={<IEZTooltipContent />} position="bottom" />}
+            {showTooltip && <InfoTooltip content={<IEZTooltipContent />} />}
           </span>
         </div>
       </div>
