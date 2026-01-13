@@ -3,10 +3,10 @@
     "id": "WC-001",
     "name": "Kołłątaja 6",
     "address": "Kołłątaja 6, Koszalin",
-    "apartments_count": 61,
-    "building_volume_m3": 9882,
+    "apartments_count": 76,
+    "building_volume_m3": 11628,
     "mtcv_type": "STAD",
-    "mtcv_count": 7,
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -938,10 +938,10 @@
     "id": "WC-002",
     "name": "Lelewela 15",
     "address": "Lelewela 15, Koszalin",
-    "apartments_count": 62,
-    "building_volume_m3": 10602,
+    "apartments_count": 32,
+    "building_volume_m3": 5248,
     "mtcv_type": "STAD",
-    "mtcv_count": 7,
+    "mtcv_count": 4,
     "readings": [
       {
         "year": 2015,
@@ -1873,10 +1873,10 @@
     "id": "WC-003",
     "name": "Śniadeckich 29",
     "address": "Śniadeckich 29, Koszalin",
-    "apartments_count": 27,
-    "building_volume_m3": 4806,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 3,
+    "apartments_count": 76,
+    "building_volume_m3": 12312,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -2808,10 +2808,10 @@
     "id": "WC-004",
     "name": "Rotunda",
     "address": "Rotunda, Koszalin",
-    "apartments_count": 37,
-    "building_volume_m3": 6512,
+    "apartments_count": 40,
+    "building_volume_m3": 6880,
     "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 4,
+    "mtcv_count": 5,
     "readings": [
       {
         "year": 2015,
@@ -3743,10 +3743,10 @@
     "id": "WC-005",
     "name": "Śniadeckich 3A",
     "address": "Śniadeckich 3A, Koszalin",
-    "apartments_count": 37,
-    "building_volume_m3": 6105,
+    "apartments_count": 45,
+    "building_volume_m3": 7380,
     "mtcv_type": "STAD",
-    "mtcv_count": 4,
+    "mtcv_count": 5,
     "readings": [
       {
         "year": 2015,
@@ -4678,10 +4678,10 @@
     "id": "WC-006",
     "name": "Jana Pawła II 2-2a",
     "address": "Jana Pawła II 2-2a, Koszalin",
-    "apartments_count": 45,
-    "building_volume_m3": 7965,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 5,
+    "apartments_count": 75,
+    "building_volume_m3": 12825,
+    "mtcv_type": "STAD",
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -4770,669 +4770,669 @@
       {
         "year": 2016,
         "month": 1,
-        "gj": 81.27,
-        "m3": 204.9,
-        "wskaznik": 0.3966
-      },
-      {
-        "year": 2016,
-        "month": 2,
-        "gj": 87.48,
-        "m3": 165,
-        "wskaznik": 0.5302
-      },
-      {
-        "year": 2016,
-        "month": 3,
-        "gj": 91.44,
-        "m3": 206.95,
-        "wskaznik": 0.4418
-      },
-      {
-        "year": 2016,
-        "month": 4,
-        "gj": 75.24,
-        "m3": 169.62,
-        "wskaznik": 0.4436
-      },
-      {
-        "year": 2016,
-        "month": 5,
-        "gj": 58.95,
-        "m3": 169.11,
-        "wskaznik": 0.3486
-      },
-      {
-        "year": 2016,
-        "month": 6,
-        "gj": 55.3,
-        "m3": 189.28,
-        "wskaznik": 0.2922
-      },
-      {
-        "year": 2016,
-        "month": 7,
-        "gj": 53,
-        "m3": 192.94,
-        "wskaznik": 0.2747
-      },
-      {
-        "year": 2016,
-        "month": 8,
-        "gj": 51.9,
-        "m3": 175.72,
-        "wskaznik": 0.2954
-      },
-      {
-        "year": 2016,
-        "month": 9,
-        "gj": 65.97,
-        "m3": 173.3,
-        "wskaznik": 0.3807
-      },
-      {
-        "year": 2016,
-        "month": 10,
-        "gj": 68.94,
-        "m3": 168.96,
-        "wskaznik": 0.408
-      },
-      {
-        "year": 2016,
-        "month": 11,
-        "gj": 70.47,
-        "m3": 177.52,
-        "wskaznik": 0.397
-      },
-      {
-        "year": 2016,
-        "month": 12,
-        "gj": 96.57,
-        "m3": 191.99,
-        "wskaznik": 0.503
-      },
-      {
-        "year": 2017,
-        "month": 1,
         "gj": 88.83,
         "m3": 172.71,
         "wskaznik": 0.5143
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 2,
         "gj": 80.55,
         "m3": 155,
         "wskaznik": 0.5197
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 3,
         "gj": 90.18,
         "m3": 201.08,
         "wskaznik": 0.4485
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 4,
         "gj": 64.05,
         "m3": 179.15,
         "wskaznik": 0.3575
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 5,
         "gj": 57.69,
         "m3": 200.95,
         "wskaznik": 0.2871
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 6,
         "gj": 48.7,
         "m3": 181.86,
         "wskaznik": 0.2678
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 7,
         "gj": 37.6,
         "m3": 163.65,
         "wskaznik": 0.2298
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 8,
         "gj": 44.9,
         "m3": 195.61,
         "wskaznik": 0.2295
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 9,
         "gj": 39.1,
         "m3": 163.78,
         "wskaznik": 0.2387
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 10,
         "gj": 40.7,
         "m3": 171.75,
         "wskaznik": 0.237
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 11,
         "gj": 51.2,
         "m3": 206.72,
         "wskaznik": 0.2477
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 12,
         "gj": 47.4,
         "m3": 194.77,
         "wskaznik": 0.2434
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 1,
         "gj": 48.7,
         "m3": 201,
         "wskaznik": 0.2423
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 2,
         "gj": 44.8,
         "m3": 172.21,
         "wskaznik": 0.2601
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 3,
         "gj": 47.3,
         "m3": 177.64,
         "wskaznik": 0.2663
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 4,
         "gj": 44.5,
         "m3": 180.58,
         "wskaznik": 0.2464
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 5,
         "gj": 50.1,
         "m3": 202,
         "wskaznik": 0.248
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 6,
         "gj": 41.5,
         "m3": 173.5,
         "wskaznik": 0.2392
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 7,
         "gj": 42,
         "m3": 180.92,
         "wskaznik": 0.2321
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 8,
         "gj": 39.7,
         "m3": 168.88,
         "wskaznik": 0.2351
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 9,
         "gj": 38.8,
         "m3": 164,
         "wskaznik": 0.2366
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 10,
         "gj": 43.3,
         "m3": 188,
         "wskaznik": 0.2303
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 11,
         "gj": 40,
         "m3": 162,
         "wskaznik": 0.2469
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 12,
         "gj": 46.4,
         "m3": 178.76,
         "wskaznik": 0.2596
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 1,
         "gj": 44.5,
         "m3": 189,
         "wskaznik": 0.2354
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 2,
         "gj": 40.8,
         "m3": 163,
         "wskaznik": 0.2503
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 3,
         "gj": 44.2,
         "m3": 164,
         "wskaznik": 0.2695
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 4,
         "gj": 45.8,
         "m3": 175,
         "wskaznik": 0.2617
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 5,
         "gj": 40.6,
         "m3": 192,
         "wskaznik": 0.2115
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 6,
         "gj": 37.4,
         "m3": 157,
         "wskaznik": 0.2382
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 7,
         "gj": 38.3,
         "m3": 170,
         "wskaznik": 0.2253
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 8,
         "gj": 36.3,
         "m3": 155,
         "wskaznik": 0.2342
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 9,
         "gj": 33.7,
         "m3": 142,
         "wskaznik": 0.2373
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 10,
         "gj": 42.5,
         "m3": 185,
         "wskaznik": 0.2297
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 11,
         "gj": 39.8,
         "m3": 193.47,
         "wskaznik": 0.2057
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 12,
         "gj": 46.7,
         "m3": 164,
         "wskaznik": 0.2848
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 1,
         "gj": 38,
         "m3": 167.21,
         "wskaznik": 0.2273
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 2,
         "gj": 36,
         "m3": 137.75,
         "wskaznik": 0.2613
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 3,
         "gj": 38.6,
         "m3": 176.1,
         "wskaznik": 0.2192
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 4,
         "gj": 42.4,
         "m3": 161.9,
         "wskaznik": 0.2619
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 5,
         "gj": 38.2,
         "m3": 157,
         "wskaznik": 0.2433
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 6,
         "gj": 35.2,
         "m3": 150,
         "wskaznik": 0.2347
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 7,
         "gj": 34.1,
         "m3": 155.71,
         "wskaznik": 0.219
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 8,
         "gj": 33,
         "m3": 152,
         "wskaznik": 0.2171
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 9,
         "gj": 36.1,
         "m3": 164,
         "wskaznik": 0.2201
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 10,
         "gj": 37.3,
         "m3": 166,
         "wskaznik": 0.2247
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 11,
         "gj": 35.8,
         "m3": 156.75,
         "wskaznik": 0.2284
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 12,
         "gj": 43.7,
         "m3": 194.37,
         "wskaznik": 0.2248
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 1,
         "gj": 41.3,
         "m3": 175,
         "wskaznik": 0.236
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 2,
         "gj": 39.5,
         "m3": 153.33,
         "wskaznik": 0.2576
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 3,
         "gj": 47.4,
         "m3": 187.27,
         "wskaznik": 0.2531
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 4,
         "gj": 44.6,
         "m3": 180,
         "wskaznik": 0.2478
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 5,
         "gj": 44.5,
         "m3": 168.7,
         "wskaznik": 0.2638
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 6,
         "gj": 42.9,
         "m3": 158.21,
         "wskaznik": 0.2712
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 7,
         "gj": 40.8,
         "m3": 153.6,
         "wskaznik": 0.2656
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 8,
         "gj": 34.9,
         "m3": 154,
         "wskaznik": 0.2266
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 9,
         "gj": 36.1,
         "m3": 164,
         "wskaznik": 0.2201
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 10,
         "gj": 37.3,
         "m3": 166,
         "wskaznik": 0.2247
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 11,
         "gj": 35.8,
         "m3": 156.75,
         "wskaznik": 0.2284
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 12,
         "gj": 43.7,
         "m3": 194.37,
         "wskaznik": 0.2248
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 1,
         "gj": 44.2,
         "m3": 156.45,
         "wskaznik": 0.2825
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 2,
         "gj": 41,
         "m3": 146.19,
         "wskaznik": 0.2805
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 3,
         "gj": 51.2,
         "m3": 177.06,
         "wskaznik": 0.2892
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 4,
         "gj": 45.4,
         "m3": 159.24,
         "wskaznik": 0.2851
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 5,
         "gj": 38.5,
         "m3": 133.58,
         "wskaznik": 0.2882
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 6,
         "gj": 38.2,
         "m3": 150.93,
         "wskaznik": 0.2531
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 7,
         "gj": 35,
         "m3": 142.25,
         "wskaznik": 0.246
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 8,
         "gj": 36.8,
         "m3": 142.25,
         "wskaznik": 0.2587
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 9,
         "gj": 32.2,
         "m3": 140.27,
         "wskaznik": 0.2296
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 10,
         "gj": 33.6,
         "m3": 142.27,
         "wskaznik": 0.2362
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 11,
         "gj": 41.5,
         "m3": 168.37,
         "wskaznik": 0.2465
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 12,
         "gj": 40.3,
         "m3": 163.72,
         "wskaznik": 0.2462
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 1,
         "gj": 36.5,
         "m3": 135.97,
         "wskaznik": 0.2684
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 2,
         "gj": 31.1,
         "m3": 118.45,
         "wskaznik": 0.2626
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 3,
         "gj": 39.4,
         "m3": 149.39,
         "wskaznik": 0.2637
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 4,
         "gj": 38.3,
         "m3": 159.24,
         "wskaznik": 0.2405
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 5,
         "gj": 41.5,
         "m3": 159.24,
         "wskaznik": 0.2606
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 6,
         "gj": 33.1,
         "m3": 141.16,
         "wskaznik": 0.2345
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 7,
         "gj": 29.4,
         "m3": 125.38,
         "wskaznik": 0.2345
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 8,
         "gj": 32,
         "m3": 144.07,
         "wskaznik": 0.2221
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 9,
         "gj": 36.1,
         "m3": 134.13,
         "wskaznik": 0.2691
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 10,
         "gj": 25.8,
         "m3": 123.71,
         "wskaznik": 0.2086
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 11,
         "gj": 36.2,
         "m3": 144.54,
         "wskaznik": 0.2504
       },
       {
+        "year": 2022,
+        "month": 12,
+        "gj": 39.1,
+        "m3": 151.55,
+        "wskaznik": 0.258
+      },
+      {
+        "year": 2023,
+        "month": 1,
+        "gj": 38.7,
+        "m3": 141.93,
+        "wskaznik": 0.2727
+      },
+      {
+        "year": 2023,
+        "month": 2,
+        "gj": 33.7,
+        "m3": 122.58,
+        "wskaznik": 0.2749
+      },
+      {
+        "year": 2023,
+        "month": 3,
+        "gj": 37.1,
+        "m3": 147,
+        "wskaznik": 0.2524
+      },
+      {
+        "year": 2023,
+        "month": 4,
+        "gj": 35.1,
+        "m3": 129,
+        "wskaznik": 0.2721
+      },
+      {
+        "year": 2023,
+        "month": 5,
+        "gj": 37.9,
+        "m3": 148,
+        "wskaznik": 0.2561
+      },
+      {
+        "year": 2023,
+        "month": 6,
+        "gj": 31.5,
+        "m3": 127.02,
+        "wskaznik": 0.248
+      },
+      {
+        "year": 2023,
+        "month": 7,
+        "gj": 32.9,
+        "m3": 128,
+        "wskaznik": 0.257
+      },
+      {
+        "year": 2023,
+        "month": 8,
+        "gj": 33.6,
+        "m3": 134,
+        "wskaznik": 0.2507
+      },
+      {
+        "year": 2023,
+        "month": 9,
+        "gj": 31.8,
+        "m3": 131,
+        "wskaznik": 0.2427
+      },
+      {
+        "year": 2023,
+        "month": 10,
+        "gj": 38.2,
+        "m3": 159,
+        "wskaznik": 0.2403
+      },
+      {
+        "year": 2023,
+        "month": 11,
+        "gj": 38,
+        "m3": 144,
+        "wskaznik": 0.2639
+      },
+      {
         "year": 2023,
         "month": 12,
         "gj": 39.1,
@@ -5442,179 +5442,151 @@
       {
         "year": 2024,
         "month": 1,
-        "gj": 38.7,
-        "m3": 141.93,
-        "wskaznik": 0.2727
-      },
-      {
-        "year": 2024,
-        "month": 2,
-        "gj": 33.7,
-        "m3": 122.58,
-        "wskaznik": 0.2749
-      },
-      {
-        "year": 2024,
-        "month": 3,
-        "gj": 37.1,
-        "m3": 147,
-        "wskaznik": 0.2524
-      },
-      {
-        "year": 2024,
-        "month": 4,
-        "gj": 35.1,
-        "m3": 129,
-        "wskaznik": 0.2721
-      },
-      {
-        "year": 2024,
-        "month": 5,
-        "gj": 37.9,
-        "m3": 148,
-        "wskaznik": 0.2561
-      },
-      {
-        "year": 2024,
-        "month": 6,
-        "gj": 31.5,
-        "m3": 127.02,
-        "wskaznik": 0.248
-      },
-      {
-        "year": 2024,
-        "month": 7,
-        "gj": 32.9,
-        "m3": 128,
-        "wskaznik": 0.257
-      },
-      {
-        "year": 2024,
-        "month": 8,
-        "gj": 33.6,
-        "m3": 134,
-        "wskaznik": 0.2507
-      },
-      {
-        "year": 2024,
-        "month": 9,
-        "gj": 31.8,
-        "m3": 131,
-        "wskaznik": 0.2427
-      },
-      {
-        "year": 2024,
-        "month": 10,
-        "gj": 38.2,
-        "m3": 159,
-        "wskaznik": 0.2403
-      },
-      {
-        "year": 2024,
-        "month": 11,
-        "gj": 38,
-        "m3": 144,
-        "wskaznik": 0.2639
-      },
-      {
-        "year": 2024,
-        "month": 12,
-        "gj": 39.1,
-        "m3": 151.55,
-        "wskaznik": 0.258
-      },
-      {
-        "year": 2025,
-        "month": 1,
         "gj": 41.7,
         "m3": 157.47,
         "wskaznik": 0.2648
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 2,
         "gj": 37.8,
         "m3": 138.33,
         "wskaznik": 0.2733
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 3,
         "gj": 35.1,
         "m3": 138.67,
         "wskaznik": 0.2531
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 4,
         "gj": 41.2,
         "m3": 147.16,
         "wskaznik": 0.28
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 5,
         "gj": 32.9,
         "m3": 133.29,
         "wskaznik": 0.2468
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 6,
         "gj": 31.9,
         "m3": 131,
         "wskaznik": 0.2435
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 7,
         "gj": 31.5,
         "m3": 140,
         "wskaznik": 0.225
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 8,
         "gj": 29.7,
         "m3": 130,
         "wskaznik": 0.2285
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 9,
         "gj": 32.4,
         "m3": 140.27,
         "wskaznik": 0.231
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 10,
         "gj": 34.8,
         "m3": 150.77,
         "wskaznik": 0.2308
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 11,
         "gj": 33.6,
         "m3": 143.95,
         "wskaznik": 0.2334
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 12,
         "gj": 39.1,
         "m3": 162.32,
         "wskaznik": 0.2409
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "gj": 38.5,
+        "m3": 154.88,
+        "wskaznik": 0.2486
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "gj": 34.7,
+        "m3": 138.15,
+        "wskaznik": 0.2512
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "gj": 39.8,
+        "m3": 175.59,
+        "wskaznik": 0.2267
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "gj": 38.8,
+        "m3": 128.95,
+        "wskaznik": 0.3009
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "gj": 37.1,
+        "m3": 140.67,
+        "wskaznik": 0.2637
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "gj": 37.2,
+        "m3": 144.43,
+        "wskaznik": 0.2576
+      },
+      {
+        "year": 2025,
+        "month": 7,
+        "gj": 34.4,
+        "m3": 137.39,
+        "wskaznik": 0.2504
+      },
+      {
+        "year": 2025,
+        "month": 9,
+        "gj": 36.3,
+        "m3": 141.84,
+        "wskaznik": 0.2559
       }
     ],
     "stats": {
-      "avg_wskaznik": 0.2459,
-      "avg_iez": 89,
+      "avg_wskaznik": 0.2493,
+      "avg_iez": 88,
       "category": "B",
-      "trend": "declining",
-      "trend_change": -3,
-      "total_readings": 132,
+      "trend": "improving",
+      "trend_change": 2,
+      "total_readings": 128,
       "years_covered": [
         2015,
         2016,
@@ -5634,8 +5606,8 @@
     "id": "WC-007",
     "name": "Jana Pawła II 8-8a",
     "address": "Jana Pawła II 8-8a, Koszalin",
-    "apartments_count": 57,
-    "building_volume_m3": 9348,
+    "apartments_count": 52,
+    "building_volume_m3": 9100,
     "mtcv_type": "TA-COMPACT-P",
     "mtcv_count": 6,
     "readings": [
@@ -5726,669 +5698,669 @@
       {
         "year": 2016,
         "month": 1,
-        "gj": 50.4,
-        "m3": 159,
-        "wskaznik": 0.317
-      },
-      {
-        "year": 2016,
-        "month": 2,
-        "gj": 51.75,
-        "m3": 156,
-        "wskaznik": 0.3317
-      },
-      {
-        "year": 2016,
-        "month": 3,
-        "gj": 54.72,
-        "m3": 180,
-        "wskaznik": 0.304
-      },
-      {
-        "year": 2016,
-        "month": 4,
-        "gj": 51.39,
-        "m3": 163,
-        "wskaznik": 0.3153
-      },
-      {
-        "year": 2016,
-        "month": 5,
-        "gj": 46.17,
-        "m3": 157,
-        "wskaznik": 0.2941
-      },
-      {
-        "year": 2016,
-        "month": 6,
-        "gj": 50.3,
-        "m3": 172,
-        "wskaznik": 0.2924
-      },
-      {
-        "year": 2016,
-        "month": 7,
-        "gj": 45.4,
-        "m3": 147,
-        "wskaznik": 0.3088
-      },
-      {
-        "year": 2016,
-        "month": 8,
-        "gj": 40.1,
-        "m3": 148,
-        "wskaznik": 0.2709
-      },
-      {
-        "year": 2016,
-        "month": 9,
-        "gj": 45.36,
-        "m3": 152,
-        "wskaznik": 0.2984
-      },
-      {
-        "year": 2016,
-        "month": 10,
-        "gj": 51.12,
-        "m3": 156,
-        "wskaznik": 0.3277
-      },
-      {
-        "year": 2016,
-        "month": 11,
-        "gj": 50.22,
-        "m3": 163,
-        "wskaznik": 0.3081
-      },
-      {
-        "year": 2016,
-        "month": 12,
-        "gj": 64.26,
-        "m3": 161,
-        "wskaznik": 0.3991
-      },
-      {
-        "year": 2017,
-        "month": 1,
         "gj": 59.22,
         "m3": 151,
         "wskaznik": 0.3922
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 2,
         "gj": 57.24,
         "m3": 151,
         "wskaznik": 0.3791
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 3,
         "gj": 64.35,
         "m3": 183,
         "wskaznik": 0.3516
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 4,
         "gj": 48.15,
         "m3": 165,
         "wskaznik": 0.2918
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 5,
         "gj": 48.63,
         "m3": 172,
         "wskaznik": 0.2827
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 6,
         "gj": 41.8,
         "m3": 156,
         "wskaznik": 0.2679
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 7,
         "gj": 36.1,
         "m3": 129,
         "wskaznik": 0.2798
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 8,
         "gj": 46.7,
         "m3": 181,
         "wskaznik": 0.258
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 9,
         "gj": 20,
         "m3": 151,
         "wskaznik": 0.1325
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 10,
         "gj": 36.73,
         "m3": 151,
         "wskaznik": 0.2432
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 11,
         "gj": 56.52,
         "m3": 191,
         "wskaznik": 0.2959
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 12,
         "gj": 59.89,
         "m3": 179,
         "wskaznik": 0.3346
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 1,
         "gj": 54.18,
         "m3": 181,
         "wskaznik": 0.2993
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 2,
         "gj": 44.1,
         "m3": 164,
         "wskaznik": 0.2689
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 3,
         "gj": 41.6,
         "m3": 167,
         "wskaznik": 0.2491
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 4,
         "gj": 42.2,
         "m3": 163,
         "wskaznik": 0.2589
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 5,
         "gj": 49,
         "m3": 187,
         "wskaznik": 0.262
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 6,
         "gj": 43.3,
         "m3": 171,
         "wskaznik": 0.2532
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 7,
         "gj": 42.1,
         "m3": 164,
         "wskaznik": 0.2567
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 8,
         "gj": 41.9,
         "m3": 165,
         "wskaznik": 0.2539
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 9,
         "gj": 41,
         "m3": 164,
         "wskaznik": 0.25
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 10,
         "gj": 47.4,
         "m3": 194,
         "wskaznik": 0.2443
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 11,
         "gj": 45.5,
         "m3": 177,
         "wskaznik": 0.2571
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 12,
         "gj": 50.3,
         "m3": 189,
         "wskaznik": 0.2661
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 1,
         "gj": 48,
         "m3": 193,
         "wskaznik": 0.2487
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 2,
         "gj": 45.5,
         "m3": 166,
         "wskaznik": 0.2741
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 3,
         "gj": 46.8,
         "m3": 173,
         "wskaznik": 0.2705
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 4,
         "gj": 48.7,
         "m3": 178,
         "wskaznik": 0.2736
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 5,
         "gj": 42.9,
         "m3": 195,
         "wskaznik": 0.22
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 6,
         "gj": 39.9,
         "m3": 157,
         "wskaznik": 0.2541
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 7,
         "gj": 40.5,
         "m3": 167,
         "wskaznik": 0.2425
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 8,
         "gj": 37.3,
         "m3": 143,
         "wskaznik": 0.2608
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 9,
         "gj": 37,
         "m3": 149,
         "wskaznik": 0.2483
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 10,
         "gj": 45.6,
         "m3": 186,
         "wskaznik": 0.2452
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 11,
         "gj": 43.2,
         "m3": 199,
         "wskaznik": 0.2171
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 12,
         "gj": 48.2,
         "m3": 163,
         "wskaznik": 0.2957
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 1,
         "gj": 47.2,
         "m3": 180,
         "wskaznik": 0.2622
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 2,
         "gj": 43.4,
         "m3": 162,
         "wskaznik": 0.2679
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 3,
         "gj": 45.1,
         "m3": 190,
         "wskaznik": 0.2374
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 4,
         "gj": 50,
         "m3": 175,
         "wskaznik": 0.2857
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 5,
         "gj": 44.6,
         "m3": 168,
         "wskaznik": 0.2655
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 6,
         "gj": 38.8,
         "m3": 151,
         "wskaznik": 0.257
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 7,
         "gj": 39.7,
         "m3": 166,
         "wskaznik": 0.2392
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 8,
         "gj": 38.4,
         "m3": 156,
         "wskaznik": 0.2462
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 9,
         "gj": 44.6,
         "m3": 169,
         "wskaznik": 0.2639
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 10,
         "gj": 45.6,
         "m3": 169,
         "wskaznik": 0.2698
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 11,
         "gj": 45.3,
         "m3": 168,
         "wskaznik": 0.2696
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 12,
         "gj": 50,
         "m3": 193,
         "wskaznik": 0.2591
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 1,
         "gj": 48,
         "m3": 178,
         "wskaznik": 0.2697
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 2,
         "gj": 43.4,
         "m3": 165,
         "wskaznik": 0.263
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 3,
         "gj": 52.5,
         "m3": 191,
         "wskaznik": 0.2749
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 4,
         "gj": 52.6,
         "m3": 181.05,
         "wskaznik": 0.2905
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 5,
         "gj": 41.2,
         "m3": 175.18,
         "wskaznik": 0.2352
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 6,
         "gj": 40.1,
         "m3": 165,
         "wskaznik": 0.243
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 7,
         "gj": 42,
         "m3": 153,
         "wskaznik": 0.2745
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 8,
         "gj": 33.6,
         "m3": 168,
         "wskaznik": 0.2
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 9,
         "gj": 44.6,
         "m3": 169,
         "wskaznik": 0.2639
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 10,
         "gj": 45.6,
         "m3": 169,
         "wskaznik": 0.2698
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 11,
         "gj": 45.3,
         "m3": 168,
         "wskaznik": 0.2696
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 12,
         "gj": 50,
         "m3": 193,
         "wskaznik": 0.2591
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 1,
         "gj": 41.9,
         "m3": 170.01,
         "wskaznik": 0.2465
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 2,
         "gj": 40.8,
         "m3": 156.82,
         "wskaznik": 0.2602
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 3,
         "gj": 49.7,
         "m3": 193.72,
         "wskaznik": 0.2566
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 4,
         "gj": 44,
         "m3": 175.98,
         "wskaznik": 0.25
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 5,
         "gj": 39.4,
         "m3": 156.67,
         "wskaznik": 0.2515
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 6,
         "gj": 37.8,
         "m3": 165.58,
         "wskaznik": 0.2283
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 7,
         "gj": 35.2,
         "m3": 141.08,
         "wskaznik": 0.2495
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 8,
         "gj": 34,
         "m3": 170.9,
         "wskaznik": 0.1989
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 9,
         "gj": 38.3,
         "m3": 170.67,
         "wskaznik": 0.2244
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 10,
         "gj": 35.4,
         "m3": 154.69,
         "wskaznik": 0.2288
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 11,
         "gj": 42.8,
         "m3": 172.43,
         "wskaznik": 0.2482
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 12,
         "gj": 43.3,
         "m3": 180.09,
         "wskaznik": 0.2404
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 1,
         "gj": 42.7,
         "m3": 164.84,
         "wskaznik": 0.259
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 2,
         "gj": 36.6,
         "m3": 149.15,
         "wskaznik": 0.2454
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 3,
         "gj": 43.1,
         "m3": 175.81,
         "wskaznik": 0.2452
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 4,
         "gj": 40.2,
         "m3": 169.35,
         "wskaznik": 0.2374
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 5,
         "gj": 43.1,
         "m3": 180.46,
         "wskaznik": 0.2388
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 6,
         "gj": 37.5,
         "m3": 151.44,
         "wskaznik": 0.2476
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 7,
         "gj": 36.1,
         "m3": 127.58,
         "wskaznik": 0.283
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 8,
         "gj": 32.4,
         "m3": 138.58,
         "wskaznik": 0.2338
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 9,
         "gj": 40.6,
         "m3": 129.3,
         "wskaznik": 0.314
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 10,
         "gj": 28.5,
         "m3": 119.58,
         "wskaznik": 0.2383
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 11,
         "gj": 40.8,
         "m3": 150.89,
         "wskaznik": 0.2704
       },
       {
+        "year": 2022,
+        "month": 12,
+        "gj": 36.6,
+        "m3": 132,
+        "wskaznik": 0.2773
+      },
+      {
+        "year": 2023,
+        "month": 1,
+        "gj": 41.9,
+        "m3": 142.62,
+        "wskaznik": 0.2938
+      },
+      {
+        "year": 2023,
+        "month": 2,
+        "gj": 37.2,
+        "m3": 128.65,
+        "wskaznik": 0.2892
+      },
+      {
+        "year": 2023,
+        "month": 3,
+        "gj": 40.3,
+        "m3": 146,
+        "wskaznik": 0.276
+      },
+      {
+        "year": 2023,
+        "month": 4,
+        "gj": 38.2,
+        "m3": 136,
+        "wskaznik": 0.2809
+      },
+      {
+        "year": 2023,
+        "month": 5,
+        "gj": 42.6,
+        "m3": 154,
+        "wskaznik": 0.2766
+      },
+      {
+        "year": 2023,
+        "month": 6,
+        "gj": 34.9,
+        "m3": 130,
+        "wskaznik": 0.2685
+      },
+      {
+        "year": 2023,
+        "month": 7,
+        "gj": 36.2,
+        "m3": 136,
+        "wskaznik": 0.2662
+      },
+      {
+        "year": 2023,
+        "month": 8,
+        "gj": 35.3,
+        "m3": 135,
+        "wskaznik": 0.2615
+      },
+      {
+        "year": 2023,
+        "month": 9,
+        "gj": 32.1,
+        "m3": 122,
+        "wskaznik": 0.2631
+      },
+      {
+        "year": 2023,
+        "month": 10,
+        "gj": 37.1,
+        "m3": 140,
+        "wskaznik": 0.265
+      },
+      {
+        "year": 2023,
+        "month": 11,
+        "gj": 37.2,
+        "m3": 136,
+        "wskaznik": 0.2735
+      },
+      {
         "year": 2023,
         "month": 12,
         "gj": 36.6,
@@ -6398,179 +6370,158 @@
       {
         "year": 2024,
         "month": 1,
-        "gj": 41.9,
-        "m3": 142.62,
-        "wskaznik": 0.2938
-      },
-      {
-        "year": 2024,
-        "month": 2,
-        "gj": 37.2,
-        "m3": 128.65,
-        "wskaznik": 0.2892
-      },
-      {
-        "year": 2024,
-        "month": 3,
-        "gj": 40.3,
-        "m3": 146,
-        "wskaznik": 0.276
-      },
-      {
-        "year": 2024,
-        "month": 4,
-        "gj": 38.2,
-        "m3": 136,
-        "wskaznik": 0.2809
-      },
-      {
-        "year": 2024,
-        "month": 5,
-        "gj": 42.6,
-        "m3": 154,
-        "wskaznik": 0.2766
-      },
-      {
-        "year": 2024,
-        "month": 6,
-        "gj": 34.9,
-        "m3": 130,
-        "wskaznik": 0.2685
-      },
-      {
-        "year": 2024,
-        "month": 7,
-        "gj": 36.2,
-        "m3": 136,
-        "wskaznik": 0.2662
-      },
-      {
-        "year": 2024,
-        "month": 8,
-        "gj": 35.3,
-        "m3": 135,
-        "wskaznik": 0.2615
-      },
-      {
-        "year": 2024,
-        "month": 9,
-        "gj": 32.1,
-        "m3": 122,
-        "wskaznik": 0.2631
-      },
-      {
-        "year": 2024,
-        "month": 10,
-        "gj": 37.1,
-        "m3": 140,
-        "wskaznik": 0.265
-      },
-      {
-        "year": 2024,
-        "month": 11,
-        "gj": 37.2,
-        "m3": 136,
-        "wskaznik": 0.2735
-      },
-      {
-        "year": 2024,
-        "month": 12,
-        "gj": 36.6,
-        "m3": 132,
-        "wskaznik": 0.2773
-      },
-      {
-        "year": 2025,
-        "month": 1,
         "gj": 40.7,
         "m3": 147.95,
         "wskaznik": 0.2751
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 2,
         "gj": 37.9,
         "m3": 133.35,
         "wskaznik": 0.2842
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 3,
         "gj": 37.3,
         "m3": 137.48,
         "wskaznik": 0.2713
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 4,
         "gj": 43,
         "m3": 168.61,
         "wskaznik": 0.255
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 5,
         "gj": 39.1,
         "m3": 97,
         "wskaznik": 0.4031
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 6,
         "gj": 28.6,
         "m3": 126,
         "wskaznik": 0.227
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 7,
         "gj": 35.2,
         "m3": 142,
         "wskaznik": 0.2479
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 8,
         "gj": 33.4,
         "m3": 129.93,
         "wskaznik": 0.2571
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 9,
         "gj": 35.3,
         "m3": 131.91,
         "wskaznik": 0.2676
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 10,
         "gj": 36.5,
         "m3": 136.8,
         "wskaznik": 0.2668
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 11,
         "gj": 34.2,
         "m3": 124.96,
         "wskaznik": 0.2737
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 12,
         "gj": 42.3,
         "m3": 158.28,
         "wskaznik": 0.2672
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "gj": 39.4,
+        "m3": 139.02,
+        "wskaznik": 0.2834
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "gj": 34.8,
+        "m3": 121.02,
+        "wskaznik": 0.2876
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "gj": 38.4,
+        "m3": 152.79,
+        "wskaznik": 0.2513
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "gj": 36.9,
+        "m3": 116.17,
+        "wskaznik": 0.3176
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "gj": 34.6,
+        "m3": 129.73,
+        "wskaznik": 0.2667
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "gj": 33.8,
+        "m3": 124.79,
+        "wskaznik": 0.2709
+      },
+      {
+        "year": 2025,
+        "month": 7,
+        "gj": 33.2,
+        "m3": 129.41,
+        "wskaznik": 0.2565
+      },
+      {
+        "year": 2025,
+        "month": 8,
+        "gj": 30.9,
+        "m3": 118.7,
+        "wskaznik": 0.2603
+      },
+      {
+        "year": 2025,
+        "month": 9,
+        "gj": 35.2,
+        "m3": 141.8,
+        "wskaznik": 0.2482
       }
     ],
     "stats": {
-      "avg_wskaznik": 0.2747,
-      "avg_iez": 80,
+      "avg_wskaznik": 0.2709,
+      "avg_iez": 81,
       "category": "B",
-      "trend": "declining",
-      "trend_change": -4,
-      "total_readings": 132,
+      "trend": "improving",
+      "trend_change": 9,
+      "total_readings": 129,
       "years_covered": [
         2015,
         2016,
@@ -6590,10 +6541,10 @@
     "id": "WC-008",
     "name": "Jana Pawła 8b-8c",
     "address": "Jana Pawła 8b-8c, Koszalin",
-    "apartments_count": 72,
-    "building_volume_m3": 10872,
-    "mtcv_type": "STAD",
-    "mtcv_count": 8,
+    "apartments_count": 21,
+    "building_volume_m3": 3150,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 3,
     "readings": [
       {
         "year": 2015,
@@ -6682,669 +6633,669 @@
       {
         "year": 2016,
         "month": 1,
-        "gj": 53.64,
-        "m3": 186,
-        "wskaznik": 0.2884
-      },
-      {
-        "year": 2016,
-        "month": 2,
-        "gj": 60.9,
-        "m3": 174,
-        "wskaznik": 0.35
-      },
-      {
-        "year": 2016,
-        "month": 3,
-        "gj": 58.59,
-        "m3": 200,
-        "wskaznik": 0.293
-      },
-      {
-        "year": 2016,
-        "month": 4,
-        "gj": 49.26,
-        "m3": 189,
-        "wskaznik": 0.2606
-      },
-      {
-        "year": 2016,
-        "month": 5,
-        "gj": 46.8,
-        "m3": 183,
-        "wskaznik": 0.2557
-      },
-      {
-        "year": 2016,
-        "month": 6,
-        "gj": 52.4,
-        "m3": 209,
-        "wskaznik": 0.2507
-      },
-      {
-        "year": 2016,
-        "month": 7,
-        "gj": 47.4,
-        "m3": 176,
-        "wskaznik": 0.2693
-      },
-      {
-        "year": 2016,
-        "month": 8,
-        "gj": 43.2,
-        "m3": 192,
-        "wskaznik": 0.225
-      },
-      {
-        "year": 2016,
-        "month": 9,
-        "gj": 47.7,
-        "m3": 183,
-        "wskaznik": 0.2607
-      },
-      {
-        "year": 2016,
-        "month": 10,
-        "gj": 59.76,
-        "m3": 231,
-        "wskaznik": 0.2587
-      },
-      {
-        "year": 2016,
-        "month": 11,
-        "gj": 52.11,
-        "m3": 200,
-        "wskaznik": 0.2606
-      },
-      {
-        "year": 2016,
-        "month": 12,
-        "gj": 64.98,
-        "m3": 194,
-        "wskaznik": 0.3349
-      },
-      {
-        "year": 2017,
-        "month": 1,
         "gj": 61.65,
         "m3": 186,
         "wskaznik": 0.3315
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 2,
         "gj": 59.04,
         "m3": 176,
         "wskaznik": 0.3355
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 3,
         "gj": 67.77,
         "m3": 216,
         "wskaznik": 0.3137
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 4,
         "gj": 51.84,
         "m3": 188,
         "wskaznik": 0.2757
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 5,
         "gj": 51.21,
         "m3": 215,
         "wskaznik": 0.2382
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 6,
         "gj": 47.3,
         "m3": 197,
         "wskaznik": 0.2401
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 7,
         "gj": 42.3,
         "m3": 184,
         "wskaznik": 0.2299
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 8,
         "gj": 51.4,
         "m3": 218,
         "wskaznik": 0.2358
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 9,
         "gj": 42.6,
         "m3": 184,
         "wskaznik": 0.2315
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 10,
         "gj": 52.56,
         "m3": 189,
         "wskaznik": 0.2781
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 11,
         "gj": 56.61,
         "m3": 222,
         "wskaznik": 0.255
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 12,
         "gj": 66.15,
         "m3": 215,
         "wskaznik": 0.3077
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 1,
         "gj": 59.04,
         "m3": 222,
         "wskaznik": 0.2659
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 2,
         "gj": 49.4,
         "m3": 192,
         "wskaznik": 0.2573
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 3,
         "gj": 45.7,
         "m3": 186,
         "wskaznik": 0.2457
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 4,
         "gj": 45.7,
         "m3": 187,
         "wskaznik": 0.2444
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 5,
         "gj": 51.5,
         "m3": 217,
         "wskaznik": 0.2373
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 6,
         "gj": 43.1,
         "m3": 181,
         "wskaznik": 0.2381
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 7,
         "gj": 44.1,
         "m3": 187,
         "wskaznik": 0.2358
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 8,
         "gj": 42.2,
         "m3": 172,
         "wskaznik": 0.2453
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 9,
         "gj": 41.6,
         "m3": 175,
         "wskaznik": 0.2377
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 10,
         "gj": 46.2,
         "m3": 194,
         "wskaznik": 0.2381
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 11,
         "gj": 46.3,
         "m3": 182,
         "wskaznik": 0.2544
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 12,
         "gj": 50.8,
         "m3": 186,
         "wskaznik": 0.2731
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 1,
         "gj": 48.4,
         "m3": 203,
         "wskaznik": 0.2384
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 2,
         "gj": 46.7,
         "m3": 182,
         "wskaznik": 0.2566
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 3,
         "gj": 47.5,
         "m3": 182,
         "wskaznik": 0.261
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 4,
         "gj": 50.4,
         "m3": 191,
         "wskaznik": 0.2639
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 5,
         "gj": 45.3,
         "m3": 213,
         "wskaznik": 0.2127
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 6,
         "gj": 43.5,
         "m3": 180,
         "wskaznik": 0.2417
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 7,
         "gj": 44.1,
         "m3": 201,
         "wskaznik": 0.2194
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 8,
         "gj": 40.4,
         "m3": 172,
         "wskaznik": 0.2349
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 9,
         "gj": 44.1,
         "m3": 175,
         "wskaznik": 0.252
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 10,
         "gj": 41.7,
         "m3": 201,
         "wskaznik": 0.2075
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 11,
         "gj": 44.5,
         "m3": 231,
         "wskaznik": 0.1926
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 12,
         "gj": 49.5,
         "m3": 183,
         "wskaznik": 0.2705
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 1,
         "gj": 48.1,
         "m3": 208,
         "wskaznik": 0.2313
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 2,
         "gj": 45.2,
         "m3": 187,
         "wskaznik": 0.2417
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 3,
         "gj": 46.8,
         "m3": 217,
         "wskaznik": 0.2157
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 4,
         "gj": 51,
         "m3": 196,
         "wskaznik": 0.2602
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 5,
         "gj": 45.5,
         "m3": 190,
         "wskaznik": 0.2395
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 6,
         "gj": 40.5,
         "m3": 171,
         "wskaznik": 0.2368
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 7,
         "gj": 41.3,
         "m3": 191,
         "wskaznik": 0.2162
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 8,
         "gj": 39.6,
         "m3": 183,
         "wskaznik": 0.2164
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 9,
         "gj": 42.7,
         "m3": 185,
         "wskaznik": 0.2308
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 10,
         "gj": 43.2,
         "m3": 198,
         "wskaznik": 0.2182
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 11,
         "gj": 43,
         "m3": 189,
         "wskaznik": 0.2275
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 12,
         "gj": 50.2,
         "m3": 211,
         "wskaznik": 0.2379
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 1,
         "gj": 48.4,
         "m3": 197,
         "wskaznik": 0.2457
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 2,
         "gj": 45,
         "m3": 169,
         "wskaznik": 0.2663
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 3,
         "gj": 55.8,
         "m3": 219,
         "wskaznik": 0.2548
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 4,
         "gj": 57.1,
         "m3": 204.33,
         "wskaznik": 0.2794
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 5,
         "gj": 44.3,
         "m3": 198.28,
         "wskaznik": 0.2234
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 6,
         "gj": 41.7,
         "m3": 187,
         "wskaznik": 0.223
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 7,
         "gj": 42.7,
         "m3": 178,
         "wskaznik": 0.2399
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 8,
         "gj": 33.6,
         "m3": 187,
         "wskaznik": 0.1797
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 9,
         "gj": 42.7,
         "m3": 185,
         "wskaznik": 0.2308
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 10,
         "gj": 43.2,
         "m3": 198,
         "wskaznik": 0.2182
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 11,
         "gj": 43,
         "m3": 189,
         "wskaznik": 0.2275
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 12,
         "gj": 50.2,
         "m3": 211,
         "wskaznik": 0.2379
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 1,
         "gj": 45.5,
         "m3": 205.45,
         "wskaznik": 0.2215
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 2,
         "gj": 44.3,
         "m3": 190.23,
         "wskaznik": 0.2329
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 3,
         "gj": 53.3,
         "m3": 228.28,
         "wskaznik": 0.2335
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 4,
         "gj": 48.2,
         "m3": 212.28,
         "wskaznik": 0.2271
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 5,
         "gj": 42.2,
         "m3": 184.91,
         "wskaznik": 0.2282
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 6,
         "gj": 45,
         "m3": 210.62,
         "wskaznik": 0.2137
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 7,
         "gj": 42.8,
         "m3": 166.56,
         "wskaznik": 0.257
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 8,
         "gj": 42.1,
         "m3": 185.55,
         "wskaznik": 0.2269
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 9,
         "gj": 39.9,
         "m3": 186.53,
         "wskaznik": 0.2139
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 10,
         "gj": 37.5,
         "m3": 178.79,
         "wskaznik": 0.2097
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 11,
         "gj": 45.1,
         "m3": 199.25,
         "wskaznik": 0.2263
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 12,
         "gj": 45.6,
         "m3": 213.01,
         "wskaznik": 0.2141
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 1,
         "gj": 46.2,
         "m3": 206.67,
         "wskaznik": 0.2235
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 2,
         "gj": 19.1,
         "m3": 185.83,
         "wskaznik": 0.1028
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 3,
         "gj": 41.4,
         "m3": 207.16,
         "wskaznik": 0.1998
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 4,
         "gj": 46.4,
         "m3": 208.7,
         "wskaznik": 0.2223
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 5,
         "gj": 45.9,
         "m3": 215.5,
         "wskaznik": 0.213
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 6,
         "gj": 42.1,
         "m3": 199.12,
         "wskaznik": 0.2114
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 7,
         "gj": 44.3,
         "m3": 166.46,
         "wskaznik": 0.2661
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 8,
         "gj": 37.2,
         "m3": 179.42,
         "wskaznik": 0.2073
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 9,
         "gj": 46.7,
         "m3": 177.36,
         "wskaznik": 0.2633
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 10,
         "gj": 34.6,
         "m3": 171.45,
         "wskaznik": 0.2018
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 11,
         "gj": 48.1,
         "m3": 197.76,
         "wskaznik": 0.2432
       },
       {
+        "year": 2022,
+        "month": 12,
+        "gj": 52.7,
+        "m3": 185,
+        "wskaznik": 0.2849
+      },
+      {
+        "year": 2023,
+        "month": 1,
+        "gj": 49.5,
+        "m3": 193.33,
+        "wskaznik": 0.256
+      },
+      {
+        "year": 2023,
+        "month": 2,
+        "gj": 43.6,
+        "m3": 165.44,
+        "wskaznik": 0.2635
+      },
+      {
+        "year": 2023,
+        "month": 3,
+        "gj": 47.3,
+        "m3": 181,
+        "wskaznik": 0.2613
+      },
+      {
+        "year": 2023,
+        "month": 4,
+        "gj": 44,
+        "m3": 167,
+        "wskaznik": 0.2635
+      },
+      {
+        "year": 2023,
+        "month": 5,
+        "gj": 50.4,
+        "m3": 207,
+        "wskaznik": 0.2435
+      },
+      {
+        "year": 2023,
+        "month": 6,
+        "gj": 42.3,
+        "m3": 181,
+        "wskaznik": 0.2337
+      },
+      {
+        "year": 2023,
+        "month": 7,
+        "gj": 41.5,
+        "m3": 176,
+        "wskaznik": 0.2358
+      },
+      {
+        "year": 2023,
+        "month": 8,
+        "gj": 40.9,
+        "m3": 175,
+        "wskaznik": 0.2337
+      },
+      {
+        "year": 2023,
+        "month": 9,
+        "gj": 39,
+        "m3": 162,
+        "wskaznik": 0.2407
+      },
+      {
+        "year": 2023,
+        "month": 10,
+        "gj": 45.2,
+        "m3": 185,
+        "wskaznik": 0.2443
+      },
+      {
+        "year": 2023,
+        "month": 11,
+        "gj": 47,
+        "m3": 184,
+        "wskaznik": 0.2554
+      },
+      {
         "year": 2023,
         "month": 12,
         "gj": 52.7,
@@ -7354,179 +7305,158 @@
       {
         "year": 2024,
         "month": 1,
-        "gj": 49.5,
-        "m3": 193.33,
-        "wskaznik": 0.256
-      },
-      {
-        "year": 2024,
-        "month": 2,
-        "gj": 43.6,
-        "m3": 165.44,
-        "wskaznik": 0.2635
-      },
-      {
-        "year": 2024,
-        "month": 3,
-        "gj": 47.3,
-        "m3": 181,
-        "wskaznik": 0.2613
-      },
-      {
-        "year": 2024,
-        "month": 4,
-        "gj": 44,
-        "m3": 167,
-        "wskaznik": 0.2635
-      },
-      {
-        "year": 2024,
-        "month": 5,
-        "gj": 50.4,
-        "m3": 207,
-        "wskaznik": 0.2435
-      },
-      {
-        "year": 2024,
-        "month": 6,
-        "gj": 42.3,
-        "m3": 181,
-        "wskaznik": 0.2337
-      },
-      {
-        "year": 2024,
-        "month": 7,
-        "gj": 41.5,
-        "m3": 176,
-        "wskaznik": 0.2358
-      },
-      {
-        "year": 2024,
-        "month": 8,
-        "gj": 40.9,
-        "m3": 175,
-        "wskaznik": 0.2337
-      },
-      {
-        "year": 2024,
-        "month": 9,
-        "gj": 39,
-        "m3": 162,
-        "wskaznik": 0.2407
-      },
-      {
-        "year": 2024,
-        "month": 10,
-        "gj": 45.2,
-        "m3": 185,
-        "wskaznik": 0.2443
-      },
-      {
-        "year": 2024,
-        "month": 11,
-        "gj": 47,
-        "m3": 184,
-        "wskaznik": 0.2554
-      },
-      {
-        "year": 2024,
-        "month": 12,
-        "gj": 52.7,
-        "m3": 185,
-        "wskaznik": 0.2849
-      },
-      {
-        "year": 2025,
-        "month": 1,
         "gj": 44.8,
         "m3": 204.15,
         "wskaznik": 0.2194
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 2,
         "gj": 45.5,
         "m3": 169.56,
         "wskaznik": 0.2683
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 3,
         "gj": 42.8,
         "m3": 167.24,
         "wskaznik": 0.2559
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 4,
         "gj": 50.7,
         "m3": 212.05,
         "wskaznik": 0.2391
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 5,
         "gj": 40.3,
         "m3": 126,
         "wskaznik": 0.3198
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 6,
         "gj": 45.3,
         "m3": 165,
         "wskaznik": 0.2745
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 7,
         "gj": 38.3,
         "m3": 172,
         "wskaznik": 0.2227
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 8,
         "gj": 39.2,
         "m3": 161.09,
         "wskaznik": 0.2433
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 9,
         "gj": 41.7,
         "m3": 173.64,
         "wskaznik": 0.2402
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 10,
         "gj": 44.2,
         "m3": 181.29,
         "wskaznik": 0.2438
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 11,
         "gj": 44,
         "m3": 178.42,
         "wskaznik": 0.2466
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 12,
         "gj": 52.9,
         "m3": 214.68,
         "wskaznik": 0.2464
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "gj": 51.2,
+        "m3": 200.13,
+        "wskaznik": 0.2558
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "gj": 44.5,
+        "m3": 174.09,
+        "wskaznik": 0.2556
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "gj": 50.4,
+        "m3": 226.3,
+        "wskaznik": 0.2227
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "gj": 48.9,
+        "m3": 169.75,
+        "wskaznik": 0.2881
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "gj": 46.2,
+        "m3": 187.57,
+        "wskaznik": 0.2463
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "gj": 45.1,
+        "m3": 185.83,
+        "wskaznik": 0.2427
+      },
+      {
+        "year": 2025,
+        "month": 7,
+        "gj": 42.1,
+        "m3": 174.76,
+        "wskaznik": 0.2409
+      },
+      {
+        "year": 2025,
+        "month": 8,
+        "gj": 39.4,
+        "m3": 164.56,
+        "wskaznik": 0.2394
+      },
+      {
+        "year": 2025,
+        "month": 9,
+        "gj": 44.9,
+        "m3": 186.6,
+        "wskaznik": 0.2406
       }
     ],
     "stats": {
-      "avg_wskaznik": 0.2517,
-      "avg_iez": 87,
+      "avg_wskaznik": 0.2474,
+      "avg_iez": 89,
       "category": "B",
-      "trend": "declining",
-      "trend_change": -4,
-      "total_readings": 132,
+      "trend": "improving",
+      "trend_change": 6,
+      "total_readings": 129,
       "years_covered": [
         2015,
         2016,
@@ -7546,10 +7476,10 @@
     "id": "WC-009",
     "name": "Spasowskiego 1-1a",
     "address": "Spasowskiego 1-1a, Koszalin",
-    "apartments_count": 45,
-    "building_volume_m3": 7290,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 5,
+    "apartments_count": 61,
+    "building_volume_m3": 10553,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -8481,10 +8411,10 @@
     "id": "WC-010",
     "name": "Spasowskiego 1b-1c",
     "address": "Spasowskiego 1b-1c, Koszalin",
-    "apartments_count": 69,
-    "building_volume_m3": 11592,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 7,
+    "apartments_count": 79,
+    "building_volume_m3": 13114,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -9416,10 +9346,10 @@
     "id": "WC-011",
     "name": "Kołłątaja 10",
     "address": "Kołłątaja 10, Koszalin",
-    "apartments_count": 53,
-    "building_volume_m3": 8109,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 6,
+    "apartments_count": 28,
+    "building_volume_m3": 4984,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 3,
     "readings": [
       {
         "year": 2015,
@@ -10351,10 +10281,10 @@
     "id": "WC-012",
     "name": "Kołłątaja 12",
     "address": "Kołłątaja 12, Koszalin",
-    "apartments_count": 31,
-    "building_volume_m3": 4774,
+    "apartments_count": 66,
+    "building_volume_m3": 11286,
     "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 4,
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -11286,10 +11216,10 @@
     "id": "WC-013",
     "name": "Kołłątaja 2",
     "address": "Kołłątaja 2, Koszalin",
-    "apartments_count": 22,
-    "building_volume_m3": 3740,
-    "mtcv_type": "STAD",
-    "mtcv_count": 3,
+    "apartments_count": 68,
+    "building_volume_m3": 11832,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -12221,10 +12151,10 @@
     "id": "WC-014",
     "name": "Lelewela 13",
     "address": "Lelewela 13, Koszalin",
-    "apartments_count": 35,
-    "building_volume_m3": 5880,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 4,
+    "apartments_count": 55,
+    "building_volume_m3": 9240,
+    "mtcv_type": "STAD",
+    "mtcv_count": 6,
     "readings": [
       {
         "year": 2015,
@@ -13156,10 +13086,10 @@
     "id": "WC-015",
     "name": "Lelewela 19",
     "address": "Lelewela 19, Koszalin",
-    "apartments_count": 63,
-    "building_volume_m3": 10017,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 7,
+    "apartments_count": 42,
+    "building_volume_m3": 7014,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 5,
     "readings": [
       {
         "year": 2015,
@@ -14091,10 +14021,10 @@
     "id": "WC-016",
     "name": "Kostenckiego 2-4",
     "address": "Kostenckiego 2-4, Koszalin",
-    "apartments_count": 77,
-    "building_volume_m3": 13398,
-    "mtcv_type": "STAD",
-    "mtcv_count": 8,
+    "apartments_count": 63,
+    "building_volume_m3": 9765,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -15005,10 +14935,10 @@
     "id": "WC-017",
     "name": "Staszica 9",
     "address": "Staszica 9, Koszalin",
-    "apartments_count": 54,
-    "building_volume_m3": 8316,
+    "apartments_count": 26,
+    "building_volume_m3": 4472,
     "mtcv_type": "STAD",
-    "mtcv_count": 6,
+    "mtcv_count": 3,
     "readings": [
       {
         "year": 2015,
@@ -15912,10 +15842,10 @@
     "id": "WC-018",
     "name": "Bukowa 25c",
     "address": "Bukowa 25c, Koszalin",
-    "apartments_count": 49,
-    "building_volume_m3": 7399,
+    "apartments_count": 72,
+    "building_volume_m3": 11880,
     "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 5,
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -16847,10 +16777,10 @@
     "id": "WC-019",
     "name": "Staszica 17",
     "address": "Staszica 17, Koszalin",
-    "apartments_count": 68,
-    "building_volume_m3": 10948,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 7,
+    "apartments_count": 56,
+    "building_volume_m3": 9016,
+    "mtcv_type": "STAD",
+    "mtcv_count": 6,
     "readings": [
       {
         "year": 2015,
@@ -17782,10 +17712,10 @@
     "id": "WC-020",
     "name": "Śniadeckich 25c",
     "address": "Śniadeckich 25c, Koszalin",
-    "apartments_count": 44,
-    "building_volume_m3": 7480,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 5,
+    "apartments_count": 64,
+    "building_volume_m3": 10688,
+    "mtcv_type": "STAD",
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -18717,10 +18647,10 @@
     "id": "WC-021",
     "name": "Śniadeckich 23A",
     "address": "Śniadeckich 23A, Koszalin",
-    "apartments_count": 73,
-    "building_volume_m3": 10950,
-    "mtcv_type": "STAD",
-    "mtcv_count": 8,
+    "apartments_count": 35,
+    "building_volume_m3": 6055,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 4,
     "readings": [
       {
         "year": 2015,
@@ -19652,10 +19582,10 @@
     "id": "WC-022",
     "name": "Śniadeckich 17",
     "address": "Śniadeckich 17, Koszalin",
-    "apartments_count": 58,
-    "building_volume_m3": 8874,
-    "mtcv_type": "STAD",
-    "mtcv_count": 6,
+    "apartments_count": 43,
+    "building_volume_m3": 6880,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 5,
     "readings": [
       {
         "year": 2015,
@@ -20587,9 +20517,9 @@
     "id": "WC-023",
     "name": "Staszica 3a",
     "address": "Staszica 3a, Koszalin",
-    "apartments_count": 32,
-    "building_volume_m3": 5344,
-    "mtcv_type": "STAD",
+    "apartments_count": 33,
+    "building_volume_m3": 5181,
+    "mtcv_type": "TA-MODULATOR",
     "mtcv_count": 4,
     "readings": [
       {
@@ -21522,10 +21452,10 @@
     "id": "WC-024",
     "name": "Bukowa 35",
     "address": "Bukowa 35, Koszalin",
-    "apartments_count": 24,
-    "building_volume_m3": 4080,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 3,
+    "apartments_count": 50,
+    "building_volume_m3": 8450,
+    "mtcv_type": "STAD",
+    "mtcv_count": 6,
     "readings": [
       {
         "year": 2015,
@@ -22457,8 +22387,8 @@
     "id": "WC-025",
     "name": "Śniadeckich 13",
     "address": "Śniadeckich 13, Koszalin",
-    "apartments_count": 28,
-    "building_volume_m3": 4760,
+    "apartments_count": 27,
+    "building_volume_m3": 4185,
     "mtcv_type": "TA-COMPACT-P",
     "mtcv_count": 3,
     "readings": [
@@ -23392,10 +23322,10 @@
     "id": "WC-026",
     "name": "Staszica 5",
     "address": "Staszica 5, Koszalin",
-    "apartments_count": 27,
-    "building_volume_m3": 4158,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 3,
+    "apartments_count": 61,
+    "building_volume_m3": 9455,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -24327,8 +24257,8 @@
     "id": "WC-027",
     "name": "Lelewela 4",
     "address": "Lelewela 4, Koszalin",
-    "apartments_count": 77,
-    "building_volume_m3": 12397,
+    "apartments_count": 73,
+    "building_volume_m3": 12118,
     "mtcv_type": "STAD",
     "mtcv_count": 8,
     "readings": [
@@ -25262,10 +25192,10 @@
     "id": "WC-028",
     "name": "Lelewela 6",
     "address": "Lelewela 6, Koszalin",
-    "apartments_count": 39,
-    "building_volume_m3": 6513,
+    "apartments_count": 24,
+    "building_volume_m3": 4104,
     "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 4,
+    "mtcv_count": 3,
     "readings": [
       {
         "year": 2015,
@@ -26197,9 +26127,9 @@
     "id": "WC-029",
     "name": "Staszica 1",
     "address": "Staszica 1, Koszalin",
-    "apartments_count": 68,
-    "building_volume_m3": 11492,
-    "mtcv_type": "TA-MODULATOR",
+    "apartments_count": 66,
+    "building_volume_m3": 11352,
+    "mtcv_type": "TA-COMPACT-P",
     "mtcv_count": 7,
     "readings": [
       {
@@ -27111,10 +27041,10 @@
     "id": "WC-030",
     "name": "Jana Pawła II 2b-2c",
     "address": "Jana Pawła II 2b-2c, Koszalin",
-    "apartments_count": 58,
-    "building_volume_m3": 9106,
-    "mtcv_type": "STAD",
-    "mtcv_count": 6,
+    "apartments_count": 37,
+    "building_volume_m3": 6364,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 4,
     "readings": [
       {
         "year": 2015,
@@ -27203,669 +27133,669 @@
       {
         "year": 2016,
         "month": 1,
-        "gj": 72.63,
-        "m3": 202,
-        "wskaznik": 0.3596
-      },
-      {
-        "year": 2016,
-        "month": 2,
-        "gj": 71.55,
-        "m3": 203,
-        "wskaznik": 0.3525
-      },
-      {
-        "year": 2016,
-        "month": 3,
-        "gj": 75.15,
-        "m3": 229,
-        "wskaznik": 0.3282
-      },
-      {
-        "year": 2016,
-        "month": 4,
-        "gj": 66.69,
-        "m3": 207,
-        "wskaznik": 0.3222
-      },
-      {
-        "year": 2016,
-        "month": 5,
-        "gj": 56.16,
-        "m3": 204,
-        "wskaznik": 0.2753
-      },
-      {
-        "year": 2016,
-        "month": 6,
-        "gj": 61.8,
-        "m3": 231,
-        "wskaznik": 0.2675
-      },
-      {
-        "year": 2016,
-        "month": 7,
-        "gj": 54,
-        "m3": 190,
-        "wskaznik": 0.2842
-      },
-      {
-        "year": 2016,
-        "month": 8,
-        "gj": 56.2,
-        "m3": 211,
-        "wskaznik": 0.2664
-      },
-      {
-        "year": 2016,
-        "month": 9,
-        "gj": 48.24,
-        "m3": 202,
-        "wskaznik": 0.2388
-      },
-      {
-        "year": 2016,
-        "month": 10,
-        "gj": 66.96,
-        "m3": 202,
-        "wskaznik": 0.3315
-      },
-      {
-        "year": 2016,
-        "month": 11,
-        "gj": 65.88,
-        "m3": 217,
-        "wskaznik": 0.3036
-      },
-      {
-        "year": 2016,
-        "month": 12,
-        "gj": 85.05,
-        "m3": 220,
-        "wskaznik": 0.3866
-      },
-      {
-        "year": 2017,
-        "month": 1,
         "gj": 77.4,
         "m3": 200,
         "wskaznik": 0.387
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 2,
         "gj": 70.56,
         "m3": 166,
         "wskaznik": 0.4251
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 3,
         "gj": 81.36,
         "m3": 217,
         "wskaznik": 0.3749
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 4,
         "gj": 61.74,
         "m3": 195,
         "wskaznik": 0.3166
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 5,
         "gj": 56.52,
         "m3": 213,
         "wskaznik": 0.2654
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 6,
         "gj": 51.2,
         "m3": 199,
         "wskaznik": 0.2573
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 7,
         "gj": 39.2,
         "m3": 168,
         "wskaznik": 0.2333
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 8,
         "gj": 57.3,
         "m3": 214,
         "wskaznik": 0.2678
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 9,
         "gj": 35.3,
         "m3": 183,
         "wskaznik": 0.1929
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 10,
         "gj": 49.6,
         "m3": 181,
         "wskaznik": 0.274
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 11,
         "gj": 50.3,
         "m3": 228,
         "wskaznik": 0.2206
       },
       {
-        "year": 2017,
+        "year": 2016,
         "month": 12,
         "gj": 56.7,
         "m3": 226,
         "wskaznik": 0.2509
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 1,
         "gj": 54.2,
         "m3": 225,
         "wskaznik": 0.2409
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 2,
         "gj": 47.5,
         "m3": 180,
         "wskaznik": 0.2639
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 3,
         "gj": 53.6,
         "m3": 196,
         "wskaznik": 0.2735
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 4,
         "gj": 49.8,
         "m3": 194,
         "wskaznik": 0.2567
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 5,
         "gj": 57.5,
         "m3": 219,
         "wskaznik": 0.2626
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 6,
         "gj": 48.7,
         "m3": 193,
         "wskaznik": 0.2523
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 7,
         "gj": 49.3,
         "m3": 197,
         "wskaznik": 0.2503
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 8,
         "gj": 46.5,
         "m3": 183,
         "wskaznik": 0.2541
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 9,
         "gj": 45.5,
         "m3": 175,
         "wskaznik": 0.26
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 10,
         "gj": 51.6,
         "m3": 204,
         "wskaznik": 0.2529
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 11,
         "gj": 48.9,
         "m3": 186,
         "wskaznik": 0.2629
       },
       {
-        "year": 2018,
+        "year": 2017,
         "month": 12,
         "gj": 54.7,
         "m3": 195,
         "wskaznik": 0.2805
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 1,
         "gj": 43.9,
         "m3": 213,
         "wskaznik": 0.2061
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 2,
         "gj": 47.6,
         "m3": 178,
         "wskaznik": 0.2674
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 3,
         "gj": 50.1,
         "m3": 184,
         "wskaznik": 0.2723
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 4,
         "gj": 52.7,
         "m3": 178,
         "wskaznik": 0.2961
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 5,
         "gj": 46.8,
         "m3": 199,
         "wskaznik": 0.2352
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 6,
         "gj": 46.1,
         "m3": 184,
         "wskaznik": 0.2505
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 7,
         "gj": 46.2,
         "m3": 198,
         "wskaznik": 0.2333
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 8,
         "gj": 42.8,
         "m3": 171,
         "wskaznik": 0.2503
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 9,
         "gj": 47,
         "m3": 176,
         "wskaznik": 0.267
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 10,
         "gj": 45.3,
         "m3": 207,
         "wskaznik": 0.2188
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 11,
         "gj": 47.2,
         "m3": 214,
         "wskaznik": 0.2206
       },
       {
-        "year": 2019,
+        "year": 2018,
         "month": 12,
         "gj": 51.2,
         "m3": 174,
         "wskaznik": 0.2943
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 1,
         "gj": 48.5,
         "m3": 184,
         "wskaznik": 0.2636
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 2,
         "gj": 45.5,
         "m3": 173,
         "wskaznik": 0.263
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 3,
         "gj": 47.5,
         "m3": 208,
         "wskaznik": 0.2284
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 4,
         "gj": 53.8,
         "m3": 194,
         "wskaznik": 0.2773
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 5,
         "gj": 48.2,
         "m3": 183,
         "wskaznik": 0.2634
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 6,
         "gj": 41.4,
         "m3": 160,
         "wskaznik": 0.2588
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 7,
         "gj": 43.5,
         "m3": 185,
         "wskaznik": 0.2351
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 8,
         "gj": 42,
         "m3": 182,
         "wskaznik": 0.2308
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 9,
         "gj": 43.8,
         "m3": 184,
         "wskaznik": 0.238
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 10,
         "gj": 46.6,
         "m3": 193,
         "wskaznik": 0.2415
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 11,
         "gj": 45,
         "m3": 179,
         "wskaznik": 0.2514
       },
       {
-        "year": 2020,
+        "year": 2019,
         "month": 12,
         "gj": 51.4,
         "m3": 204,
         "wskaznik": 0.252
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 1,
         "gj": 47.6,
         "m3": 183,
         "wskaznik": 0.2601
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 2,
         "gj": 43.9,
         "m3": 166,
         "wskaznik": 0.2645
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 3,
         "gj": 54.8,
         "m3": 207,
         "wskaznik": 0.2647
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 4,
         "gj": 56.4,
         "m3": 206.12,
         "wskaznik": 0.2736
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 5,
         "gj": 45.6,
         "m3": 193.66,
         "wskaznik": 0.2355
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 6,
         "gj": 41,
         "m3": 182.44,
         "wskaznik": 0.2247
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 7,
         "gj": 43.5,
         "m3": 195.05,
         "wskaznik": 0.223
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 8,
         "gj": 33.3,
         "m3": 154,
         "wskaznik": 0.2162
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 9,
         "gj": 43.8,
         "m3": 184,
         "wskaznik": 0.238
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 10,
         "gj": 46.6,
         "m3": 193,
         "wskaznik": 0.2415
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 11,
         "gj": 45,
         "m3": 179,
         "wskaznik": 0.2514
       },
       {
-        "year": 2021,
+        "year": 2020,
         "month": 12,
         "gj": 51.4,
         "m3": 204,
         "wskaznik": 0.252
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 1,
         "gj": 46.2,
         "m3": 204.2,
         "wskaznik": 0.2262
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 2,
         "gj": 45.1,
         "m3": 193.3,
         "wskaznik": 0.2333
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 3,
         "gj": 52.9,
         "m3": 225.51,
         "wskaznik": 0.2346
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 4,
         "gj": 47.8,
         "m3": 209.23,
         "wskaznik": 0.2285
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 5,
         "gj": 42,
         "m3": 187.09,
         "wskaznik": 0.2245
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 6,
         "gj": 42.9,
         "m3": 208.23,
         "wskaznik": 0.206
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 7,
         "gj": 39.4,
         "m3": 167.73,
         "wskaznik": 0.2349
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 8,
         "gj": 45.4,
         "m3": 199.98,
         "wskaznik": 0.227
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 9,
         "gj": 39.1,
         "m3": 197.04,
         "wskaznik": 0.1984
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 10,
         "gj": 38.7,
         "m3": 178.47,
         "wskaznik": 0.2168
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 11,
         "gj": 45.8,
         "m3": 195.37,
         "wskaznik": 0.2344
       },
       {
-        "year": 2022,
+        "year": 2021,
         "month": 12,
         "gj": 47,
         "m3": 204.17,
         "wskaznik": 0.2302
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 1,
         "gj": 45.8,
         "m3": 188.66,
         "wskaznik": 0.2428
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 2,
         "gj": 39.9,
         "m3": 165.94,
         "wskaznik": 0.2404
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 3,
         "gj": 46.2,
         "m3": 193.62,
         "wskaznik": 0.2386
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 4,
         "gj": 41.3,
         "m3": 176.48,
         "wskaznik": 0.234
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 5,
         "gj": 43.5,
         "m3": 186.36,
         "wskaznik": 0.2334
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 6,
         "gj": 35.1,
         "m3": 156,
         "wskaznik": 0.225
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 7,
         "gj": 33.1,
         "m3": 158.66,
         "wskaznik": 0.2086
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 8,
         "gj": 35.5,
         "m3": 172.37,
         "wskaznik": 0.206
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 9,
         "gj": 39.8,
         "m3": 161.73,
         "wskaznik": 0.2461
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 10,
         "gj": 29.6,
         "m3": 157.83,
         "wskaznik": 0.1875
       },
       {
-        "year": 2023,
+        "year": 2022,
         "month": 11,
         "gj": 41.5,
         "m3": 188.66,
         "wskaznik": 0.22
       },
       {
+        "year": 2022,
+        "month": 12,
+        "gj": 43.1,
+        "m3": 190.06,
+        "wskaznik": 0.2268
+      },
+      {
+        "year": 2023,
+        "month": 1,
+        "gj": 42,
+        "m3": 175.07,
+        "wskaznik": 0.2399
+      },
+      {
+        "year": 2023,
+        "month": 2,
+        "gj": 37.2,
+        "m3": 157.82,
+        "wskaznik": 0.2357
+      },
+      {
+        "year": 2023,
+        "month": 3,
+        "gj": 41.3,
+        "m3": 184,
+        "wskaznik": 0.2245
+      },
+      {
+        "year": 2023,
+        "month": 4,
+        "gj": 39.6,
+        "m3": 170,
+        "wskaznik": 0.2329
+      },
+      {
+        "year": 2023,
+        "month": 5,
+        "gj": 42.4,
+        "m3": 186,
+        "wskaznik": 0.228
+      },
+      {
+        "year": 2023,
+        "month": 6,
+        "gj": 36.1,
+        "m3": 168,
+        "wskaznik": 0.2149
+      },
+      {
+        "year": 2023,
+        "month": 7,
+        "gj": 35.9,
+        "m3": 167,
+        "wskaznik": 0.215
+      },
+      {
+        "year": 2023,
+        "month": 8,
+        "gj": 35.9,
+        "m3": 167,
+        "wskaznik": 0.215
+      },
+      {
+        "year": 2023,
+        "month": 9,
+        "gj": 33.1,
+        "m3": 157,
+        "wskaznik": 0.2108
+      },
+      {
+        "year": 2023,
+        "month": 10,
+        "gj": 39.5,
+        "m3": 185,
+        "wskaznik": 0.2135
+      },
+      {
+        "year": 2023,
+        "month": 11,
+        "gj": 39.2,
+        "m3": 169,
+        "wskaznik": 0.232
+      },
+      {
         "year": 2023,
         "month": 12,
         "gj": 43.1,
@@ -27875,179 +27805,158 @@
       {
         "year": 2024,
         "month": 1,
-        "gj": 42,
-        "m3": 175.07,
-        "wskaznik": 0.2399
-      },
-      {
-        "year": 2024,
-        "month": 2,
-        "gj": 37.2,
-        "m3": 157.82,
-        "wskaznik": 0.2357
-      },
-      {
-        "year": 2024,
-        "month": 3,
-        "gj": 41.3,
-        "m3": 184,
-        "wskaznik": 0.2245
-      },
-      {
-        "year": 2024,
-        "month": 4,
-        "gj": 39.6,
-        "m3": 170,
-        "wskaznik": 0.2329
-      },
-      {
-        "year": 2024,
-        "month": 5,
-        "gj": 42.4,
-        "m3": 186,
-        "wskaznik": 0.228
-      },
-      {
-        "year": 2024,
-        "month": 6,
-        "gj": 36.1,
-        "m3": 168,
-        "wskaznik": 0.2149
-      },
-      {
-        "year": 2024,
-        "month": 7,
-        "gj": 35.9,
-        "m3": 167,
-        "wskaznik": 0.215
-      },
-      {
-        "year": 2024,
-        "month": 8,
-        "gj": 35.9,
-        "m3": 167,
-        "wskaznik": 0.215
-      },
-      {
-        "year": 2024,
-        "month": 9,
-        "gj": 33.1,
-        "m3": 157,
-        "wskaznik": 0.2108
-      },
-      {
-        "year": 2024,
-        "month": 10,
-        "gj": 39.5,
-        "m3": 185,
-        "wskaznik": 0.2135
-      },
-      {
-        "year": 2024,
-        "month": 11,
-        "gj": 39.2,
-        "m3": 169,
-        "wskaznik": 0.232
-      },
-      {
-        "year": 2024,
-        "month": 12,
-        "gj": 43.1,
-        "m3": 190.06,
-        "wskaznik": 0.2268
-      },
-      {
-        "year": 2025,
-        "month": 1,
         "gj": 46.2,
         "m3": 203.91,
         "wskaznik": 0.2266
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 2,
         "gj": 41,
         "m3": 172.82,
         "wskaznik": 0.2372
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 3,
         "gj": 39.4,
         "m3": 176.81,
         "wskaznik": 0.2228
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 4,
         "gj": 47.8,
         "m3": 198.38,
         "wskaznik": 0.241
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 5,
         "gj": 38,
         "m3": 163.09,
         "wskaznik": 0.233
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 6,
         "gj": 39.7,
         "m3": 166,
         "wskaznik": 0.2392
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 7,
         "gj": 39.7,
         "m3": 181,
         "wskaznik": 0.2193
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 8,
         "gj": 36.1,
         "m3": 165.87,
         "wskaznik": 0.2176
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 9,
         "gj": 36.8,
         "m3": 165.89,
         "wskaznik": 0.2218
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 10,
         "gj": 39.1,
         "m3": 179.63,
         "wskaznik": 0.2177
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 11,
         "gj": 37.7,
         "m3": 170.36,
         "wskaznik": 0.2213
       },
       {
-        "year": 2025,
+        "year": 2024,
         "month": 12,
         "gj": 45,
         "m3": 201.24,
         "wskaznik": 0.2236
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "gj": 43.8,
+        "m3": 188.54,
+        "wskaznik": 0.2323
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "gj": 41,
+        "m3": 176.34,
+        "wskaznik": 0.2325
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "gj": 46.5,
+        "m3": 221.18,
+        "wskaznik": 0.2102
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "gj": 48.5,
+        "m3": 179.86,
+        "wskaznik": 0.2697
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "gj": 47.5,
+        "m3": 203.2,
+        "wskaznik": 0.2338
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "gj": 50.3,
+        "m3": 228.41,
+        "wskaznik": 0.2202
+      },
+      {
+        "year": 2025,
+        "month": 7,
+        "gj": 43.4,
+        "m3": 196.7,
+        "wskaznik": 0.2206
+      },
+      {
+        "year": 2025,
+        "month": 8,
+        "gj": 35.3,
+        "m3": 149.01,
+        "wskaznik": 0.2369
+      },
+      {
+        "year": 2025,
+        "month": 9,
+        "gj": 41.3,
+        "m3": 209.36,
+        "wskaznik": 0.1973
       }
     ],
     "stats": {
-      "avg_wskaznik": 0.2268,
+      "avg_wskaznik": 0.2263,
       "avg_iez": 97,
       "category": "A",
-      "trend": "stable",
-      "trend_change": -1,
-      "total_readings": 132,
+      "trend": "improving",
+      "trend_change": 10,
+      "total_readings": 129,
       "years_covered": [
         2015,
         2016,
@@ -28067,10 +27976,10 @@
     "id": "WC-031",
     "name": "Spasowskiego 12",
     "address": "Spasowskiego 12, Koszalin",
-    "apartments_count": 40,
-    "building_volume_m3": 6480,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 5,
+    "apartments_count": 78,
+    "building_volume_m3": 12714,
+    "mtcv_type": "STAD",
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -29002,10 +28911,10 @@
     "id": "WC-032",
     "name": "Kołłataja 3-3b",
     "address": "Kołłataja 3-3b, Koszalin",
-    "apartments_count": 42,
-    "building_volume_m3": 6552,
+    "apartments_count": 31,
+    "building_volume_m3": 4867,
     "mtcv_type": "STAD",
-    "mtcv_count": 5,
+    "mtcv_count": 4,
     "readings": [
       {
         "year": 2015,
@@ -29937,10 +29846,10 @@
     "id": "WC-033",
     "name": "Śniadeckich 7-7b",
     "address": "Śniadeckich 7-7b, Koszalin",
-    "apartments_count": 59,
-    "building_volume_m3": 9676,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 6,
+    "apartments_count": 62,
+    "building_volume_m3": 10292,
+    "mtcv_type": "STAD",
+    "mtcv_count": 7,
     "readings": [
       {
         "year": 2015,
@@ -30872,10 +30781,10 @@
     "id": "WC-034",
     "name": "Śniadeckich 21-21a",
     "address": "Śniadeckich 21-21a, Koszalin",
-    "apartments_count": 48,
-    "building_volume_m3": 8544,
+    "apartments_count": 22,
+    "building_volume_m3": 3388,
     "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 5,
+    "mtcv_count": 3,
     "readings": [
       {
         "year": 2015,
@@ -31807,10 +31716,10 @@
     "id": "WC-035",
     "name": "Śniadeckich 19",
     "address": "Śniadeckich 19, Koszalin",
-    "apartments_count": 56,
-    "building_volume_m3": 9184,
+    "apartments_count": 40,
+    "building_volume_m3": 6320,
     "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 6,
+    "mtcv_count": 5,
     "readings": [
       {
         "year": 2015,
@@ -32735,10 +32644,10 @@
     "id": "WC-036",
     "name": "Śniadeckich 11-11f",
     "address": "Śniadeckich 11-11f, Koszalin",
-    "apartments_count": 63,
-    "building_volume_m3": 10143,
-    "mtcv_type": "TA-MODULATOR",
-    "mtcv_count": 7,
+    "apartments_count": 45,
+    "building_volume_m3": 7290,
+    "mtcv_type": "TA-COMPACT-P",
+    "mtcv_count": 5,
     "readings": [
       {
         "year": 2015,
@@ -33670,10 +33579,10 @@
     "id": "WC-037",
     "name": "Lelewela 8",
     "address": "Lelewela 8, Koszalin",
-    "apartments_count": 59,
-    "building_volume_m3": 9971,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 6,
+    "apartments_count": 74,
+    "building_volume_m3": 13246,
+    "mtcv_type": "TA-MODULATOR",
+    "mtcv_count": 8,
     "readings": [
       {
         "year": 2015,
@@ -34605,10 +34514,10 @@
     "id": "WC-038",
     "name": "Śniadeckich 15",
     "address": "Śniadeckich 15, Koszalin",
-    "apartments_count": 32,
-    "building_volume_m3": 4800,
-    "mtcv_type": "TA-COMPACT-P",
-    "mtcv_count": 4,
+    "apartments_count": 50,
+    "building_volume_m3": 7750,
+    "mtcv_type": "STAD",
+    "mtcv_count": 6,
     "readings": [
       {
         "year": 2015,
@@ -35540,9 +35449,9 @@
     "id": "WC-039",
     "name": "Lelewela 2",
     "address": "Lelewela 2, Koszalin",
-    "apartments_count": 71,
-    "building_volume_m3": 11289,
-    "mtcv_type": "TA-MODULATOR",
+    "apartments_count": 73,
+    "building_volume_m3": 12191,
+    "mtcv_type": "TA-COMPACT-P",
     "mtcv_count": 8,
     "readings": [
       {
