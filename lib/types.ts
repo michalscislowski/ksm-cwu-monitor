@@ -38,23 +38,51 @@ export interface IEZ {
   trend_change: number;
 }
 
-export type DeviationStatus = 'ok' | 'warning' | 'critical';
+export type IndicatorStatus = 'optimal' | 'good' | 'warning' | 'critical';
 
-export interface Deviation {
-  percent_of_optimal: number;
-  status: DeviationStatus;
+// WWC - Wskaźnik Wymiany Ciepła (Heat Exchange Index)
+// Shows how well the heat exchanger is performing vs design
+export interface HeatExchangeIndex {
+  value: number;  // 0-120%, where 100% = design performance
+  status: IndicatorStatus;
+  interpretation: string;  // Polish description for engineer
+  action?: string;  // Recommended action if needed
 }
 
-export interface Deviations {
-  delta_t: Deviation;
-  return_temp: Deviation;
-  flow_balance: Deviation;
+// SH - Stabilność Hydrauliczna (Hydraulic Stability)
+// Shows how stable ΔT is throughout the day
+export interface HydraulicStability {
+  value: number;  // 0-100%, higher = more stable
+  status: IndicatorStatus;
+  interpretation: string;
+  action?: string;
 }
 
-export interface Losses {
-  vs_optimal_percent: number;
-  vs_last_week_percent: number;
-  vs_last_year_percent: number;
+// ES - Efektywność Szczytowa (Peak Efficiency)
+// Shows how well the system handles peak hours vs baseline
+export interface PeakEfficiency {
+  value: number;  // 0-100%, higher = better peak handling
+  status: IndicatorStatus;
+  interpretation: string;
+  action?: string;
+  worst_hours: number[];  // Hours with worst efficiency
+}
+
+// Combined operational indicators from MEC
+export interface OperationalIndicators {
+  wwc: HeatExchangeIndex;      // Wskaźnik Wymiany Ciepła
+  sh: HydraulicStability;       // Stabilność Hydrauliczna
+  es: PeakEfficiency;           // Efektywność Szczytowa
+  weekly_trend: number;         // % change vs last week
+}
+
+// Monthly forecast based on current indicators
+export interface MonthlyForecast {
+  predicted_wskaznik: number;   // Predicted GJ/m³ for current month
+  predicted_category: Category;
+  confidence: 'high' | 'medium' | 'low';
+  vs_last_month: number;        // % change from last month
+  potential_improvement: number; // How much wskaźnik could improve with regulation
 }
 
 export type Category = 'A' | 'B' | 'C';
@@ -67,8 +95,8 @@ export interface Benchmark {
 export interface EfficiencyData {
   timestamp: string;
   iez: IEZ;
-  deviations: Deviations;
-  losses: Losses;
+  indicators: OperationalIndicators;  // New operational indicators from MEC
+  forecast: MonthlyForecast;          // Predicted monthly wskaźnik
   benchmark: Benchmark;
 }
 

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, DataSourceBadge } from '@/components/ui/Badge';
 import { IEZGauge } from '@/components/node-detail/IEZGauge';
-import { DeviationsPanel } from '@/components/node-detail/DeviationsPanel';
-import { LossesPanel } from '@/components/node-detail/LossesPanel';
+import { OperationalIndicatorsPanel } from '@/components/node-detail/OperationalIndicatorsPanel';
+import { MonthlyForecastPanel } from '@/components/node-detail/MonthlyForecastPanel';
 import { BenchmarkPanel } from '@/components/node-detail/BenchmarkPanel';
 import { RecommendationsList } from '@/components/node-detail/RecommendationsList';
 import { HistoricalChart } from '@/components/node-detail/HistoricalChart';
@@ -74,7 +74,7 @@ export default async function NodeDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Top row - IEZ + Deviations + Losses */}
+      {/* Top row - IEZ + Forecast */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* IEZ Gauge */}
         <Card className="animate-in stagger-2">
@@ -84,15 +84,23 @@ export default async function NodeDetailPage({ params }: PageProps) {
           </CardBody>
         </Card>
 
-        {/* Deviations */}
+        {/* Monthly Forecast */}
         <div className="animate-in stagger-3">
-          <DeviationsPanel deviations={node.efficiency.deviations} />
+          <MonthlyForecastPanel
+            forecast={node.efficiency.forecast}
+            lastKnownWskaznik={node.readings?.[node.readings.length - 1]?.wskaznik}
+          />
         </div>
 
-        {/* Losses */}
+        {/* Benchmark */}
         <div className="animate-in stagger-4">
-          <LossesPanel losses={node.efficiency.losses} />
+          <BenchmarkPanel benchmark={node.efficiency.benchmark} />
         </div>
+      </div>
+
+      {/* Operational Indicators - Full width */}
+      <div className="animate-in stagger-5">
+        <OperationalIndicatorsPanel indicators={node.efficiency.indicators} />
       </div>
 
       {/* Daily Profile */}
@@ -109,17 +117,9 @@ export default async function NodeDetailPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* Bottom row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recommendations */}
-        <div className="lg:col-span-2">
-          <RecommendationsList recommendations={node.recommendations || []} />
-        </div>
-
-        {/* Benchmark */}
-        <div>
-          <BenchmarkPanel benchmark={node.efficiency.benchmark} />
-        </div>
+      {/* Recommendations - Full width */}
+      <div>
+        <RecommendationsList recommendations={node.recommendations || []} />
       </div>
 
       {/* Alerts */}

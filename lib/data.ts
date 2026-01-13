@@ -13,7 +13,9 @@ import type {
   NodeWithEfficiency,
   DashboardStats,
   Category,
-  DeviationStatus,
+  IndicatorStatus,
+  OperationalIndicators,
+  MonthlyForecast,
 } from './types';
 
 // Constants
@@ -46,11 +48,80 @@ function getCategory(iez: number): Category {
   return 'C';
 }
 
-// Get deviation status
-function getDeviationStatus(percentOfOptimal: number): DeviationStatus {
-  if (percentOfOptimal >= 90) return 'ok';
-  if (percentOfOptimal >= 75) return 'warning';
+// Get indicator status based on percentage
+function getIndicatorStatus(percent: number): IndicatorStatus {
+  if (percent >= 95) return 'optimal';
+  if (percent >= 85) return 'good';
+  if (percent >= 70) return 'warning';
   return 'critical';
+}
+
+// Get interpretation and action for WWC (Heat Exchange Index)
+function getWWCInterpretation(value: number): { interpretation: string; action?: string } {
+  if (value >= 95) {
+    return { interpretation: 'Wymiana ciepła zgodna z projektem' };
+  } else if (value >= 85) {
+    return {
+      interpretation: 'Dobra wymiana ciepła, możliwa drobna optymalizacja',
+      action: 'Sprawdź nastawy MTCV przy okazji przeglądu'
+    };
+  } else if (value >= 70) {
+    return {
+      interpretation: 'ΔT poniżej normy - woda wraca za ciepła',
+      action: 'Sprawdź nastawy MTCV - mogą być zbyt przymknięte'
+    };
+  } else {
+    return {
+      interpretation: 'Znacząco obniżona wymiana ciepła',
+      action: 'Pilna regulacja MTCV lub kontrola wymiennika'
+    };
+  }
+}
+
+// Get interpretation and action for SH (Hydraulic Stability)
+function getSHInterpretation(value: number): { interpretation: string; action?: string } {
+  if (value >= 90) {
+    return { interpretation: 'Stabilna praca hydrauliczna' };
+  } else if (value >= 80) {
+    return {
+      interpretation: 'Lekkie wahania ΔT w ciągu doby',
+      action: 'Monitoruj - może wymagać równoważenia'
+    };
+  } else if (value >= 70) {
+    return {
+      interpretation: 'Znaczne wahania ΔT - nierównomierne obciążenie pionów',
+      action: 'Sprawdź równoważenie MTCV między pionami'
+    };
+  } else {
+    return {
+      interpretation: 'Niestabilna praca - problem hydrauliczny',
+      action: 'Pilna diagnostyka: pompa cyrkulacyjna lub MTCV'
+    };
+  }
+}
+
+// Get interpretation and action for ES (Peak Efficiency)
+function getESInterpretation(value: number, worstHours: number[]): { interpretation: string; action?: string } {
+  const hoursStr = worstHours.map(h => `${h}:00`).join(', ');
+
+  if (value >= 90) {
+    return { interpretation: 'System dobrze radzi sobie ze szczytami' };
+  } else if (value >= 80) {
+    return {
+      interpretation: `Lekki spadek w szczycie (${hoursStr})`,
+      action: 'Rozważ optymalizację harmonogramu pompy'
+    };
+  } else if (value >= 70) {
+    return {
+      interpretation: `Słaba efektywność w szczycie (${hoursStr})`,
+      action: 'Zwiększ wydajność pompy w godzinach szczytu lub otwórz MTCV'
+    };
+  } else {
+    return {
+      interpretation: `System przeciążony w szczycie (${hoursStr})`,
+      action: 'Pilne: sprawdź wydajność pompy cyrkulacyjnej'
+    };
+  }
 }
 
 // Generate pseudo-random number from seed
@@ -59,22 +130,100 @@ function seededRandom(seed: number): number {
   return x - Math.floor(x);
 }
 
-// Generate efficiency data from node readings
-function generateEfficiencyData(node: RawNode): EfficiencyData {
+// Generate operational indicators from node readings
+function generateOperationalIndicators(node: RawNode): OperationalIndicators {
+  const seed = parseInt(node.id.replace('WC-', ''), 10);
+  const iez = node.stats.avg_iez;
+
+  // WWC (Heat Exchange Index) - based on IEZ with some variation
+  // Simulates: ΔT_actual / ΔT_design × 100%
+  const wwcValue = Math.round(Math.min(115, Math.max(50, iez + (seededRandom(seed * 1) * 15 - 5))));
+  const wwcInterp = getWWCInterpretation(wwcValue);
+
+  // SH (Hydraulic Stability) - how consistent ΔT is
+  // Higher IEZ nodes tend to have more stable systems
+  const shValue = Math.round(Math.min(100, Math.max(55, iez + 5 + (seededRandom(seed * 2) * 20 - 10))));
+  const shInterp = getSHInterpretation(shValue);
+
+  // ES (Peak Efficiency) - ratio of peak performance to baseline
+  // Morning (6-9) and evening (17-20) peaks
+  const esValue = Math.round(Math.min(100, Math.max(50, iez - 5 + (seededRandom(seed * 3) * 20 - 10))));
+  const worstHours = esValue < 85 ? [7, 8, 18, 19] : esValue < 90 ? [7, 18] : [];
+  const esInterp = getESInterpretation(esValue, worstHours);
+
+  // Weekly trend (% change)
+  const weeklyTrend = Math.round((seededRandom(seed * 4) * 10) - 5);
+
+  return {
+    wwc: {
+      value: wwcValue,
+      status: getIndicatorStatus(wwcValue),
+      interpretation: wwcInterp.interpretation,
+      action: wwcInterp.action,
+    },
+    sh: {
+      value: shValue,
+      status: getIndicatorStatus(shValue),
+      interpretation: shInterp.interpretation,
+      action: shInterp.action,
+    },
+    es: {
+      value: esValue,
+      status: getIndicatorStatus(esValue),
+      interpretation: esInterp.interpretation,
+      action: esInterp.action,
+      worst_hours: worstHours,
+    },
+    weekly_trend: weeklyTrend,
+  };
+}
+
+// Generate monthly forecast based on indicators
+function generateMonthlyForecast(node: RawNode, indicators: OperationalIndicators): MonthlyForecast {
   const recentReadings = node.readings.slice(-6);
   const avgWskaznik = recentReadings.reduce((s, r) => s + r.wskaznik, 0) / recentReadings.length;
-  const iez = calculateIEZ(avgWskaznik);
+  const lastMonthWskaznik = recentReadings[recentReadings.length - 1]?.wskaznik || avgWskaznik;
 
-  // Generate deviations based on IEZ
-  const seed = parseInt(node.id.replace('WC-', ''), 10);
-  const deltaT = Math.min(100, iez + (seededRandom(seed * 1) * 20 - 10));
-  const returnTemp = Math.min(100, iez + (seededRandom(seed * 2) * 15 - 5));
-  const flowBalance = Math.min(100, iez + (seededRandom(seed * 3) * 25 - 15));
+  // Predict wskaźnik based on indicators
+  // Lower indicators = higher wskaźnik (worse efficiency)
+  const avgIndicator = (indicators.wwc.value + indicators.sh.value + indicators.es.value) / 3;
+  const indicatorFactor = avgIndicator / 100;
+
+  // Predicted wskaźnik: base on historical average, adjusted by current indicators
+  const predictedWskaznik = Math.round((avgWskaznik / indicatorFactor) * 1000) / 1000;
+
+  // Determine category
+  const predictedCategory: Category =
+    predictedWskaznik <= 0.22 ? 'A' :
+    predictedWskaznik <= 0.27 ? 'B' : 'C';
+
+  // Calculate potential improvement (if all indicators were at 95%)
+  const optimalWskaznik = avgWskaznik * (avgIndicator / 95);
+  const potentialImprovement = Math.round((predictedWskaznik - optimalWskaznik) * 1000) / 1000;
+
+  return {
+    predicted_wskaznik: Math.min(0.45, Math.max(0.18, predictedWskaznik)),
+    predicted_category: predictedCategory,
+    confidence: indicators.sh.value >= 85 ? 'high' : indicators.sh.value >= 70 ? 'medium' : 'low',
+    vs_last_month: Math.round(((predictedWskaznik / lastMonthWskaznik) - 1) * 100),
+    potential_improvement: Math.max(0, potentialImprovement),
+  };
+}
+
+// Generate efficiency data from node readings
+function generateEfficiencyData(node: RawNode): EfficiencyData {
+  const iez = node.stats.avg_iez;
 
   // Calculate percentile (rank among all nodes)
   const allIez = rawNodes.map(n => n.stats.avg_iez).sort((a, b) => b - a);
   const position = allIez.findIndex(v => v <= iez);
   const percentile = Math.round(((rawNodes.length - position) / rawNodes.length) * 100);
+
+  // Generate operational indicators
+  const indicators = generateOperationalIndicators(node);
+
+  // Generate monthly forecast
+  const forecast = generateMonthlyForecast(node, indicators);
 
   return {
     timestamp: new Date().toISOString(),
@@ -83,25 +232,8 @@ function generateEfficiencyData(node: RawNode): EfficiencyData {
       trend: node.stats.trend,
       trend_change: node.stats.trend_change,
     },
-    deviations: {
-      delta_t: {
-        percent_of_optimal: Math.round(deltaT),
-        status: getDeviationStatus(deltaT),
-      },
-      return_temp: {
-        percent_of_optimal: Math.round(returnTemp),
-        status: getDeviationStatus(returnTemp),
-      },
-      flow_balance: {
-        percent_of_optimal: Math.round(flowBalance),
-        status: getDeviationStatus(flowBalance),
-      },
-    },
-    losses: {
-      vs_optimal_percent: Math.round((avgWskaznik / OPTIMAL_WSKAZNIK - 1) * 100),
-      vs_last_week_percent: Math.round((seededRandom(seed * 4) * 10) - 5),
-      vs_last_year_percent: Math.round((seededRandom(seed * 5) * 20) - 10),
-    },
+    indicators,
+    forecast,
     benchmark: {
       percentile,
       category: node.stats.category,

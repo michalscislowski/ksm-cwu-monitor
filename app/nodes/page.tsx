@@ -71,46 +71,52 @@ export default function NodesPage() {
                     </div>
                   </div>
 
-                  {/* Worst deviation indicator */}
-                  {Object.values(node.efficiency.deviations).some(
-                    (d) => d.status !== 'ok'
-                  ) && (
+                  {/* Operational indicators summary */}
+                  {(node.efficiency.indicators.wwc.status !== 'optimal' ||
+                    node.efficiency.indicators.sh.status !== 'optimal' ||
+                    node.efficiency.indicators.es.status !== 'optimal') && (
                     <div className="text-right">
-                      <p className="text-xs text-foreground-subtle mb-1">Problem</p>
+                      <p className="text-xs text-foreground-subtle mb-1">Wskaźniki</p>
                       <div className="flex gap-1">
-                        {node.efficiency.deviations.delta_t.status !== 'ok' && (
-                          <span
-                            className={`text-xs px-1.5 py-0.5 rounded ${
-                              node.efficiency.deviations.delta_t.status === 'critical'
-                                ? 'bg-critical/20 text-critical'
-                                : 'bg-warning/20 text-warning'
-                            }`}
-                          >
-                            ΔT
-                          </span>
-                        )}
-                        {node.efficiency.deviations.return_temp.status !== 'ok' && (
-                          <span
-                            className={`text-xs px-1.5 py-0.5 rounded ${
-                              node.efficiency.deviations.return_temp.status === 'critical'
-                                ? 'bg-critical/20 text-critical'
-                                : 'bg-warning/20 text-warning'
-                            }`}
-                          >
-                            Tp
-                          </span>
-                        )}
-                        {node.efficiency.deviations.flow_balance.status !== 'ok' && (
-                          <span
-                            className={`text-xs px-1.5 py-0.5 rounded ${
-                              node.efficiency.deviations.flow_balance.status === 'critical'
-                                ? 'bg-critical/20 text-critical'
-                                : 'bg-warning/20 text-warning'
-                            }`}
-                          >
-                            Q
-                          </span>
-                        )}
+                        <span
+                          className={`text-xs px-1.5 py-0.5 rounded ${
+                            node.efficiency.indicators.wwc.status === 'critical'
+                              ? 'bg-critical/20 text-critical'
+                              : node.efficiency.indicators.wwc.status === 'warning'
+                              ? 'bg-warning/20 text-warning'
+                              : node.efficiency.indicators.wwc.status === 'good'
+                              ? 'bg-efficiency/20 text-efficiency'
+                              : 'bg-success/20 text-success'
+                          }`}
+                        >
+                          WWC
+                        </span>
+                        <span
+                          className={`text-xs px-1.5 py-0.5 rounded ${
+                            node.efficiency.indicators.sh.status === 'critical'
+                              ? 'bg-critical/20 text-critical'
+                              : node.efficiency.indicators.sh.status === 'warning'
+                              ? 'bg-warning/20 text-warning'
+                              : node.efficiency.indicators.sh.status === 'good'
+                              ? 'bg-efficiency/20 text-efficiency'
+                              : 'bg-success/20 text-success'
+                          }`}
+                        >
+                          SH
+                        </span>
+                        <span
+                          className={`text-xs px-1.5 py-0.5 rounded ${
+                            node.efficiency.indicators.es.status === 'critical'
+                              ? 'bg-critical/20 text-critical'
+                              : node.efficiency.indicators.es.status === 'warning'
+                              ? 'bg-warning/20 text-warning'
+                              : node.efficiency.indicators.es.status === 'good'
+                              ? 'bg-efficiency/20 text-efficiency'
+                              : 'bg-success/20 text-success'
+                          }`}
+                        >
+                          ES
+                        </span>
                       </div>
                     </div>
                   )}

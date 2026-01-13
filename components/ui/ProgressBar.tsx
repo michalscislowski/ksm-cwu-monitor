@@ -1,11 +1,11 @@
 'use client';
 
-import type { DeviationStatus } from '@/lib/types';
+import type { IndicatorStatus } from '@/lib/types';
 
 interface ProgressBarProps {
   value: number;
   max?: number;
-  status?: DeviationStatus;
+  status?: IndicatorStatus;
   showValue?: boolean;
   size?: 'sm' | 'md' | 'lg';
   label?: string;
@@ -13,14 +13,16 @@ interface ProgressBarProps {
   animated?: boolean;
 }
 
-const statusColors: Record<DeviationStatus, string> = {
-  ok: 'bg-success',
+const statusColors: Record<IndicatorStatus, string> = {
+  optimal: 'bg-success',
+  good: 'bg-efficiency',
   warning: 'bg-warning',
   critical: 'bg-critical',
 };
 
-const statusGlow: Record<DeviationStatus, string> = {
-  ok: 'shadow-[0_0_8px_rgba(16,185,129,0.4)]',
+const statusGlow: Record<IndicatorStatus, string> = {
+  optimal: 'shadow-[0_0_8px_rgba(16,185,129,0.4)]',
+  good: 'shadow-[0_0_8px_rgba(20,184,166,0.4)]',
   warning: 'shadow-[0_0_8px_rgba(245,158,11,0.4)]',
   critical: 'shadow-[0_0_8px_rgba(239,68,68,0.4)]',
 };
@@ -34,7 +36,7 @@ const sizeHeights = {
 export function ProgressBar({
   value,
   max = 100,
-  status = 'ok',
+  status = 'optimal',
   showValue = false,
   size = 'md',
   label,
@@ -70,21 +72,22 @@ export function ProgressBar({
   );
 }
 
-// Deviation bar with label
-interface DeviationBarProps {
+// Indicator bar with label
+interface IndicatorBarProps {
   label: string;
   value: number;
-  status: DeviationStatus;
+  status: IndicatorStatus;
   note?: string;
 }
 
-export function DeviationBar({ label, value, status, note }: DeviationBarProps) {
+export function IndicatorBar({ label, value, status, note }: IndicatorBarProps) {
   return (
     <div className="mb-4 last:mb-0">
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-medium text-foreground">{label}</span>
         <span className={`text-sm font-mono font-semibold ${
-          status === 'ok' ? 'text-success' :
+          status === 'optimal' ? 'text-success' :
+          status === 'good' ? 'text-efficiency' :
           status === 'warning' ? 'text-warning' : 'text-critical'
         }`}>
           {value}%

@@ -4,32 +4,36 @@ import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, TrendBadge } from '@/components/ui/Badge';
 import { MiniGauge } from '@/components/node-detail/IEZGauge';
-import type { NodeWithEfficiency, DeviationStatus } from '@/lib/types';
+import type { NodeWithEfficiency, IndicatorStatus } from '@/lib/types';
 
 interface NodesTableProps {
   nodes: NodeWithEfficiency[];
   title?: string;
 }
 
-function getWorstDeviation(deviations: NodeWithEfficiency['efficiency']['deviations']): {
-  param: string;
-  status: DeviationStatus;
+function getWorstIndicator(indicators: NodeWithEfficiency['efficiency']['indicators']): {
+  label: string;
+  shortLabel: string;
+  status: IndicatorStatus;
 } {
-  const params: Array<{ key: string; label: string }> = [
-    { key: 'delta_t', label: 'ΔT' },
-    { key: 'return_temp', label: 'Temp. powrotu' },
-    { key: 'flow_balance', label: 'Przepływ' },
+  const indicatorsList: Array<{ key: 'wwc' | 'sh' | 'es'; label: string; shortLabel: string }> = [
+    { key: 'wwc', label: 'Wymiana ciepła', shortLabel: 'WWC' },
+    { key: 'sh', label: 'Stabilność hydrauliczna', shortLabel: 'SH' },
+    { key: 'es', label: 'Efektywność szczytowa', shortLabel: 'ES' },
   ];
 
-  let worst = { param: '', status: 'ok' as DeviationStatus };
+  let worst = { label: '', shortLabel: '', status: 'optimal' as IndicatorStatus };
+  const statusPriority: Record<IndicatorStatus, number> = {
+    critical: 3,
+    warning: 2,
+    good: 1,
+    optimal: 0,
+  };
 
-  for (const p of params) {
-    const dev = deviations[p.key as keyof typeof deviations];
-    if (dev.status === 'critical') {
-      return { param: p.label, status: 'critical' };
-    }
-    if (dev.status === 'warning' && worst.status !== 'warning') {
-      worst = { param: p.label, status: 'warning' };
+  for (const ind of indicatorsList) {
+    const indicator = indicators[ind.key];
+    if (statusPriority[indicator.status] > statusPriority[worst.status]) {
+      worst = { label: ind.label, shortLabel: ind.shortLabel, status: indicator.status };
     }
   }
 
@@ -62,13 +66,13 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
                 <th className="px-5 py-3 font-medium">Węzeł</th>
                 <th className="px-5 py-3 font-medium">IEZ</th>
                 <th className="px-5 py-3 font-medium">Trend</th>
-                <th className="px-5 py-3 font-medium">Problem</th>
+                <th className="px-5 py-3 font-medium">Najsłabszy wskaźnik</th>
                 <th className="px-5 py-3 font-medium">Kategoria</th>
               </tr>
             </thead>
             <tbody>
               {nodes.map((node) => {
-                const worst = getWorstDeviation(node.efficiency.deviations);
+                const worst = getWorstIndicator(node.efficiency.indicators);
 
                 return (
                   <tr
@@ -93,16 +97,20 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
                       />
                     </td>
                     <td className="px-5 py-4">
-                      {worst.status !== 'ok' ? (
+                      {worst.status !== 'optimal' ? (
                         <span
-                          className={`text-xs ${
-                            worst.status === 'critical' ? 'text-critical' : 'text-warning'
+                          className={`text-xs px-2 py-0.5 rounded ${
+                            worst.status === 'critical'
+                              ? 'bg-critical/20 text-critical'
+                              : worst.status === 'warning'
+                              ? 'bg-warning/20 text-warning'
+                              : 'bg-efficiency/20 text-efficiency'
                           }`}
                         >
-                          {worst.param}
+                          {worst.shortLabel}
                         </span>
                       ) : (
-                        <span className="text-foreground-subtle text-xs">—</span>
+                        <span className="text-success text-xs">✓ OK</span>
                       )}
                     </td>
                     <td className="px-5 py-4">

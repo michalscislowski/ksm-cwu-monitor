@@ -17,21 +17,21 @@ export function CategoriesChart({ stats }: CategoriesChartProps) {
       sublabel: 'Bardzo dobra',
       count: stats.categoryACount,
       percent: Math.round((stats.categoryACount / total) * 100),
-      status: 'ok' as const,
+      status: 'optimal' as const,
     },
     {
       label: 'Kategoria B',
       sublabel: 'Dobra',
       count: stats.categoryBCount,
       percent: Math.round((stats.categoryBCount / total) * 100),
-      status: 'warning' as const,
+      status: 'good' as const,
     },
     {
       label: 'Kategoria C',
       sublabel: 'Wymaga uwagi',
       count: stats.categoryCCount,
       percent: Math.round((stats.categoryCCount / total) * 100),
-      status: 'critical' as const,
+      status: 'warning' as const,
     },
   ];
 
