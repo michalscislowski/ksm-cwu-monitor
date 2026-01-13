@@ -99,17 +99,37 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
             interpretation={indicators.wwc.interpretation}
             action={indicators.wwc.action}
             tooltip={
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <p className="font-semibold text-foreground">Wskaźnik Wymiany Ciepła (WWC)</p>
-                <p className="text-foreground-muted">
-                  Pokazuje jak efektywnie wymiennik ciepła przekazuje energię z sieci ciepłowniczej do instalacji budynku.
-                </p>
-                <p className="text-foreground-muted">
-                  <span className="font-medium">Wzór:</span> WWC = (ΔT rzeczywiste / ΔT projektowe) × 100%
-                </p>
-                <p className="text-foreground-muted text-xs">
-                  Niski WWC oznacza, że woda wraca do sieci zbyt ciepła - sprawdź nastawy zaworów MTCV.
-                </p>
+
+                <div className="text-foreground-muted text-sm space-y-2">
+                  <p>
+                    <span className="font-medium text-foreground">Skąd się bierze ΔT?</span><br />
+                    ΔT to różnica temperatur mierzona na wymienniku ciepła po stronie sieciowej:
+                    temperatura zasilania (T<sub>zas</sub>) minus temperatura powrotu (T<sub>pow</sub>).
+                    Dla CWU projektowe ΔT wynosi zwykle 20-25K.
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Co mierzy WWC?</span><br />
+                    WWC = (ΔT<sub>rzeczywiste</sub> / ΔT<sub>projektowe</sub>) × 100%<br />
+                    Pokazuje jaki procent projektowej różnicy temperatur jest wykorzystywany.
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Interpretacja:</span><br />
+                    • <span className="text-success">WWC ≥95%</span> — wymiennik pracuje zgodnie z projektem<br />
+                    • <span className="text-warning">WWC 70-85%</span> — woda wraca za ciepła, energia nie jest w pełni odbierana<br />
+                    • <span className="text-critical">WWC &lt;70%</span> — znaczne straty, pilna regulacja
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Co robić przy niskim WWC?</span><br />
+                    Niskie ΔT oznacza zbyt mały odbiór ciepła. Przyczyny: MTCV za bardzo przymknięte,
+                    zbyt mały przepływ w instalacji wewnętrznej, lub problem z wymiennikiem.
+                    Sprawdź nastawy MTCV na pionach CWU.
+                  </p>
+                </div>
               </div>
             }
           />
@@ -122,17 +142,43 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
             interpretation={indicators.sh.interpretation}
             action={indicators.sh.action}
             tooltip={
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <p className="font-semibold text-foreground">Stabilność Hydrauliczna (SH)</p>
-                <p className="text-foreground-muted">
-                  Mierzy jak równomiernie pracuje instalacja w ciągu doby - czy ΔT jest stabilne czy mocno się waha.
-                </p>
-                <p className="text-foreground-muted">
-                  <span className="font-medium">Wzór:</span> SH = 100% - (odchylenie ΔT / średnie ΔT) × 100%
-                </p>
-                <p className="text-foreground-muted text-xs">
-                  Niska stabilność wskazuje na nierównomierne obciążenie pionów - wymaga równoważenia hydraulicznego.
-                </p>
+
+                <div className="text-foreground-muted text-sm space-y-2">
+                  <p>
+                    <span className="font-medium text-foreground">Co mierzy SH?</span><br />
+                    SH pokazuje jak bardzo ΔT waha się w ciągu doby. Obliczamy odchylenie standardowe
+                    ΔT ze wszystkich pomiarów dobowych i porównujemy do średniego ΔT.
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Wzór:</span><br />
+                    SH = 100% - (σ<sub>ΔT</sub> / μ<sub>ΔT</sub>) × 100%<br />
+                    gdzie σ = odchylenie standardowe, μ = średnia
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Dlaczego ΔT się waha?</span><br />
+                    W dobrze zrównoważonej instalacji ΔT powinno być podobne niezależnie od obciążenia.
+                    Duże wahania oznaczają, że przy różnym poborze CWU instalacja reaguje nierównomiernie
+                    — niektóre piony są przeciążone, inne niedociążone.
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Interpretacja:</span><br />
+                    • <span className="text-success">SH ≥90%</span> — stabilna praca, piony dobrze zrównoważone<br />
+                    • <span className="text-warning">SH 70-85%</span> — zauważalne wahania, monitoruj<br />
+                    • <span className="text-critical">SH &lt;70%</span> — niestabilna hydraulika, wymaga interwencji
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Co robić przy niskim SH?</span><br />
+                    Wykonaj równoważenie hydrauliczne instalacji. Sprawdź nastawy MTCV na wszystkich
+                    pionach — mogą być zbyt zróżnicowane. Przy bardzo niskim SH sprawdź też pompę
+                    cyrkulacyjną (może pracować niestabilnie).
+                  </p>
+                </div>
               </div>
             }
           />
@@ -145,17 +191,43 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
             interpretation={indicators.es.interpretation}
             action={indicators.es.action}
             tooltip={
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <p className="font-semibold text-foreground">Efektywność Szczytowa (ES)</p>
-                <p className="text-foreground-muted">
-                  Porównuje efektywność instalacji w godzinach szczytu (6-9, 17-20) z okresem niskiego obciążenia.
-                </p>
-                <p className="text-foreground-muted">
-                  <span className="font-medium">Wzór:</span> ES = (WWC w szczycie / WWC w nocy) × 100%
-                </p>
-                <p className="text-foreground-muted text-xs">
-                  Niska ES oznacza, że system nie nadąża ze szczytowym zapotrzebowaniem - sprawdź pompę cyrkulacyjną.
-                </p>
+
+                <div className="text-foreground-muted text-sm space-y-2">
+                  <p>
+                    <span className="font-medium text-foreground">Co mierzy ES?</span><br />
+                    ES porównuje jak instalacja radzi sobie w godzinach szczytu (6:00-9:00 rano,
+                    17:00-20:00 wieczorem) względem okresu niskiego obciążenia (2:00-4:00 w nocy).
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Wzór:</span><br />
+                    ES = (WWC<sub>szczyt</sub> / WWC<sub>noc</sub>) × 100%<br />
+                    Jeśli w szczycie WWC spada np. do 75%, a w nocy jest 95%, to ES = 79%.
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Dlaczego w szczycie jest gorzej?</span><br />
+                    W godzinach szczytu mieszkańcy intensywnie korzystają z CWU (poranki, wieczory).
+                    Instalacja musi dostarczyć więcej ciepła w krótkim czasie. Jeśli pompa cyrkulacyjna
+                    lub przepustowość MTCV są niewystarczające, ΔT spada — woda wraca cieplejsza.
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Interpretacja:</span><br />
+                    • <span className="text-success">ES ≥90%</span> — instalacja dobrze radzi sobie ze szczytami<br />
+                    • <span className="text-warning">ES 75-85%</span> — zauważalny spadek wydajności w szczycie<br />
+                    • <span className="text-critical">ES &lt;75%</span> — instalacja przeciążona, pilna interwencja
+                  </p>
+
+                  <p>
+                    <span className="font-medium text-foreground">Co robić przy niskim ES?</span><br />
+                    1. Sprawdź wydajność pompy cyrkulacyjnej — może być za słaba na szczytowe obciążenie<br />
+                    2. Rozważ zwiększenie otwarcia MTCV na najbardziej obciążonych pionach<br />
+                    3. Zoptymalizuj harmonogram pracy pompy (wyższa wydajność w godzinach szczytu)
+                  </p>
+                </div>
               </div>
             }
           />

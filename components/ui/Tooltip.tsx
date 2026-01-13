@@ -101,7 +101,7 @@ interface InfoTooltipProps {
 
 export function InfoTooltip({ content, position = 'top' }: InfoTooltipProps) {
   return (
-    <Tooltip content={content} position={position}>
+    <Tooltip content={content} position={position} maxWidth="380px">
       <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-foreground-subtle/20 text-foreground-subtle text-xs hover:bg-foreground-subtle/30 transition-colors">
         ?
       </span>
