@@ -563,3 +563,4 @@ export function formatMonth(month: number): string {
   const months = ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'];
   return months[month - 1] || '';
 }
+// Auto-deploy test Tue 13 Jan 2026 18:53:23 CET
