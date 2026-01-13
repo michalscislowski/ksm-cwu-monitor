@@ -83,7 +83,7 @@ export function RecommendationsList({ recommendations }: RecommendationsListProp
   if (recommendations.length === 0) {
     return (
       <Card>
-        <CardHeader>
+        <CardHeader dataSource="mec">
           <span className="flex items-center gap-2">
             <span>💡</span>
             Rekomendacje
@@ -107,7 +107,7 @@ export function RecommendationsList({ recommendations }: RecommendationsListProp
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader dataSource="mec">
         <span className="flex items-center gap-2">
           <span>💡</span>
           Rekomendacje ({recommendations.length})

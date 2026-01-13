@@ -34,7 +34,7 @@ function LossItem({ label, value }: LossItemProps) {
 export function LossesPanel({ losses }: LossesPanelProps) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader dataSource="mec">
         <span className="flex items-center gap-2">
           <span className="text-warning">⚡</span>
           Straty szacunkowe

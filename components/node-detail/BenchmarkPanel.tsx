@@ -16,7 +16,7 @@ export function BenchmarkPanel({ benchmark }: BenchmarkPanelProps) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader dataSource="mec">
         <span className="flex items-center gap-2">
           <span>📊</span>
           Benchmark

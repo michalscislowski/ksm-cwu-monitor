@@ -96,6 +96,7 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
   return (
     <Card>
       <CardHeader
+        dataSource="ksm"
         action={
           <div className="flex items-center gap-2">
             {/* Time range selector */}

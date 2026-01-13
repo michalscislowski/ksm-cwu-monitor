@@ -96,3 +96,41 @@ export function TrendBadge({ trend, change }: TrendBadgeProps) {
     </Badge>
   );
 }
+
+// Data source badge - indicates whether data comes from MEC or KSM
+export type DataSource = 'mec' | 'ksm';
+
+interface DataSourceBadgeProps {
+  source: DataSource;
+  showLabel?: boolean;
+  className?: string;
+}
+
+export function DataSourceBadge({ source, showLabel = true, className = '' }: DataSourceBadgeProps) {
+  const config = {
+    mec: {
+      icon: '⚡',
+      label: 'MEC',
+      description: 'Dane z MEC',
+      bgClass: 'bg-info/10 text-info border-info/30',
+    },
+    ksm: {
+      icon: '📊',
+      label: 'KSM',
+      description: 'Dane KSM',
+      bgClass: 'bg-efficiency/10 text-efficiency border-efficiency/30',
+    },
+  };
+
+  const { icon, label, description, bgClass } = config[source];
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium rounded border ${bgClass} ${className}`}
+      title={description}
+    >
+      <span>{icon}</span>
+      {showLabel && <span>{label}</span>}
+    </span>
+  );
+}

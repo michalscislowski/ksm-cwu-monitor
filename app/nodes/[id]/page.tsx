@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
-import { CategoryBadge } from '@/components/ui/Badge';
+import { CategoryBadge, DataSourceBadge } from '@/components/ui/Badge';
 import { IEZGauge } from '@/components/node-detail/IEZGauge';
 import { DeviationsPanel } from '@/components/node-detail/DeviationsPanel';
 import { LossesPanel } from '@/components/node-detail/LossesPanel';
@@ -61,11 +61,24 @@ export default async function NodeDetailPage({ params }: PageProps) {
         <CategoryBadge category={node.efficiency.benchmark.category} size="lg" showLabel />
       </div>
 
+      {/* Data source legend */}
+      <div className="flex items-center gap-4 text-xs text-foreground-muted bg-surface/50 rounded-lg px-4 py-2 border border-border-subtle">
+        <span className="font-medium">Źródła danych:</span>
+        <div className="flex items-center gap-2">
+          <DataSourceBadge source="mec" />
+          <span>Dane z MEC Koszalin (symulowane)</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <DataSourceBadge source="ksm" />
+          <span>Dane KSM Przylesie (rzeczywiste)</span>
+        </div>
+      </div>
+
       {/* Top row - IEZ + Deviations + Losses */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* IEZ Gauge */}
         <Card className="animate-in stagger-2">
-          <CardHeader>Indeks Efektywności (IEZ)</CardHeader>
+          <CardHeader dataSource="mec">Indeks Efektywności (IEZ)</CardHeader>
           <CardBody className="flex justify-center py-6">
             <IEZGauge iez={node.efficiency.iez} size="lg" />
           </CardBody>
@@ -116,7 +129,7 @@ export default async function NodeDetailPage({ params }: PageProps) {
 
       {/* Node info */}
       <Card>
-        <CardHeader>
+        <CardHeader dataSource="ksm">
           <span className="flex items-center gap-2">
             <span>ℹ️</span>
             Informacje o węźle

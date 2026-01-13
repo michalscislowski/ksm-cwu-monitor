@@ -71,6 +71,7 @@ export function AlertsList({ alerts, maxItems = 5, showHeader = true }: AlertsLi
     <Card className="animate-in stagger-2">
       {showHeader && (
         <CardHeader
+          dataSource="mec"
           action={
             alerts.length > maxItems && (
               <Link

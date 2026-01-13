@@ -38,7 +38,7 @@ const deviationLabels: Record<keyof Deviations, { label: string; notes: Record<s
 export function DeviationsPanel({ deviations }: DeviationsPanelProps) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader dataSource="mec">
         <span className="flex items-center gap-2">
           <span className="text-efficiency">◎</span>
           Odchylenia od optimum
