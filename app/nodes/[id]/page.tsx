@@ -7,6 +7,7 @@ import { DeviationsPanel } from '@/components/node-detail/DeviationsPanel';
 import { LossesPanel } from '@/components/node-detail/LossesPanel';
 import { BenchmarkPanel } from '@/components/node-detail/BenchmarkPanel';
 import { RecommendationsList } from '@/components/node-detail/RecommendationsList';
+import { HistoricalChart } from '@/components/node-detail/HistoricalChart';
 import { DailyProfileChart } from '@/components/dashboard/TrendChart';
 import { AlertsList } from '@/components/dashboard/AlertsList';
 import { getNodeWithEfficiency, getNodes } from '@/lib/data';
@@ -88,6 +89,13 @@ export default async function NodeDetailPage({ params }: PageProps) {
         </div>
       )}
 
+      {/* Historical Chart */}
+      {node.readings && node.readings.length > 0 && (
+        <div className="animate-in">
+          <HistoricalChart readings={node.readings} nodeId={node.id} />
+        </div>
+      )}
+
       {/* Bottom row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recommendations */}
@@ -115,7 +123,7 @@ export default async function NodeDetailPage({ params }: PageProps) {
           </span>
         </CardHeader>
         <CardBody>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <div className="p-3 bg-surface-elevated rounded-lg">
               <p className="text-xs text-foreground-subtle">Liczba mieszkań</p>
               <p className="font-mono font-semibold text-lg">{node.apartments_count}</p>
@@ -134,6 +142,15 @@ export default async function NodeDetailPage({ params }: PageProps) {
               <p className="text-xs text-foreground-subtle">Liczba MTCV</p>
               <p className="font-mono font-semibold text-lg">{node.mtcv_count}</p>
             </div>
+            {node.stats && (
+              <div className="p-3 bg-surface-elevated rounded-lg">
+                <p className="text-xs text-foreground-subtle">Dane historyczne</p>
+                <p className="font-mono font-semibold text-lg">{node.stats.total_readings}</p>
+                <p className="text-xs text-foreground-subtle">
+                  {node.stats.years_covered[0]}-{node.stats.years_covered[node.stats.years_covered.length - 1]}
+                </p>
+              </div>
+            )}
           </div>
         </CardBody>
       </Card>

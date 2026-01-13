@@ -1,77 +1,367 @@
-import mockData from '@/data/mock-data.json';
+import nodesData from '@/data/nodes-data.json';
 import type {
   Node,
+  MonthlyReading,
+  NodeStats,
   EfficiencyData,
   DailyProfile,
+  HourlyData,
   HistoryEntry,
   Alert,
   Recommendation,
   RankingEntry,
   NodeWithEfficiency,
   DashboardStats,
+  Category,
+  DeviationStatus,
 } from './types';
 
-// Type assertion for imported JSON
-const data = mockData as {
-  nodes: Node[];
-  efficiency_current: Record<string, EfficiencyData>;
-  daily_profile: Record<string, DailyProfile>;
-  history_30_days: Record<string, HistoryEntry[]>;
-  alerts: Record<string, Alert[]>;
-  recommendations: Record<string, Recommendation[]>;
-  ranking: RankingEntry[];
-};
+// Constants
+const OPTIMAL_WSKAZNIK = 0.22; // Optimal GJ/m3 indicator
+
+// Type for raw node data from JSON
+interface RawNode {
+  id: string;
+  name: string;
+  address: string;
+  apartments_count: number;
+  building_volume_m3: number;
+  mtcv_type: string;
+  mtcv_count: number;
+  readings: MonthlyReading[];
+  stats: NodeStats;
+}
+
+const rawNodes = nodesData as RawNode[];
+
+// Calculate IEZ from wskaznik
+function calculateIEZ(wskaznik: number): number {
+  return Math.round((OPTIMAL_WSKAZNIK / wskaznik) * 100);
+}
+
+// Get category from IEZ
+function getCategory(iez: number): Category {
+  if (iez >= 90) return 'A';
+  if (iez >= 75) return 'B';
+  return 'C';
+}
+
+// Get deviation status
+function getDeviationStatus(percentOfOptimal: number): DeviationStatus {
+  if (percentOfOptimal >= 90) return 'ok';
+  if (percentOfOptimal >= 75) return 'warning';
+  return 'critical';
+}
+
+// Generate pseudo-random number from seed
+function seededRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
+// Generate efficiency data from node readings
+function generateEfficiencyData(node: RawNode): EfficiencyData {
+  const recentReadings = node.readings.slice(-6);
+  const avgWskaznik = recentReadings.reduce((s, r) => s + r.wskaznik, 0) / recentReadings.length;
+  const iez = calculateIEZ(avgWskaznik);
+
+  // Generate deviations based on IEZ
+  const seed = parseInt(node.id.replace('WC-', ''), 10);
+  const deltaT = Math.min(100, iez + (seededRandom(seed * 1) * 20 - 10));
+  const returnTemp = Math.min(100, iez + (seededRandom(seed * 2) * 15 - 5));
+  const flowBalance = Math.min(100, iez + (seededRandom(seed * 3) * 25 - 15));
+
+  // Calculate percentile (rank among all nodes)
+  const allIez = rawNodes.map(n => n.stats.avg_iez).sort((a, b) => b - a);
+  const position = allIez.findIndex(v => v <= iez);
+  const percentile = Math.round(((rawNodes.length - position) / rawNodes.length) * 100);
+
+  return {
+    timestamp: new Date().toISOString(),
+    iez: {
+      value: iez,
+      trend: node.stats.trend,
+      trend_change: node.stats.trend_change,
+    },
+    deviations: {
+      delta_t: {
+        percent_of_optimal: Math.round(deltaT),
+        status: getDeviationStatus(deltaT),
+      },
+      return_temp: {
+        percent_of_optimal: Math.round(returnTemp),
+        status: getDeviationStatus(returnTemp),
+      },
+      flow_balance: {
+        percent_of_optimal: Math.round(flowBalance),
+        status: getDeviationStatus(flowBalance),
+      },
+    },
+    losses: {
+      vs_optimal_percent: Math.round((avgWskaznik / OPTIMAL_WSKAZNIK - 1) * 100),
+      vs_last_week_percent: Math.round((seededRandom(seed * 4) * 10) - 5),
+      vs_last_year_percent: Math.round((seededRandom(seed * 5) * 20) - 10),
+    },
+    benchmark: {
+      percentile,
+      category: node.stats.category,
+    },
+  };
+}
+
+// Generate daily profile
+function generateDailyProfile(node: RawNode): DailyProfile {
+  const seed = parseInt(node.id.replace('WC-', ''), 10);
+  const baseIez = node.stats.avg_iez;
+
+  const hours: HourlyData[] = [];
+  let minIez = 999, maxIez = 0;
+  const bestHours: number[] = [];
+  const worstHours: number[] = [];
+
+  for (let h = 0; h < 24; h++) {
+    // Morning peak (6-9), evening peak (17-21)
+    let modifier = 0;
+    if (h >= 6 && h <= 9) modifier = -5 - seededRandom(seed + h) * 8;
+    else if (h >= 17 && h <= 21) modifier = -8 - seededRandom(seed + h) * 10;
+    else if (h >= 1 && h <= 5) modifier = 5 + seededRandom(seed + h) * 5;
+    else modifier = seededRandom(seed + h) * 6 - 3;
+
+    const iez = Math.round(baseIez + modifier);
+    minIez = Math.min(minIez, iez);
+    maxIez = Math.max(maxIez, iez);
+
+    const load = h >= 6 && h <= 9 ? 'peak' :
+                 h >= 17 && h <= 21 ? 'high' :
+                 h >= 10 && h <= 16 ? 'medium' : 'low';
+
+    hours.push({
+      hour: h,
+      iez,
+      load: load as 'low' | 'medium' | 'high' | 'peak',
+      deviation_delta_t: Math.round(seededRandom(seed + h * 2) * 20 - 10),
+      deviation_return_temp: Math.round(seededRandom(seed + h * 3) * 15 - 5),
+    });
+
+    if (iez >= baseIez + 3) bestHours.push(h);
+    if (iez <= baseIez - 5) worstHours.push(h);
+  }
+
+  return {
+    date: new Date().toISOString().split('T')[0],
+    hours,
+    summary: {
+      best_hours: bestHours.slice(0, 4),
+      worst_hours: worstHours.slice(0, 4),
+      avg_iez: baseIez,
+      min_iez: minIez,
+      max_iez: maxIez,
+    },
+  };
+}
+
+// Generate history from readings
+function generateHistory(node: RawNode): HistoryEntry[] {
+  const entries: HistoryEntry[] = [];
+
+  // Use last 30 readings or generate daily data
+  const recentReadings = node.readings.slice(-12);
+
+  recentReadings.forEach((reading, i) => {
+    const monthStr = String(reading.month).padStart(2, '0');
+    const date = `${reading.year}-${monthStr}-15`;
+    const iez = calculateIEZ(reading.wskaznik);
+
+    entries.push({
+      date,
+      iez,
+      category: getCategory(iez),
+    });
+  });
+
+  // Add some daily variation for the current month
+  const seed = parseInt(node.id.replace('WC-', ''), 10);
+  const now = new Date();
+  const baseIez = node.stats.avg_iez;
+
+  for (let d = 30; d >= 0; d--) {
+    const date = new Date(now);
+    date.setDate(date.getDate() - d);
+    const dateStr = date.toISOString().split('T')[0];
+    const variation = Math.round((seededRandom(seed + d) * 10) - 5);
+    const iez = Math.max(50, Math.min(110, baseIez + variation));
+
+    entries.push({
+      date: dateStr,
+      iez,
+      category: getCategory(iez),
+    });
+  }
+
+  return entries.slice(-60); // Last 60 entries
+}
+
+// Generate alerts based on efficiency
+function generateAlerts(node: RawNode): Alert[] {
+  const alerts: Alert[] = [];
+  const iez = node.stats.avg_iez;
+  const now = new Date();
+
+  if (iez < 70) {
+    alerts.push({
+      id: `${node.id}-alert-1`,
+      type: 'efficiency_drop',
+      severity: 'critical',
+      created_at: new Date(now.getTime() - 2 * 3600000).toISOString(),
+      message: `Krytycznie niski IEZ (${iez}) - wymagana pilna interwencja`,
+      status: 'active',
+      node_id: node.id,
+      node_name: node.name,
+    });
+  }
+
+  if (node.stats.trend === 'declining' && node.stats.trend_change < -3) {
+    alerts.push({
+      id: `${node.id}-alert-2`,
+      type: 'trend_negative',
+      severity: 'warning',
+      created_at: new Date(now.getTime() - 24 * 3600000).toISOString(),
+      message: `Spadkowy trend efektywności (${node.stats.trend_change} pkt)`,
+      status: 'active',
+      node_id: node.id,
+      node_name: node.name,
+    });
+  }
+
+  if (iez < 80 && iez >= 70) {
+    alerts.push({
+      id: `${node.id}-alert-3`,
+      type: 'deviation_critical',
+      severity: 'warning',
+      created_at: new Date(now.getTime() - 48 * 3600000).toISOString(),
+      message: `Wskaźnik GJ/m³ powyżej normy - sprawdź nastawy MTCV`,
+      status: 'active',
+      node_id: node.id,
+      node_name: node.name,
+    });
+  }
+
+  return alerts;
+}
+
+// Generate recommendations
+function generateRecommendations(node: RawNode): Recommendation[] {
+  const recommendations: Recommendation[] = [];
+  const iez = node.stats.avg_iez;
+
+  if (iez < 85) {
+    recommendations.push({
+      id: `${node.id}-rec-1`,
+      priority: iez < 70 ? 'high' : 'medium',
+      category: 'mtcv_adjustment',
+      title: 'Regulacja zaworów MTCV',
+      description: `Sprawdź nastawy zaworów ${node.mtcv_type} na wszystkich pionach. Wskaźnik GJ/m³ odbiega od optimum.`,
+      expected_improvement: { iez_points: Math.round((85 - iez) * 0.6) },
+      affected_hours: [7, 8, 18, 19, 20],
+    });
+  }
+
+  if (node.stats.avg_wskaznik > 0.28) {
+    recommendations.push({
+      id: `${node.id}-rec-2`,
+      priority: 'medium',
+      category: 'hydraulic_balance',
+      title: 'Równoważenie hydrauliczne',
+      description: 'Przeprowadź pełne równoważenie instalacji CWU. Wykryto nierównomierny rozkład przepływów.',
+      expected_improvement: { iez_points: 5 },
+      affected_hours: [6, 7, 8, 9, 17, 18, 19, 20, 21],
+    });
+  }
+
+  if (iez < 75) {
+    recommendations.push({
+      id: `${node.id}-rec-3`,
+      priority: 'low',
+      category: 'circulation_pump',
+      title: 'Optymalizacja pompy cyrkulacyjnej',
+      description: 'Dostosuj harmonogram pracy pompy cyrkulacyjnej do profilu zużycia CWU.',
+      expected_improvement: { iez_points: 3 },
+      affected_hours: [1, 2, 3, 4, 5],
+    });
+  }
+
+  return recommendations;
+}
 
 // Get all nodes
 export function getNodes(): Node[] {
-  return data.nodes;
+  return rawNodes.map(n => ({
+    id: n.id,
+    name: n.name,
+    address: n.address,
+    apartments_count: n.apartments_count,
+    building_volume_m3: n.building_volume_m3,
+    mtcv_type: n.mtcv_type,
+    mtcv_count: n.mtcv_count,
+    readings: n.readings,
+    stats: n.stats,
+  }));
 }
 
 // Get single node by ID
 export function getNode(id: string): Node | undefined {
-  return data.nodes.find((node) => node.id === id);
+  const node = rawNodes.find(n => n.id === id);
+  if (!node) return undefined;
+
+  return {
+    id: node.id,
+    name: node.name,
+    address: node.address,
+    apartments_count: node.apartments_count,
+    building_volume_m3: node.building_volume_m3,
+    mtcv_type: node.mtcv_type,
+    mtcv_count: node.mtcv_count,
+    readings: node.readings,
+    stats: node.stats,
+  };
 }
 
 // Get efficiency data for a node
 export function getEfficiency(nodeId: string): EfficiencyData | undefined {
-  return data.efficiency_current[nodeId];
+  const node = rawNodes.find(n => n.id === nodeId);
+  if (!node) return undefined;
+  return generateEfficiencyData(node);
 }
 
 // Get daily profile for a node
 export function getDailyProfile(nodeId: string): DailyProfile | undefined {
-  return data.daily_profile[nodeId];
+  const node = rawNodes.find(n => n.id === nodeId);
+  if (!node) return undefined;
+  return generateDailyProfile(node);
 }
 
 // Get history for a node
 export function getHistory(nodeId: string): HistoryEntry[] {
-  return data.history_30_days[nodeId] || [];
+  const node = rawNodes.find(n => n.id === nodeId);
+  if (!node) return [];
+  return generateHistory(node);
 }
 
 // Get alerts for a node
 export function getNodeAlerts(nodeId: string): Alert[] {
-  const alerts = data.alerts[nodeId] || [];
-  return alerts.map((alert) => ({
-    ...alert,
-    node_id: nodeId,
-    node_name: getNode(nodeId)?.name,
-  }));
+  const node = rawNodes.find(n => n.id === nodeId);
+  if (!node) return [];
+  return generateAlerts(node);
 }
 
 // Get all active alerts across all nodes
 export function getAllAlerts(): Alert[] {
   const allAlerts: Alert[] = [];
 
-  for (const nodeId of Object.keys(data.alerts)) {
-    const node = getNode(nodeId);
-    const nodeAlerts = data.alerts[nodeId].map((alert) => ({
-      ...alert,
-      node_id: nodeId,
-      node_name: node?.name,
-    }));
-    allAlerts.push(...nodeAlerts);
+  for (const node of rawNodes) {
+    allAlerts.push(...generateAlerts(node));
   }
 
-  // Sort by severity (critical first) then by date
   return allAlerts.sort((a, b) => {
     const severityOrder = { critical: 0, warning: 1, info: 2 };
     if (severityOrder[a.severity] !== severityOrder[b.severity]) {
@@ -83,60 +373,97 @@ export function getAllAlerts(): Alert[] {
 
 // Get recommendations for a node
 export function getRecommendations(nodeId: string): Recommendation[] {
-  return data.recommendations[nodeId] || [];
+  const node = rawNodes.find(n => n.id === nodeId);
+  if (!node) return [];
+  return generateRecommendations(node);
 }
 
 // Get ranking
 export function getRanking(): RankingEntry[] {
-  return data.ranking;
+  const sorted = [...rawNodes].sort((a, b) => b.stats.avg_iez - a.stats.avg_iez);
+
+  return sorted.map((node, index) => ({
+    position: index + 1,
+    node_id: node.id,
+    name: node.name,
+    category: node.stats.category,
+    avg_iez: node.stats.avg_iez,
+    trend: node.stats.trend,
+  }));
 }
 
 // Get full node data with all related information
 export function getNodeWithEfficiency(id: string): NodeWithEfficiency | undefined {
-  const node = getNode(id);
+  const node = rawNodes.find(n => n.id === id);
   if (!node) return undefined;
 
-  const efficiency = getEfficiency(id);
-  if (!efficiency) return undefined;
+  const efficiency = generateEfficiencyData(node);
 
   return {
-    ...node,
+    id: node.id,
+    name: node.name,
+    address: node.address,
+    apartments_count: node.apartments_count,
+    building_volume_m3: node.building_volume_m3,
+    mtcv_type: node.mtcv_type,
+    mtcv_count: node.mtcv_count,
+    readings: node.readings,
+    stats: node.stats,
     efficiency,
-    dailyProfile: getDailyProfile(id),
-    history: getHistory(id),
-    alerts: getNodeAlerts(id),
-    recommendations: getRecommendations(id),
+    dailyProfile: generateDailyProfile(node),
+    history: generateHistory(node),
+    alerts: generateAlerts(node),
+    recommendations: generateRecommendations(node),
   };
 }
 
 // Get all nodes with efficiency data
 export function getNodesWithEfficiency(): NodeWithEfficiency[] {
-  return data.nodes
-    .map((node) => getNodeWithEfficiency(node.id))
+  return rawNodes
+    .map(node => getNodeWithEfficiency(node.id))
     .filter((node): node is NodeWithEfficiency => node !== undefined);
 }
 
 // Get dashboard statistics
 export function getDashboardStats(): DashboardStats {
-  const nodes = getNodesWithEfficiency();
   const allAlerts = getAllAlerts();
 
   const avgIez = Math.round(
-    nodes.reduce((sum, node) => sum + node.efficiency.iez.value, 0) / nodes.length
+    rawNodes.reduce((sum, node) => sum + node.stats.avg_iez, 0) / rawNodes.length
   );
 
-  const categoryACount = nodes.filter((n) => n.efficiency.benchmark.category === 'A').length;
-  const categoryBCount = nodes.filter((n) => n.efficiency.benchmark.category === 'B').length;
-  const categoryCCount = nodes.filter((n) => n.efficiency.benchmark.category === 'C').length;
+  const categoryACount = rawNodes.filter(n => n.stats.category === 'A').length;
+  const categoryBCount = rawNodes.filter(n => n.stats.category === 'B').length;
+  const categoryCCount = rawNodes.filter(n => n.stats.category === 'C').length;
 
   return {
-    totalNodes: nodes.length,
+    totalNodes: rawNodes.length,
     avgIez,
-    activeAlerts: allAlerts.filter((a) => a.status === 'active').length,
+    activeAlerts: allAlerts.filter(a => a.status === 'active').length,
     categoryACount,
     categoryBCount,
     categoryCCount,
   };
+}
+
+// Get monthly history for charts (real data)
+export function getMonthlyHistory(nodeId: string): { date: string; iez: number; wskaznik: number; gj: number; m3: number }[] {
+  const node = rawNodes.find(n => n.id === nodeId);
+  if (!node) return [];
+
+  return node.readings.map(r => ({
+    date: `${r.year}-${String(r.month).padStart(2, '0')}`,
+    iez: calculateIEZ(r.wskaznik),
+    wskaznik: r.wskaznik,
+    gj: r.gj,
+    m3: r.m3,
+  }));
+}
+
+// Get all readings across all years for a node
+export function getNodeReadings(nodeId: string): MonthlyReading[] {
+  const node = rawNodes.find(n => n.id === nodeId);
+  return node?.readings || [];
 }
 
 // Format date for display
@@ -175,20 +502,20 @@ export function getRelativeTime(dateString: string): string {
   return `${diffDays} dni temu`;
 }
 
-// Get trend icon/text
-export function getTrendInfo(trend: 'rising' | 'falling' | 'stable', change: number): { icon: string; text: string; color: string } {
+// Get trend info
+export function getTrendInfo(trend: 'improving' | 'declining' | 'stable', change: number): { icon: string; text: string; color: string } {
   switch (trend) {
-    case 'rising':
-      return { icon: '↗', text: `+${change}`, color: 'text-success' };
-    case 'falling':
-      return { icon: '↘', text: `${change}`, color: 'text-critical' };
+    case 'improving':
+      return { icon: '↗', text: `+${Math.abs(change)}`, color: 'text-success' };
+    case 'declining':
+      return { icon: '↘', text: `-${Math.abs(change)}`, color: 'text-critical' };
     default:
       return { icon: '→', text: `${change > 0 ? '+' : ''}${change}`, color: 'text-foreground-muted' };
   }
 }
 
 // Get category color class
-export function getCategoryColor(category: 'A' | 'B' | 'C'): string {
+export function getCategoryColor(category: Category): string {
   switch (category) {
     case 'A': return 'text-category-a';
     case 'B': return 'text-category-b';
@@ -197,7 +524,7 @@ export function getCategoryColor(category: 'A' | 'B' | 'C'): string {
 }
 
 // Get category background class
-export function getCategoryBg(category: 'A' | 'B' | 'C'): string {
+export function getCategoryBg(category: Category): string {
   switch (category) {
     case 'A': return 'bg-success-muted text-success';
     case 'B': return 'bg-warning-muted text-warning';
@@ -229,4 +556,10 @@ export function getSeverityBg(severity: 'info' | 'warning' | 'critical'): string
     case 'warning': return 'bg-warning-muted border-warning/30';
     case 'critical': return 'bg-critical-muted border-critical/30';
   }
+}
+
+// Format month name in Polish
+export function formatMonth(month: number): string {
+  const months = ['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru'];
+  return months[month - 1] || '';
 }

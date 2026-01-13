@@ -1,3 +1,23 @@
+// Monthly reading from real data
+export interface MonthlyReading {
+  year: number;
+  month: number;
+  gj: number;
+  m3: number;
+  wskaznik: number;  // GJ/m3 efficiency indicator
+}
+
+// Node stats computed from readings
+export interface NodeStats {
+  avg_wskaznik: number;
+  avg_iez: number;
+  category: Category;
+  trend: 'improving' | 'declining' | 'stable';
+  trend_change: number;
+  total_readings: number;
+  years_covered: number[];
+}
+
 // Node (heating point) types
 export interface Node {
   id: string;
@@ -7,12 +27,14 @@ export interface Node {
   mtcv_type: string;
   mtcv_count: number;
   building_volume_m3: number;
+  readings?: MonthlyReading[];
+  stats?: NodeStats;
 }
 
 // IEZ (Efficiency Index) types
 export interface IEZ {
   value: number;
-  trend: 'rising' | 'falling' | 'stable';
+  trend: 'improving' | 'declining' | 'stable';
   trend_change: number;
 }
 
@@ -121,7 +143,7 @@ export interface RankingEntry {
   name: string;
   category: Category;
   avg_iez: number;
-  trend: 'rising' | 'falling' | 'stable';
+  trend: 'improving' | 'declining' | 'stable';
 }
 
 // Combined node data for detail view

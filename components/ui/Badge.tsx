@@ -76,14 +76,14 @@ export function CategoryBadge({ category, size = 'md', showLabel = false }: Cate
 
 // Trend badge
 interface TrendBadgeProps {
-  trend: 'rising' | 'falling' | 'stable';
+  trend: 'improving' | 'declining' | 'stable';
   change: number;
 }
 
 export function TrendBadge({ trend, change }: TrendBadgeProps) {
   const config = {
-    rising: { icon: '↗', variant: 'success' as const, prefix: '+' },
-    falling: { icon: '↘', variant: 'critical' as const, prefix: '' },
+    improving: { icon: '↗', variant: 'success' as const, prefix: '+' },
+    declining: { icon: '↘', variant: 'critical' as const, prefix: '' },
     stable: { icon: '→', variant: 'default' as const, prefix: change > 0 ? '+' : '' },
   };
 
@@ -92,7 +92,7 @@ export function TrendBadge({ trend, change }: TrendBadgeProps) {
   return (
     <Badge variant={variant} size="sm">
       <span>{icon}</span>
-      <span className="font-mono">{prefix}{change}</span>
+      <span className="font-mono">{prefix}{Math.abs(change)}</span>
     </Badge>
   );
 }
