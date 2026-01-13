@@ -1,14 +1,60 @@
 'use client';
 
 import { TrendBadge } from '@/components/ui/Badge';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { IEZ } from '@/lib/types';
 
 interface IEZGaugeProps {
   iez: IEZ;
   size?: 'sm' | 'md' | 'lg';
+  showTooltip?: boolean;
 }
 
-export function IEZGauge({ iez, size = 'lg' }: IEZGaugeProps) {
+const IEZTooltipContent = () => (
+  <div className="space-y-3">
+    <p className="font-semibold text-foreground">Indeks Efektywności Zużycia (IEZ)</p>
+
+    <div className="text-foreground-muted text-sm space-y-2">
+      <p>
+        <span className="font-medium text-foreground">Co to jest IEZ?</span><br />
+        IEZ to syntetyczny wskaźnik pokazujący ogólną efektywność węzła cieplnego w skali 0-100.
+        Łączy informacje z danych historycznych (GJ/m³ z rozliczeń) z bieżącymi wskaźnikami operacyjnymi.
+      </p>
+
+      <p>
+        <span className="font-medium text-foreground">Skąd się bierze?</span><br />
+        IEZ = (wskaźnik optymalny / wskaźnik rzeczywisty) × 100<br />
+        gdzie wskaźnik = GJ zużyte / m³ CWU pobranej przez mieszkańców.<br />
+        Optymalny wskaźnik dla CWU to około 0.22 GJ/m³.
+      </p>
+
+      <p>
+        <span className="font-medium text-foreground">Interpretacja:</span><br />
+        • <span className="text-success">IEZ ≥90 (Kat. A)</span> — węzeł pracuje bardzo efektywnie<br />
+        • <span className="text-efficiency">IEZ 75-89 (Kat. B)</span> — dobra efektywność, możliwa optymalizacja<br />
+        • <span className="text-critical">IEZ &lt;75 (Kat. C)</span> — niska efektywność, wymaga interwencji
+      </p>
+
+      <p>
+        <span className="font-medium text-foreground">Co wpływa na IEZ?</span><br />
+        • Nastawy zaworów MTCV na pionach CWU<br />
+        • Sprawność wymiennika ciepła<br />
+        • Równoważenie hydrauliczne instalacji<br />
+        • Wydajność i harmonogram pompy cyrkulacyjnej<br />
+        • Izolacja przewodów cyrkulacyjnych
+      </p>
+
+      <p>
+        <span className="font-medium text-foreground">Różnica IEZ vs WWC/SH/ES:</span><br />
+        IEZ to wskaźnik ogólny oparty na danych rozliczeniowych (znany po miesiącu).
+        WWC, SH, ES to wskaźniki operacyjne z bieżących pomiarów — pokazują CO konkretnie
+        wymaga regulacji.
+      </p>
+    </div>
+  </div>
+);
+
+export function IEZGauge({ iez, size = 'lg', showTooltip = true }: IEZGaugeProps) {
   const { value, trend, trend_change } = iez;
 
   // Calculate the angle for the gauge (0-100 maps to 0-270 degrees)
@@ -124,7 +170,10 @@ export function IEZGauge({ iez, size = 'lg' }: IEZGaugeProps) {
           >
             {value}
           </span>
-          <span className="text-foreground-muted text-sm -mt-1">ze 100</span>
+          <span className="text-foreground-muted text-sm -mt-1 flex items-center gap-1">
+            ze 100
+            {showTooltip && <InfoTooltip content={<IEZTooltipContent />} position="bottom" />}
+          </span>
         </div>
       </div>
 
