@@ -9,9 +9,10 @@ interface EfficiencyHierarchyPanelProps {
   indicators: OperationalIndicators;
 }
 
+// Color convention: optimal/good = green, warning = yellow, critical = red
 const statusColors: Record<IndicatorStatus, { text: string; bg: string; border: string }> = {
   optimal: { text: 'text-success', bg: 'bg-success/10', border: 'border-success/30' },
-  good: { text: 'text-efficiency', bg: 'bg-efficiency/10', border: 'border-efficiency/30' },
+  good: { text: 'text-success', bg: 'bg-success/10', border: 'border-success/30' },
   warning: { text: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/30' },
   critical: { text: 'text-critical', bg: 'bg-critical/10', border: 'border-critical/30' },
 };
@@ -75,9 +76,9 @@ function ArcGauge({
 
   const getColor = () => {
     switch (status) {
-      case 'optimal': return '#10b981';
-      case 'good': return '#14b8a6';
-      case 'warning': return '#f59e0b';
+      case 'optimal': return '#22c55e';
+      case 'good': return '#22c55e';
+      case 'warning': return '#eab308';
       case 'critical': return '#ef4444';
     }
   };
@@ -176,7 +177,7 @@ function MiniIndicator({
         <div
           className={`h-full rounded-full transition-all duration-500 ease-out ${
             status === 'optimal' ? 'bg-success' :
-            status === 'good' ? 'bg-efficiency' :
+            status === 'good' ? 'bg-success' :
             status === 'warning' ? 'bg-warning' :
             'bg-critical'
           }`}
@@ -262,35 +263,42 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
           Sprawność Energetyczna
           <InfoTooltip
             content={
-              <div className="space-y-3">
-                <p className="font-semibold text-foreground">Hierarchia Wskaźników Efektywności</p>
-
-                <div className="text-foreground-muted text-sm space-y-2">
-                  <p>
-                    <span className="font-medium text-foreground">SE — Sprawność Energetyczna</span><br />
-                    Główny wskaźnik pokazujący jaki procent kupowanej energii trafia do mieszkańców
-                    jako ciepła woda użytkowa. Uwzględnia wszystkie straty w systemie.
-                  </p>
-
-                  <p>
-                    <span className="font-medium text-foreground">KW — Kondycja Wymiennika</span><br />
-                    Średnia geometryczna wskaźników WWC, SH i ES. Pokazuje jak sprawnie
-                    pracuje wymiennik ciepła i instalacja przy wymienniku.
-                  </p>
-
-                  <p>
-                    <span className="font-medium text-foreground">SS — Straty Systemowe</span><br />
-                    Straty energii poza wymiennikiem: cyrkulacja, rury, izolacja.
-                    Obliczane jako różnica między KW a SE.
-                  </p>
-
-                  <p>
-                    <span className="font-medium text-foreground">Diagnostyka:</span><br />
-                    • SE niskie, KW wysokie → problem z cyrkulacją<br />
-                    • SE niskie, KW niskie → problem z wymiennikiem<br />
-                    • Oba wysokie → system sprawny
-                  </p>
+              <div className="space-y-4">
+                <div>
+                  <p className="font-semibold text-foreground text-base">Sprawność Energetyczna (SE)</p>
+                  <p className="text-foreground-muted text-xs mt-1">Główny wskaźnik systemu</p>
                 </div>
+
+                <p className="text-foreground-muted text-sm leading-relaxed">
+                  Określa jaki procent zakupionej energii cieplnej faktycznie dociera do mieszkańców jako użyteczna ciepła woda.
+                </p>
+
+                <div className="bg-surface rounded-lg p-3 font-mono text-xs">
+                  <p className="text-foreground mb-1">SE = (Q_teoretyczne / Q_rzeczywiste) × 100</p>
+                  <p className="text-foreground-muted">gdzie Q_teor = V × c × ΔT × k_straty</p>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-xs font-medium text-foreground">Kategorie:</p>
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-success" />
+                      <span className="text-foreground-muted">≥80% — Kategoria A</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-warning" />
+                      <span className="text-foreground-muted">70-79% — Kategoria B</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-critical" />
+                      <span className="text-foreground-muted">&lt;70% — Kategoria C</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-[10px] text-foreground-subtle border-t border-border pt-3">
+                  Źródło: dane KSM (miesięczne) lub MEC SCADA (bieżące)
+                </p>
               </div>
             }
           />

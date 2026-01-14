@@ -19,9 +19,10 @@ interface IndicatorBarProps {
 }
 
 function IndicatorBar({ label, shortLabel, value, status, interpretation, action, tooltip }: IndicatorBarProps) {
+  // Color convention: optimal/good = green, warning = yellow, critical = red
   const statusConfig: Record<IndicatorStatus, { color: string; bgColor: string; barColor: string }> = {
     optimal: { color: 'text-success', bgColor: 'bg-success/10', barColor: 'bg-success' },
-    good: { color: 'text-efficiency', bgColor: 'bg-efficiency/10', barColor: 'bg-efficiency' },
+    good: { color: 'text-success', bgColor: 'bg-success/10', barColor: 'bg-success' },
     warning: { color: 'text-warning', bgColor: 'bg-warning/10', barColor: 'bg-warning' },
     critical: { color: 'text-critical', bgColor: 'bg-critical/10', barColor: 'bg-critical' },
   };
@@ -85,7 +86,10 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
         }
       >
         <span className="flex items-center gap-2">
-          <span className="text-efficiency">◎</span>
+          <svg className="w-4 h-4 text-foreground-muted" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="8" cy="8" r="6" />
+            <circle cx="8" cy="8" r="2" />
+          </svg>
           Wskaźniki operacyjne
         </span>
       </CardHeader>
@@ -242,7 +246,7 @@ export function OperationalIndicatorsPanel({ indicators }: OperationalIndicators
               <span className="text-foreground-muted">≥95% Optymalne</span>
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-efficiency" />
+              <span className="w-2 h-2 rounded-full bg-success" />
               <span className="text-foreground-muted">≥85% Dobre</span>
             </span>
             <span className="flex items-center gap-1">
