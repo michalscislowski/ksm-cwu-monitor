@@ -571,20 +571,6 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
           </div>
         </div>
 
-        {/* Technical Footer */}
-        <div className="px-6 py-3 bg-surface-elevated/50 border-t border-border-subtle flex items-center justify-between text-xs text-foreground-subtle font-mono">
-          <span>
-            T<sub>zimna</sub> = {se.t_cold_estimated}°C
-          </span>
-          <span className="text-foreground-muted">|</span>
-          <span>
-            Q<sub>teor</sub> = {se.q_theoretical} GJ
-          </span>
-          <span className="text-foreground-muted">|</span>
-          <span>
-            Q<sub>rzecz</sub> = {se.q_actual} GJ
-          </span>
-        </div>
       </CardBody>
     </Card>
   );
