@@ -4,6 +4,12 @@ import { useState } from 'react';
 
 const docs = [
   {
+    id: '00-functional-specification',
+    title: 'Specyfikacja Funkcjonalna',
+    description: 'Cele systemu, wymagania, przypadki użycia, interfejs',
+    file: '/docs/00-functional-specification.html',
+  },
+  {
     id: '01-data-contract',
     title: 'Kontrakt Danych',
     description: 'Definicje wskaźników SE, KW, SS oraz źródła danych',

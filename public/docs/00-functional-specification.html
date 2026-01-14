@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Specyfikacja Funkcjonalna</title>
+  <style>
+    @page {
+      margin: 2cm 2cm;
+      size: A4;
+    }
+
+    @page:first {
+      margin-top: 1cm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #1a1a1a;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 40px;
+      background: white;
+    }
+
+    /* Header dokumentu */
+    .doc-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: white;
+      padding: 24px 32px;
+      border-radius: 12px;
+      margin: -32px -40px 32px -40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .doc-header-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc-header-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .doc-header-text h1 {
+      font-size: 22pt;
+      margin: 0;
+      border: none;
+      padding: 0;
+      color: white;
+    }
+
+    .doc-header-text p {
+      margin: 4px 0 0 0;
+      opacity: 0.85;
+      font-size: 11pt;
+    }
+
+    /* Nagłówki */
+    h1 {
+      font-size: 22pt;
+      color: #1e3a5f;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 15pt;
+      color: #1e3a5f;
+      border-bottom: 2px solid #bfdbfe;
+      padding-bottom: 6px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #1d4ed8;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      color: #2563eb;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* Tabele */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #1e3a5f;
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9pt;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Kolorowanie statusów w tabelach */
+    td:contains("optimal"), td:contains("Optimal"), td:contains("OPTIMAL") {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Status badges - ręczne znaczniki w tabelach */
+    .status-optimal { color: #059669; font-weight: 600; }
+    .status-good { color: #0284c7; font-weight: 600; }
+    .status-warning { color: #d97706; font-weight: 600; }
+    .status-critical { color: #dc2626; font-weight: 600; }
+
+    /* Kod inline */
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+      font-size: 9pt;
+      background-color: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Bloki kodu - domyślne */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+      margin: 16px 0;
+      border-left: 4px solid #3b82f6;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+      border: none;
+      font-size: 9pt;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    }
+
+    /* ============================================================
+       DIAGRAMY ASCII - Technical Blueprint Style
+       Inspiracja: schematy inżynierskie, terminale CRT, NASA docs
+       ============================================================ */
+
+    pre.diagram {
+      /* Tło - ciemny granat z subtelną siatką */
+      background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #020617 0%, #0a1628 50%, #0f172a 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+
+      /* Wymiary i spacing */
+      padding: 28px 32px 24px 32px;
+      margin: 24px 0;
+      border-radius: 8px;
+      overflow-x: auto;
+
+      /* Obramowanie - podwójna linia techniczna */
+      border: 1px solid #1e3a5f;
+      box-shadow:
+        inset 0 0 0 1px rgba(56, 189, 248, 0.1),
+        0 0 0 1px #0f172a,
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(56, 189, 248, 0.05);
+
+      /* Pozycjonowanie dla etykiety */
+      position: relative;
+    }
+
+
+    /* Tekst w diagramie */
+    pre.diagram code {
+      /* Font - czytelny monospace */
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 10pt;
+      line-height: 1.4;
+      letter-spacing: 0;
+
+      /* Kolor bazowy - jasny niebieskoszary */
+      color: #cbd5e1;
+
+      /* Wyłącz domyślne style */
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    /* ============================================================
+       DIAGRAMY - jednolity kolor tekstu, bez podświetleń
+       ============================================================ */
+
+    /* Formuły matematyczne */
+    pre.math-formula {
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+      color: #854d0e;
+      border: 2px solid #fbbf24;
+      border-left: 4px solid #f59e0b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 10pt;
+      text-align: center;
+    }
+
+    pre.math-formula code {
+      color: #713f12;
+      font-size: 10pt;
+      font-weight: 500;
+    }
+
+    /* Cytaty i uwagi */
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      margin: 16px 0;
+      padding: 12px 20px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-style: normal;
+      border-radius: 0 6px 6px 0;
+    }
+
+    blockquote p {
+      margin: 0;
+    }
+
+    blockquote strong {
+      color: #1d4ed8;
+    }
+
+    /* Listy */
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    li > ul, li > ol {
+      margin: 6px 0;
+    }
+
+    /* Linki */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Linie poziome */
+    hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 28px 0;
+    }
+
+    /* Paragraf */
+    p {
+      margin: 10px 0;
+    }
+
+    /* Strong */
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* Pierwsza tabela - meta info */
+    body > table:first-of-type,
+    h2#informacje-o-dokumencie + table {
+      background: #f8fafc;
+      border: 2px solid #3b82f6;
+    }
+
+    body > table:first-of-type th,
+    h2#informacje-o-dokumencie + table th {
+      background: #3b82f6;
+    }
+
+    /* Stopka */
+    .doc-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #e5e7eb;
+      text-align: center;
+      color: #64748b;
+      font-size: 9pt;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 0;
+        max-width: none;
+        font-size: 10pt;
+      }
+
+      .doc-header {
+        margin: 0 0 24px 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+      }
+
+      table, pre, blockquote {
+        page-break-inside: avoid;
+      }
+
+      pre {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: #1e3a5f;
+      }
+
+      a[href^="http"]:after {
+        content: none;
+      }
+    }
+
+    /* Spis treści */
+    nav#TOC {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+    }
+
+    nav#TOC > ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    nav#TOC > ul > li {
+      margin: 8px 0;
+    }
+
+    nav#TOC > ul > li > a {
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    nav#TOC ul ul {
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+
+    nav#TOC ul ul li {
+      margin: 4px 0;
+    }
+
+    nav#TOC ul ul a {
+      color: #475569;
+      font-size: 9.5pt;
+    }
+
+    /* Kategorie kolorów - dla tabel z kategoriami */
+    tr td:first-child:contains("A"),
+    td.cat-a {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("B"),
+    td.cat-b {
+      color: #d97706;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("C"),
+    td.cat-c {
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-header-icon">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div class="doc-header-text">
+    <h1>Specyfikacja Funkcjonalna</h1>
+    <p>CWU Monitor — KSM Przylesie</p>
+  </div>
+</div>
+
+<nav id="TOC">
+<ul>
+<li><a href="#specyfikacja-funkcjonalna"
+id="toc-specyfikacja-funkcjonalna">Specyfikacja Funkcjonalna</a>
+<ul>
+<li><a href="#system-monitorowania-efektywności-energetycznej-cwu"
+id="toc-system-monitorowania-efektywności-energetycznej-cwu">System
+Monitorowania Efektywności Energetycznej CWU</a></li>
+<li><a href="#spis-treści" id="toc-spis-treści">Spis treści</a></li>
+<li><a href="#wprowadzenie" id="toc-wprowadzenie">1.
+Wprowadzenie</a></li>
+<li><a href="#cele-systemu" id="toc-cele-systemu">2. Cele
+systemu</a></li>
+<li><a href="#użytkownicy-i-role" id="toc-użytkownicy-i-role">3.
+Użytkownicy i role</a></li>
+<li><a href="#architektura-funkcjonalna"
+id="toc-architektura-funkcjonalna">4. Architektura funkcjonalna</a></li>
+<li><a href="#moduły-systemu" id="toc-moduły-systemu">5. Moduły
+systemu</a></li>
+<li><a href="#wymagania-funkcjonalne" id="toc-wymagania-funkcjonalne">6.
+Wymagania funkcjonalne</a></li>
+<li><a href="#przypadki-użycia" id="toc-przypadki-użycia">7. Przypadki
+użycia</a></li>
+<li><a href="#interfejs-użytkownika" id="toc-interfejs-użytkownika">8.
+Interfejs użytkownika</a></li>
+<li><a href="#integracje" id="toc-integracje">9. Integracje</a></li>
+<li><a href="#wymagania-niefunkcjonalne"
+id="toc-wymagania-niefunkcjonalne">10. Wymagania
+niefunkcjonalne</a></li>
+<li><a href="#ograniczenia-i-założenia"
+id="toc-ograniczenia-i-założenia">11. Ograniczenia i założenia</a></li>
+<li><a href="#załączniki" id="toc-załączniki">Załączniki</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="specyfikacja-funkcjonalna">Specyfikacja Funkcjonalna</h1>
+<h2 id="system-monitorowania-efektywności-energetycznej-cwu">System
+Monitorowania Efektywności Energetycznej CWU</h2>
+<p><strong>Wersja:</strong> 1.0 <strong>Data:</strong> Styczeń 2025
+<strong>Autor:</strong> Banach Group dla KSM Przylesie</p>
+<hr />
+<h2 id="spis-treści">Spis treści</h2>
+<ol type="1">
+<li><a href="#1-wprowadzenie">Wprowadzenie</a></li>
+<li><a href="#2-cele-systemu">Cele systemu</a></li>
+<li><a href="#3-użytkownicy-i-role">Użytkownicy i role</a></li>
+<li><a href="#4-architektura-funkcjonalna">Architektura
+funkcjonalna</a></li>
+<li><a href="#5-moduły-systemu">Moduły systemu</a></li>
+<li><a href="#6-wymagania-funkcjonalne">Wymagania funkcjonalne</a></li>
+<li><a href="#7-przypadki-użycia">Przypadki użycia</a></li>
+<li><a href="#8-interfejs-użytkownika">Interfejs użytkownika</a></li>
+<li><a href="#9-integracje">Integracje</a></li>
+<li><a href="#10-wymagania-niefunkcjonalne">Wymagania
+niefunkcjonalne</a></li>
+<li><a href="#11-ograniczenia-i-założenia">Ograniczenia i
+założenia</a></li>
+</ol>
+<hr />
+<h2 id="wprowadzenie">1. Wprowadzenie</h2>
+<h3 id="cel-dokumentu">1.1 Cel dokumentu</h3>
+<p>Niniejszy dokument stanowi specyfikację funkcjonalną systemu
+<strong>Monitor CWU</strong> — aplikacji webowej służącej do
+monitorowania efektywności energetycznej węzłów cieplnych ciepłej wody
+użytkowej (CWU) w zasobach Katowickiej Spółdzielni Mieszkaniowej
+„Przylesie”.</p>
+<h3 id="zakres-systemu">1.2 Zakres systemu</h3>
+<p>System obejmuje: - Zbieranie i agregację danych z systemów
+pomiarowych (MEC SCADA) oraz rozliczeniowych (KSM) - Obliczanie
+wskaźników efektywności energetycznej według zdefiniowanej metodologii -
+Wizualizację danych w czasie rzeczywistym i historycznym - Automatyczne
+generowanie alertów przy wykryciu anomalii - Wspomaganie decyzji
+dotyczących optymalizacji i konserwacji</p>
+<h3 id="definicje-i-skróty">1.3 Definicje i skróty</h3>
+<table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Znaczenie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CWU</td>
+<td>Ciepła Woda Użytkowa</td>
+</tr>
+<tr>
+<td>MEC</td>
+<td>Miejska Energetyka Cieplna</td>
+</tr>
+<tr>
+<td>SCADA</td>
+<td>Supervisory Control and Data Acquisition</td>
+</tr>
+<tr>
+<td>SE</td>
+<td>Sprawność Energetyczna (wskaźnik główny)</td>
+</tr>
+<tr>
+<td>KW</td>
+<td>Kondycja Wymiennika</td>
+</tr>
+<tr>
+<td>SS</td>
+<td>Straty Systemowe</td>
+</tr>
+<tr>
+<td>WWC</td>
+<td>Współczynnik Wymiany Ciepła</td>
+</tr>
+<tr>
+<td>SH</td>
+<td>Stabilność Hydrauliczna</td>
+</tr>
+<tr>
+<td>ES</td>
+<td>Efektywność Szczytowa</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cele-systemu">2. Cele systemu</h2>
+<h3 id="cele-biznesowe">2.1 Cele biznesowe</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    CELE BIZNESOWE                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
+│  │  REDUKCJA   │    │  POPRAWA    │    │ OPTYMALI-   │         │
+│  │   KOSZTÓW   │    │  JAKOŚCI    │    │   ZACJA     │         │
+│  │   ENERGII   │    │   USŁUGI    │    │ KONSERWACJI │         │
+│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘         │
+│         │                  │                  │                 │
+│         ▼                  ▼                  ▼                 │
+│  • Identyfikacja     • Stabilna temp.   • Predykcja awarii     │
+│    strat energii       CWU dla          • Priorytetyzacja      │
+│  • Wykrywanie          mieszkańców        napraw               │
+│    nieefektywności   • Mniej reklamacji • Planowanie           │
+│  • Benchmarking      • Transparentność    przeglądów           │
+│    między węzłami                                              │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="cele-mierzalne">2.2 Cele mierzalne</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 28%" />
+<col style="width: 56%" />
+</colgroup>
+<thead>
+<tr>
+<th>Cel</th>
+<th>Metryka</th>
+<th>Wartość docelowa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Redukcja strat energii</td>
+<td>Średnie SE dla wszystkich węzłów</td>
+<td>Wzrost o 5 p.p. w ciągu roku</td>
+</tr>
+<tr>
+<td>Szybkość reakcji</td>
+<td>Czas od wykrycia problemu do alertu</td>
+<td>&lt; 1 godzina</td>
+</tr>
+<tr>
+<td>Pokrycie monitoringiem</td>
+<td>Liczba węzłów w systemie</td>
+<td>40 węzłów (100%)</td>
+</tr>
+<tr>
+<td>Oszczędności finansowe</td>
+<td>Roczna redukcja kosztów energii</td>
+<td>Min. 50 000 PLN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interesariusze">2.3 Interesariusze</h3>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 34%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr>
+<th>Interesariusz</th>
+<th>Rola w systemie</th>
+<th>Główne potrzeby</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zarząd KSM</td>
+<td>Sponsor, odbiorca raportów</td>
+<td>Przegląd KPI, raporty kosztowe</td>
+</tr>
+<tr>
+<td>Dział Techniczny</td>
+<td>Główny użytkownik</td>
+<td>Monitoring, alerty, diagnostyka</td>
+</tr>
+<tr>
+<td>Konserwatorzy</td>
+<td>Użytkownik operacyjny</td>
+<td>Lista zadań, szczegóły węzłów</td>
+</tr>
+<tr>
+<td>Mieszkańcy</td>
+<td>Beneficjent pośredni</td>
+<td>Stabilna temperatura CWU</td>
+</tr>
+<tr>
+<td>MEC Katowice</td>
+<td>Dostawca danych</td>
+<td>Integracja SCADA</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="użytkownicy-i-role">3. Użytkownicy i role</h2>
+<h3 id="role-w-systemie">3.1 Role w systemie</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                      ROLE UŻYTKOWNIKÓW                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │ ADMINISTRATOR                                              │  │
+│  │ • Zarządzanie użytkownikami i uprawnieniami               │  │
+│  │ • Konfiguracja systemu i progów alertów                   │  │
+│  │ • Dostęp do wszystkich funkcji                            │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                              │                                   │
+│              ┌───────────────┴───────────────┐                  │
+│              ▼                               ▼                  │
+│  ┌─────────────────────────┐    ┌─────────────────────────┐    │
+│  │ KIEROWNIK TECHNICZNY    │    │ ANALITYK                │    │
+│  │ • Pełny podgląd danych  │    │ • Raporty i analizy     │    │
+│  │ • Zarządzanie alertami  │    │ • Eksport danych        │    │
+│  │ • Zlecanie zadań        │    │ • Porównania węzłów     │    │
+│  └─────────────────────────┘    └─────────────────────────┘    │
+│              │                                                   │
+│              ▼                                                   │
+│  ┌─────────────────────────┐                                    │
+│  │ KONSERWATOR             │                                    │
+│  │ • Podgląd przypisanych  │                                    │
+│  │   węzłów                │                                    │
+│  │ • Potwierdzanie zadań   │                                    │
+│  │ • Raportowanie wykonania│                                    │
+│  └─────────────────────────┘                                    │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="macierz-uprawnień">3.2 Macierz uprawnień</h3>
+<table>
+<thead>
+<tr>
+<th>Funkcja</th>
+<th style="text-align: center;">Administrator</th>
+<th style="text-align: center;">Kierownik</th>
+<th style="text-align: center;">Analityk</th>
+<th style="text-align: center;">Konserwator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard - podgląd</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+</tr>
+<tr>
+<td>Lista węzłów</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">Przypisane</td>
+</tr>
+<tr>
+<td>Szczegóły węzła</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">Przypisane</td>
+</tr>
+<tr>
+<td>Alerty - podgląd</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">Przypisane</td>
+</tr>
+<tr>
+<td>Alerty - potwierdzanie</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">Przypisane</td>
+</tr>
+<tr>
+<td>Raporty - generowanie</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+</tr>
+<tr>
+<td>Eksport danych</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+</tr>
+<tr>
+<td>Konfiguracja progów</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">✗</td>
+</tr>
+<tr>
+<td>Zarządzanie użytkownikami</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">✗</td>
+</tr>
+<tr>
+<td>Konfiguracja systemu</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">✗</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architektura-funkcjonalna">4. Architektura funkcjonalna</h2>
+<h3 id="diagram-architektury">4.1 Diagram architektury</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                        MONITOR CWU - ARCHITEKTURA                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ╔═══════════════════════════════════════════════════════════════════╗  │
+│  ║                     WARSTWA PREZENTACJI                            ║  │
+│  ║  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────────┐  ║  │
+│  ║  │Dashboard │  │  Węzły   │  │  Alerty  │  │  Dokumentacja    │  ║  │
+│  ║  │ Przegląd │  │  Lista   │  │  System  │  │  Techniczna      │  ║  │
+│  ║  └──────────┘  └──────────┘  └──────────┘  └──────────────────┘  ║  │
+│  ╚═══════════════════════════════════════════════════════════════════╝  │
+│                                    │                                     │
+│                                    ▼                                     │
+│  ╔═══════════════════════════════════════════════════════════════════╗  │
+│  ║                     WARSTWA LOGIKI BIZNESOWEJ                      ║  │
+│  ║  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐   ║  │
+│  ║  │ Kalkulator      │  │ Generator       │  │ Analizator      │   ║  │
+│  ║  │ Wskaźników      │  │ Alertów         │  │ Trendów         │   ║  │
+│  ║  │                 │  │                 │  │                 │   ║  │
+│  ║  │ SE, KW, SS      │  │ Reguły          │  │ Predykcje       │   ║  │
+│  ║  │ WWC, SH, ES     │  │ Progi           │  │ Porównania      │   ║  │
+│  ║  └─────────────────┘  └─────────────────┘  └─────────────────┘   ║  │
+│  ╚═══════════════════════════════════════════════════════════════════╝  │
+│                                    │                                     │
+│                                    ▼                                     │
+│  ╔═══════════════════════════════════════════════════════════════════╗  │
+│  ║                     WARSTWA DANYCH                                 ║  │
+│  ║  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐   ║  │
+│  ║  │ Adapter         │  │ Adapter         │  │ Baza            │   ║  │
+│  ║  │ MEC SCADA       │  │ KSM             │  │ Danych          │   ║  │
+│  ║  │                 │  │                 │  │                 │   ║  │
+│  ║  │ • Temperatury   │  │ • Zużycie GJ    │  │ • Węzły         │   ║  │
+│  ║  │ • Przepływy     │  │ • Zużycie m³    │  │ • Pomiary       │   ║  │
+│  ║  │ • Stany         │  │ • Koszty        │  │ • Alerty        │   ║  │
+│  ║  └─────────────────┘  └─────────────────┘  └─────────────────┘   ║  │
+│  ╚═══════════════════════════════════════════════════════════════════╝  │
+│                                    │                                     │
+│                    ┌───────────────┴───────────────┐                    │
+│                    ▼                               ▼                    │
+│           ┌───────────────┐               ┌───────────────┐             │
+│           │  MEC SCADA    │               │  System KSM   │             │
+│           │  (zewnętrzny) │               │  (zewnętrzny) │             │
+│           └───────────────┘               └───────────────┘             │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="przepływ-danych">4.2 Przepływ danych</h3>
+<pre><code>┌────────────────────────────────────────────────────────────────┐
+│                    PRZEPŁYW DANYCH                              │
+├────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   MEC SCADA                          KSM System                │
+│   (co 15 min)                        (miesięcznie)             │
+│       │                                   │                    │
+│       ▼                                   ▼                    │
+│  ┌─────────┐                        ┌─────────┐               │
+│  │T_zas    │                        │ΔGJ      │               │
+│  │T_pow    │                        │Δm³      │               │
+│  │Q_flow   │                        │Koszty   │               │
+│  └────┬────┘                        └────┬────┘               │
+│       │                                   │                    │
+│       └───────────────┬──────────────────┘                    │
+│                       ▼                                        │
+│              ┌─────────────────┐                               │
+│              │   AGREGACJA     │                               │
+│              │   I WALIDACJA   │                               │
+│              └────────┬────────┘                               │
+│                       │                                        │
+│       ┌───────────────┼───────────────┐                       │
+│       ▼               ▼               ▼                       │
+│  ┌─────────┐    ┌─────────┐    ┌─────────┐                   │
+│  │   WWC   │    │   SH    │    │   ES    │   Poziom 3       │
+│  └────┬────┘    └────┬────┘    └────┬────┘                   │
+│       │              │              │                         │
+│       └──────────────┼──────────────┘                         │
+│                      ▼                                         │
+│         ┌────────────────────────┐                            │
+│         │    KW = ∛(WWC×SH×ES)   │          Poziom 2         │
+│         └───────────┬────────────┘                            │
+│                     │                                          │
+│       ┌─────────────┴─────────────┐                           │
+│       ▼                           ▼                           │
+│  ┌─────────┐               ┌─────────────┐                    │
+│  │   SE    │               │SS=100(1-SE/KW)│    Poziom 2     │
+│  │(główny) │               └─────────────┘                    │
+│  └────┬────┘                                                   │
+│       │                                                        │
+│       ▼                                                        │
+│  ┌─────────────────────────────────────┐                      │
+│  │         WIZUALIZACJA                │                      │
+│  │  Dashboard │ Wykresy │ Alerty       │                      │
+│  └─────────────────────────────────────┘                      │
+│                                                                 │
+└────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="moduły-systemu">5. Moduły systemu</h2>
+<h3 id="moduł-dashboard">5.1 Moduł Dashboard</h3>
+<p><strong>Cel:</strong> Szybki przegląd stanu wszystkich węzłów i
+kluczowych wskaźników.</p>
+<p><strong>Funkcje:</strong> - Wyświetlanie głównego wskaźnika SE
+(średnia dla wszystkich węzłów) - Liczba węzłów w poszczególnych
+kategoriach (A, B, C) - Lista aktywnych alertów z priorytetem - Rozkład
+kategorii węzłów (wykres) - Trend SE w czasie (wykres liniowy)</p>
+<p><strong>Odświeżanie:</strong> Automatyczne co 5 minut lub na
+żądanie.</p>
+<h3 id="moduł-węzły">5.2 Moduł Węzły</h3>
+<p><strong>Cel:</strong> Szczegółowy monitoring poszczególnych węzłów
+cieplnych.</p>
+<p><strong>Funkcje:</strong> - Lista wszystkich węzłów z podstawowymi
+wskaźnikami - Filtrowanie po kategorii, lokalizacji, statusie -
+Sortowanie po dowolnej kolumnie - Wyszukiwanie po nazwie/adresie - Widok
+szczegółowy pojedynczego węzła: - Hierarchia wskaźników (SE → KW/SS →
+WWC/SH/ES) - Wykresy historyczne (24h, 7d, 30d, 12m) - Diagnostyka i
+rekomendacje - Historia alertów - Dane techniczne węzła</p>
+<h3 id="moduł-alerty">5.3 Moduł Alerty</h3>
+<p><strong>Cel:</strong> Zarządzanie powiadomieniami o anomaliach i
+problemach.</p>
+<p><strong>Funkcje:</strong> - Lista alertów z filtrowaniem
+(aktywne/potwierdzone/rozwiązane) - Priorytety: krytyczny, ostrzeżenie,
+informacyjny - Szczegóły alertu z kontekstem i rekomendacjami -
+Potwierdzanie i zamykanie alertów - Historia alertów z możliwością
+eksportu - Konfiguracja progów alertów (admin)</p>
+<h3 id="moduł-dokumentacja">5.4 Moduł Dokumentacja</h3>
+<p><strong>Cel:</strong> Dostęp do dokumentacji technicznej i
+użytkowej.</p>
+<p><strong>Funkcje:</strong> - Kontrakt danych (opis wskaźników i
+wzorów) - Specyfikacja API - Instrukcje użytkownika - FAQ i
+rozwiązywanie problemów</p>
+<h3 id="moduł-raportów-faza-2">5.5 Moduł Raportów (faza 2)</h3>
+<p><strong>Cel:</strong> Generowanie raportów okresowych.</p>
+<p><strong>Funkcje:</strong> - Raporty miesięczne dla zarządu - Raporty
+techniczne dla działu utrzymania - Porównania między węzłami - Eksport
+do PDF/Excel</p>
+<hr />
+<h2 id="wymagania-funkcjonalne">6. Wymagania funkcjonalne</h2>
+<h3 id="dashboard">6.1 Dashboard</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 42%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Wymaganie</th>
+<th>Priorytet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-D01</td>
+<td>System wyświetla średnią SE dla wszystkich aktywnych węzłów</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-D02</td>
+<td>System pokazuje liczbę węzłów w kategoriach A, B, C</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-D03</td>
+<td>System wyświetla listę do 5 aktywnych alertów posortowanych wg
+priorytetu</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-D04</td>
+<td>System pokazuje wykres rozkładu kategorii (pie chart)</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-D05</td>
+<td>System pokazuje trend SE z ostatnich 30 dni</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-D06</td>
+<td>Dashboard odświeża się automatycznie co 5 minut</td>
+<td>Średni</td>
+</tr>
+</tbody>
+</table>
+<h3 id="węzły">6.2 Węzły</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 42%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Wymaganie</th>
+<th>Priorytet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-W01</td>
+<td>System wyświetla listę wszystkich węzłów z kolumnami: nazwa, adres,
+SE, kategoria, trend</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-W02</td>
+<td>Użytkownik może filtrować węzły po kategorii (A/B/C)</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-W03</td>
+<td>Użytkownik może sortować listę po dowolnej kolumnie</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-W04</td>
+<td>Użytkownik może wyszukiwać węzeł po nazwie lub adresie</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-W05</td>
+<td>Kliknięcie węzła otwiera widok szczegółowy</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-W06</td>
+<td>Widok szczegółowy pokazuje hierarchię wskaźników
+SE→KW/SS→WWC/SH/ES</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-W07</td>
+<td>Widok szczegółowy zawiera wykresy historyczne z wyborem okresu</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-W08</td>
+<td>System wyświetla interpretację tekstową każdego wskaźnika</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-W09</td>
+<td>System pokazuje rekomendowane działania przy niskich
+wskaźnikach</td>
+<td>Średni</td>
+</tr>
+<tr>
+<td>F-W10</td>
+<td>System pokazuje potencjał oszczędności w GJ i PLN</td>
+<td>Średni</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alerty">6.3 Alerty</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 42%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Wymaganie</th>
+<th>Priorytet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-A01</td>
+<td>System automatycznie generuje alert gdy SE &lt; 70% przez 2+
+godziny</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-A02</td>
+<td>System automatycznie generuje alert gdy KW &lt; 70% przez 2+
+godziny</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-A03</td>
+<td>System automatycznie generuje alert gdy SS &gt; 30% przez 4+
+godziny</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-A04</td>
+<td>Alerty mają 3 poziomy: krytyczny, ostrzeżenie, informacyjny</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-A05</td>
+<td>Użytkownik może potwierdzić alert (zmiana statusu na “w
+realizacji”)</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-A06</td>
+<td>Użytkownik może zamknąć alert z komentarzem</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-A07</td>
+<td>System przechowuje historię alertów minimum 12 miesięcy</td>
+<td>Średni</td>
+</tr>
+<tr>
+<td>F-A08</td>
+<td>Administrator może konfigurować progi alertów</td>
+<td>Średni</td>
+</tr>
+</tbody>
+</table>
+<h3 id="integracja-danych">6.4 Integracja danych</h3>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 42%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Wymaganie</th>
+<th>Priorytet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-I01</td>
+<td>System pobiera dane z MEC SCADA co 15 minut</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-I02</td>
+<td>System importuje dane rozliczeniowe KSM (miesięcznie)</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-I03</td>
+<td>System waliduje dane wejściowe i oznacza nieprawidłowe</td>
+<td>Wysoki</td>
+</tr>
+<tr>
+<td>F-I04</td>
+<td>System oblicza wskaźniki zgodnie z metodyką z kontraktu danych</td>
+<td>Krytyczny</td>
+</tr>
+<tr>
+<td>F-I05</td>
+<td>System przechowuje dane historyczne minimum 24 miesiące</td>
+<td>Wysoki</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="przypadki-użycia">7. Przypadki użycia</h2>
+<h3 id="uc-01-codzienny-przegląd-stanu-systemu">7.1 UC-01: Codzienny
+przegląd stanu systemu</h3>
+<p><strong>Aktor:</strong> Kierownik techniczny</p>
+<p><strong>Warunek wstępny:</strong> Użytkownik zalogowany do
+systemu</p>
+<p><strong>Scenariusz główny:</strong> 1. Użytkownik otwiera Dashboard
+2. System wyświetla średnią SE i rozkład kategorii 3. Użytkownik
+przegląda listę aktywnych alertów 4. Użytkownik klika alert o najwyższym
+priorytecie 5. System wyświetla szczegóły alertu z kontekstem 6.
+Użytkownik przechodzi do widoku węzła 7. System wyświetla pełną
+diagnostykę węzła 8. Użytkownik podejmuje decyzję o działaniu</p>
+<p><strong>Scenariusz alternatywny:</strong> - 3a. Brak aktywnych
+alertów → Użytkownik przegląda węzły kategorii C</p>
+<h3 id="uc-02-diagnostyka-problematycznego-węzła">7.2 UC-02: Diagnostyka
+problematycznego węzła</h3>
+<p><strong>Aktor:</strong> Konserwator</p>
+<p><strong>Warunek wstępny:</strong> Otrzymano alert o niskiej
+sprawności węzła</p>
+<p><strong>Scenariusz główny:</strong> 1. Użytkownik otwiera widok
+szczegółowy węzła 2. System wyświetla hierarchię wskaźników 3.
+Użytkownik analizuje które wskaźniki są niskie 4. System pokazuje
+rekomendacje działań 5. Użytkownik identyfikuje przyczynę (np. niski WWC
+→ osady) 6. Użytkownik potwierdza alert jako “w realizacji” 7.
+Użytkownik wykonuje czynności serwisowe 8. Użytkownik zamyka alert z
+komentarzem</p>
+<h3 id="uc-03-generowanie-raportu-miesięcznego">7.3 UC-03: Generowanie
+raportu miesięcznego</h3>
+<p><strong>Aktor:</strong> Analityk</p>
+<p><strong>Warunek wstępny:</strong> Zakończony miesiąc
+rozliczeniowy</p>
+<p><strong>Scenariusz główny:</strong> 1. Użytkownik przechodzi do
+modułu Raportów 2. Użytkownik wybiera typ raportu “Miesięczny dla
+zarządu” 3. Użytkownik wybiera miesiąc 4. System generuje raport z: -
+Podsumowaniem SE dla wszystkich węzłów - Listą węzłów wymagających uwagi
+- Porównaniem z poprzednim miesiącem - Szacowanymi
+oszczędnościami/stratami 5. Użytkownik eksportuje raport do PDF 6.
+Użytkownik przesyła raport do zarządu</p>
+<hr />
+<h2 id="interfejs-użytkownika">8. Interfejs użytkownika</h2>
+<h3 id="zasady-projektowania">8.1 Zasady projektowania</h3>
+<table>
+<colgroup>
+<col style="width: 57%" />
+<col style="width: 42%" />
+</colgroup>
+<thead>
+<tr>
+<th>Zasada</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ciemny motyw</strong></td>
+<td>Interfejs w ciemnej kolorystyce (industrial control room)</td>
+</tr>
+<tr>
+<td><strong>Czytelność</strong></td>
+<td>Duże, czytelne liczby dla kluczowych wskaźników</td>
+</tr>
+<tr>
+<td><strong>Hierarchia wizualna</strong></td>
+<td>Najważniejsze informacje najbardziej widoczne</td>
+</tr>
+<tr>
+<td><strong>Responsywność</strong></td>
+<td>Działanie na desktop i tablet</td>
+</tr>
+<tr>
+<td><strong>Dostępność</strong></td>
+<td>Kontrasty zgodne z WCAG 2.1 AA</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paleta-kolorów-statusów">8.2 Paleta kolorów statusów</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    KOLORY STATUSÓW                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐       │
+│  │ #10b981 │  │ #14b8a6 │  │ #f59e0b │  │ #ef4444 │       │
+│  │ SUCCESS │  │ EFFICIEN│  │ WARNING │  │CRITICAL │       │
+│  │         │  │   CY    │  │         │  │         │       │
+│  │ Kat. A  │  │ Główny  │  │ Kat. B  │  │ Kat. C  │       │
+│  │ SE ≥80% │  │ akcent  │  │ SE 70%  │  │ SE &lt;70% │       │
+│  └─────────┘  └─────────┘  └─────────┘  └─────────┘       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="makiety-ekranów">8.3 Makiety ekranów</h3>
+<h4 id="dashboard-1">Dashboard</h4>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│  [Logo KSM]  Monitor CWU          Przegląd │ Węzły │ Alerty    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌─────────────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐    │
+│  │ SPRAWNOŚĆ       │ │ Węzły    │ │ Aktywne  │ │ Węzły    │    │
+│  │ ENERGETYCZNA    │ │ ogółem   │ │ alerty   │ │ kat. A   │    │
+│  │     ████        │ │          │ │          │ │          │    │
+│  │      76%        │ │    40    │ │    3     │ │    18    │    │
+│  │   [::::::::]   │ │          │ │          │ │   45%    │    │
+│  └─────────────────┘ └──────────┘ └──────────┘ └──────────┘    │
+│                                                                  │
+│  ┌──────────────────────────────┐ ┌──────────────────────────┐  │
+│  │ Aktywne alerty               │ │ Rozkład kategorii        │  │
+│  │ ─────────────────────────    │ │                          │  │
+│  │ ⚠ WC-023 - SE spadło &lt;70%   │ │      ┌───┐               │  │
+│  │ ⚠ WC-041 - Wysoki SS        │ │   A──┤   ├──C            │  │
+│  │ ℹ WC-015 - Trend spadkowy   │ │      │ B │               │  │
+│  │                              │ │      └───┘               │  │
+│  └──────────────────────────────┘ └──────────────────────────┘  │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │ Trend SE (30 dni)                                          │ │
+│  │ 80─┬─────────────────────────────────────────────────────  │ │
+│  │    │     ╭───╮                                             │ │
+│  │ 75─┼────╯    ╰───────╮                                     │ │
+│  │    │                  ╰───────────────────────             │ │
+│  │ 70─┼──────────────────────────────────────────────────     │ │
+│  │    └─────────────────────────────────────────────────────  │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<h4 id="widok-szczegółowy-węzła">Widok szczegółowy węzła</h4>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│  ← Węzły    WC-023 · ul. Przykładowa 15                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────────┐ │
+│  │ Sprawność Energetyczna                              [MEC]  │ │
+│  │ ──────────────────────────────────────────────────────     │ │
+│  │                                                            │ │
+│  │              ████████████████████                          │ │
+│  │                     68%                                    │ │
+│  │              [:::::::::::::::::]                           │ │
+│  │                                                            │ │
+│  │           SE = KW − SS (Sprawność = Wymiennik − Straty)    │ │
+│  │                                                            │ │
+│  │  ┌─────────────────────────┐ ┌─────────────────────────┐  │ │
+│  │  │ Kondycja Wymiennika [KW]│ │ Straty Systemowe    [SS]│  │ │
+│  │  │          82%            │ │          14%            │  │ │
+│  │  │                         │ │                         │  │ │
+│  │  │ WWC  Wymiana ciepła 85% │ │ Cyrkulacja (est.)   8%  │  │ │
+│  │  │ SH   Stabilność     79% │ │ Rury/izolacja       6%  │  │ │
+│  │  │ ES   Efekt. szczyt. 83% │ │ Wskaźnik nocny     22%  │  │ │
+│  │  └─────────────────────────┘ └─────────────────────────┘  │ │
+│  │                                                            │ │
+│  │  ┌──────────────────────────────────────────────────────┐ │ │
+│  │  │ ⚙ Problem z wymiennikiem                             │ │ │
+│  │  │   Główny problem to sprawność wymiennika ciepła.     │ │ │
+│  │  │                           Potencjał oszczędności: 8% │ │ │
+│  │  └──────────────────────────────────────────────────────┘ │ │
+│  └────────────────────────────────────────────────────────────┘ │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="integracje">9. Integracje</h2>
+<h3 id="mec-scada">9.1 MEC SCADA</h3>
+<table>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Protokół</strong></td>
+<td>REST API / SFTP</td>
+</tr>
+<tr>
+<td><strong>Częstotliwość</strong></td>
+<td>Co 15 minut</td>
+</tr>
+<tr>
+<td><strong>Format danych</strong></td>
+<td>JSON / CSV</td>
+</tr>
+<tr>
+<td><strong>Dane</strong></td>
+<td>T_zasilanie, T_powrót, Q_przepływ, stany liczników</td>
+</tr>
+<tr>
+<td><strong>Autentykacja</strong></td>
+<td>API Key / certyfikat</td>
+</tr>
+</tbody>
+</table>
+<h3 id="system-ksm">9.2 System KSM</h3>
+<table>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Protokół</strong></td>
+<td>Import plików / baza danych</td>
+</tr>
+<tr>
+<td><strong>Częstotliwość</strong></td>
+<td>Miesięcznie</td>
+</tr>
+<tr>
+<td><strong>Format danych</strong></td>
+<td>Excel / CSV</td>
+</tr>
+<tr>
+<td><strong>Dane</strong></td>
+<td>Zużycie GJ, zużycie m³, koszty, dane węzłów</td>
+</tr>
+<tr>
+<td><strong>Autentykacja</strong></td>
+<td>Użytkownik bazy / dostęp do folderu</td>
+</tr>
+</tbody>
+</table>
+<h3 id="diagram-integracji">9.3 Diagram integracji</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                      INTEGRACJE SYSTEMOWE                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│   ┌───────────────┐                     ┌───────────────┐       │
+│   │   MEC SCADA   │                     │  System KSM   │       │
+│   │               │                     │               │       │
+│   │ • Temperatury │                     │ • Rozliczenia │       │
+│   │ • Przepływy   │                     │ • Zużycia     │       │
+│   │ • Stany       │                     │ • Koszty      │       │
+│   └───────┬───────┘                     └───────┬───────┘       │
+│           │                                     │               │
+│           │ REST API                   Import CSV/Excel         │
+│           │ co 15 min                   miesięcznie             │
+│           │                                     │               │
+│           ▼                                     ▼               │
+│   ┌───────────────────────────────────────────────────────┐    │
+│   │                    MONITOR CWU                         │    │
+│   │                                                        │    │
+│   │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐   │    │
+│   │  │   Adapter   │  │   Adapter   │  │    Baza     │   │    │
+│   │  │  MEC SCADA  │  │    KSM      │  │   Danych    │   │    │
+│   │  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘   │    │
+│   │         │                │                │          │    │
+│   │         └────────────────┼────────────────┘          │    │
+│   │                          ▼                           │    │
+│   │                 ┌─────────────────┐                  │    │
+│   │                 │   Kalkulator    │                  │    │
+│   │                 │   Wskaźników    │                  │    │
+│   │                 └─────────────────┘                  │    │
+│   │                                                        │    │
+│   └───────────────────────────────────────────────────────┘    │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="wymagania-niefunkcjonalne">10. Wymagania niefunkcjonalne</h2>
+<h3 id="wydajność">10.1 Wydajność</h3>
+<table>
+<thead>
+<tr>
+<th>Wymaganie</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Czas ładowania Dashboard</td>
+<td>&lt; 2 sekundy</td>
+</tr>
+<tr>
+<td>Czas ładowania widoku węzła</td>
+<td>&lt; 3 sekundy</td>
+</tr>
+<tr>
+<td>Obsługa równoczesnych użytkowników</td>
+<td>Min. 20</td>
+</tr>
+<tr>
+<td>Czas odpowiedzi API</td>
+<td>&lt; 500ms (P95)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dostępność">10.2 Dostępność</h3>
+<table>
+<thead>
+<tr>
+<th>Wymaganie</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dostępność systemu</td>
+<td>99% (bez planowanych przerw)</td>
+</tr>
+<tr>
+<td>Okno serwisowe</td>
+<td>Niedziela 2:00-6:00</td>
+</tr>
+<tr>
+<td>Backup danych</td>
+<td>Codzienny, retencja 30 dni</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bezpieczeństwo">10.3 Bezpieczeństwo</h3>
+<table>
+<thead>
+<tr>
+<th>Wymaganie</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Autentykacja</td>
+<td>Login/hasło, opcjonalnie SSO</td>
+</tr>
+<tr>
+<td>Autoryzacja</td>
+<td>Role-based access control (RBAC)</td>
+</tr>
+<tr>
+<td>Transmisja</td>
+<td>HTTPS (TLS 1.2+)</td>
+</tr>
+<tr>
+<td>Hasła</td>
+<td>Min. 8 znaków, wymóg złożoności</td>
+</tr>
+<tr>
+<td>Sesje</td>
+<td>Timeout 30 minut nieaktywności</td>
+</tr>
+<tr>
+<td>Logi</td>
+<td>Logowanie wszystkich operacji użytkowników</td>
+</tr>
+</tbody>
+</table>
+<h3 id="skalowalność">10.4 Skalowalność</h3>
+<table>
+<thead>
+<tr>
+<th>Wymaganie</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Węzły</td>
+<td>System obsługuje do 100 węzłów</td>
+</tr>
+<tr>
+<td>Dane historyczne</td>
+<td>24 miesiące online, archiwum offline</td>
+</tr>
+<tr>
+<td>Użytkownicy</td>
+<td>Do 50 zarejestrowanych kont</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kompatybilność">10.5 Kompatybilność</h3>
+<table>
+<thead>
+<tr>
+<th>Platforma</th>
+<th>Wymaganie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Przeglądarki</td>
+<td>Chrome 90+, Firefox 88+, Edge 90+, Safari 14+</td>
+</tr>
+<tr>
+<td>Rozdzielczość</td>
+<td>Min. 1280×720, optymalna 1920×1080</td>
+</tr>
+<tr>
+<td>Urządzenia</td>
+<td>Desktop, laptop, tablet (landscape)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ograniczenia-i-założenia">11. Ograniczenia i założenia</h2>
+<h3 id="ograniczenia">11.1 Ograniczenia</h3>
+<ol type="1">
+<li><strong>Źródła danych</strong> — System zależny od dostępności i
+jakości danych z MEC SCADA i KSM</li>
+<li><strong>Dokładność obliczeń</strong> — Wskaźniki obliczane na
+podstawie dostępnych danych; rzeczywista sprawność może się różnić</li>
+<li><strong>Temperatura zimnej wody</strong> — Estymowana sezonowo (brak
+bezpośredniego pomiaru)</li>
+<li><strong>Podział strat SS</strong> — Szacunkowy podział na cyrkulację
+i rury</li>
+</ol>
+<h3 id="założenia">11.2 Założenia</h3>
+<ol type="1">
+<li>MEC udostępni API lub regularny eksport danych SCADA</li>
+<li>KSM dostarczy miesięczne dane rozliczeniowe w uzgodnionym
+formacie</li>
+<li>Użytkownicy mają dostęp do komputera/tabletu z przeglądarką</li>
+<li>Infrastruktura hostingowa zapewniona przez Wykonawcę (cloud)</li>
+<li>Dane osobowe nie są przetwarzane (system operacyjny, nie dla
+mieszkańców)</li>
+</ol>
+<h3 id="ryzyka">11.3 Ryzyka</h3>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 42%" />
+<col style="width: 15%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr>
+<th>Ryzyko</th>
+<th>Prawdopodobieństwo</th>
+<th>Wpływ</th>
+<th>Mitygacja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Opóźnienia w dostawie danych MEC</td>
+<td>Średnie</td>
+<td>Wysoki</td>
+<td>Buforowanie, dane zastępcze</td>
+</tr>
+<tr>
+<td>Niska jakość danych źródłowych</td>
+<td>Średnie</td>
+<td>Wysoki</td>
+<td>Walidacja, alerty jakości</td>
+</tr>
+<tr>
+<td>Zmiany w formacie danych KSM</td>
+<td>Niskie</td>
+<td>Średni</td>
+<td>Elastyczne parsery</td>
+</tr>
+<tr>
+<td>Brak dostępu do internetu</td>
+<td>Niskie</td>
+<td>Wysoki</td>
+<td>Offline mode (readonly)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="załączniki">Załączniki</h2>
+<ul>
+<li><strong>Załącznik A:</strong> Kontrakt danych
+(data-contract.md)</li>
+<li><strong>Załącznik B:</strong> Specyfikacja API
+(api-specification.md)</li>
+<li><strong>Załącznik C:</strong> Słownik pojęć</li>
+</ul>
+<hr />
+<p><em>Dokument stanowi załącznik do Umowy o wykonanie systemu
+informatycznego między KSM Przylesie a Banach Group.</em></p>
+<p><em>Wersja 1.0 — Styczeń 2025</em></p>
+
+<div class="doc-footer">
+  CWU Monitor • KSM Przylesie • Koszalin • Wersja dokumentacji: 2025-01-14
+</div>
+
+<script>
+// Automatyczne wykrywanie diagramów ASCII i formuł matematycznych
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre code').forEach(function(block) {
+    var text = block.textContent;
+    var pre = block.parentElement;
+
+    // Wykryj diagramy ASCII (box-drawing characters)
+    var isDiagram = text.includes('┌') || text.includes('│') || text.includes('└') ||
+                    text.includes('├') || text.includes('┬') || text.includes('─') ||
+                    text.includes('▼') || text.includes('▲') || text.includes('►') ||
+                    text.includes('═') || text.includes('║') || text.includes('╔');
+
+    if (isDiagram) {
+      pre.classList.add('diagram');
+      return;
+    }
+
+    // Wykryj formuły matematyczne
+    var hasEquals = text.includes('=');
+    var hasMathSymbols = text.includes('×') || text.includes('÷') ||
+                         text.includes('∛') || text.includes('√');
+    var hasCode = text.includes('function') || text.includes('const ') ||
+                  text.includes('interface') || text.includes('async') ||
+                  text.includes('return ') || text.includes('import ') ||
+                  text.includes('//') || text.includes('=>');
+    var lines = text.trim().split('\n');
+    var isShort = lines.length <= 15;
+
+    // Dodatkowe sygnały że to wzór fizyczny
+    var hasPhysicsTerms = text.includes('gdzie:') || text.includes('Q_') ||
+                          text.includes('T_') || text.includes('ΔT') ||
+                          text.includes('[GJ]') || text.includes('[m³]') ||
+                          text.includes('[K]') || text.includes('[°C]');
+
+    if (((hasEquals || hasMathSymbols) && !hasCode && isShort) ||
+        (hasPhysicsTerms && hasEquals && !hasCode)) {
+      pre.classList.add('math-formula');
+    }
+  });
+});
+</script>
+</body>
+</html>
