@@ -226,7 +226,8 @@ export interface RankingEntry {
   node_id: string;
   name: string;
   category: Category;
-  avg_iez: number;
+  avg_iez: number;      // Legacy
+  avg_se: number;       // Sprawność Energetyczna
   trend: 'improving' | 'declining' | 'stable';
 }
 
@@ -242,7 +243,8 @@ export interface NodeWithEfficiency extends Node {
 // Dashboard stats
 export interface DashboardStats {
   totalNodes: number;
-  avgIez: number;
+  avgIez: number;       // Legacy - kept for compatibility
+  avgSe: number;        // New: average Sprawność Energetyczna
   activeAlerts: number;
   categoryACount: number;
   categoryBCount: number;

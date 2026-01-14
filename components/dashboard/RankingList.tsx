@@ -49,7 +49,7 @@ function RankingItem({ entry, isFirst, isLast }: RankingItemProps) {
         <div className="flex-1 min-w-0">
           <p className="font-medium text-foreground truncate">{entry.name}</p>
           <p className="text-xs text-foreground-muted">
-            IEZ: <span className="font-mono">{entry.avg_iez}</span>
+            SE: <span className="font-mono">{entry.avg_se}%</span>
           </p>
         </div>
 

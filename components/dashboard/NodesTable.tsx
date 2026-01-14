@@ -64,7 +64,7 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
             <thead>
               <tr className="text-left text-foreground-muted border-b border-border-subtle">
                 <th className="px-5 py-3 font-medium">Węzeł</th>
-                <th className="px-5 py-3 font-medium">IEZ</th>
+                <th className="px-5 py-3 font-medium">SE</th>
                 <th className="px-5 py-3 font-medium">Trend</th>
                 <th className="px-5 py-3 font-medium">Najsłabszy wskaźnik</th>
                 <th className="px-5 py-3 font-medium">Kategoria</th>
@@ -88,7 +88,7 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
                       </Link>
                     </td>
                     <td className="px-5 py-4">
-                      <MiniGauge value={node.efficiency.iez.value} />
+                      <MiniGauge value={node.efficiency.hierarchy.se.value} />
                     </td>
                     <td className="px-5 py-4">
                       <TrendBadge

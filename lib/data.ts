@@ -749,15 +749,27 @@ export function getRecommendations(nodeId: string): Recommendation[] {
 
 // Get ranking
 export function getRanking(): RankingEntry[] {
-  const sorted = [...rawNodes].sort((a, b) => b.stats.avg_iez - a.stats.avg_iez);
+  // Calculate SE for each node for ranking
+  const nodesWithSE = rawNodes.map(node => {
+    const indicators = generateOperationalIndicators(node);
+    const hierarchy = generateEfficiencyHierarchy(node, indicators);
+    return {
+      node,
+      se: hierarchy.se.value,
+    };
+  });
 
-  return sorted.map((node, index) => ({
+  // Sort by SE (descending)
+  const sorted = nodesWithSE.sort((a, b) => b.se - a.se);
+
+  return sorted.map((item, index) => ({
     position: index + 1,
-    node_id: node.id,
-    name: node.name,
-    category: node.stats.category,
-    avg_iez: node.stats.avg_iez,
-    trend: node.stats.trend,
+    node_id: item.node.id,
+    name: item.node.name,
+    category: item.node.stats.category,
+    avg_iez: item.node.stats.avg_iez,
+    avg_se: item.se,
+    trend: item.node.stats.trend,
   }));
 }
 
@@ -801,6 +813,14 @@ export function getDashboardStats(): DashboardStats {
     rawNodes.reduce((sum, node) => sum + node.stats.avg_iez, 0) / rawNodes.length
   );
 
+  // Calculate average SE across all nodes
+  const seValues = rawNodes.map(node => {
+    const indicators = generateOperationalIndicators(node);
+    const hierarchy = generateEfficiencyHierarchy(node, indicators);
+    return hierarchy.se.value;
+  });
+  const avgSe = Math.round(seValues.reduce((sum, se) => sum + se, 0) / seValues.length);
+
   const categoryACount = rawNodes.filter(n => n.stats.category === 'A').length;
   const categoryBCount = rawNodes.filter(n => n.stats.category === 'B').length;
   const categoryCCount = rawNodes.filter(n => n.stats.category === 'C').length;
@@ -808,6 +828,7 @@ export function getDashboardStats(): DashboardStats {
   return {
     totalNodes: rawNodes.length,
     avgIez,
+    avgSe,
     activeAlerts: allAlerts.filter(a => a.status === 'active').length,
     categoryACount,
     categoryBCount,
