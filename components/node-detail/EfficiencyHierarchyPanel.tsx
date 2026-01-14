@@ -374,14 +374,36 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
               value={indicators.wwc.value}
               status={indicators.wwc.status}
               tooltip={
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground text-sm">Współczynnik Wymiany Ciepła (WWC)</p>
-                  <p className="text-foreground-muted text-xs">
-                    Mierzy jak efektywnie energia jest przekazywana z wody sieciowej do CWU.
-                    Bazuje na różnicy temperatur zasilania i powrotu.
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-semibold text-foreground">Współczynnik Wymiany Ciepła (WWC)</p>
+                    <p className="text-foreground-subtle text-xs mt-0.5">Wskaźnik poziomu 3 • Składnik KW</p>
+                  </div>
+                  <p className="text-foreground-muted text-sm">
+                    Ocenia efektywność przekazywania ciepła w wymienniku na podstawie
+                    różnicy temperatur zasilania i powrotu.
                   </p>
-                  <p className="text-[10px] text-foreground-subtle pt-1 border-t border-border-subtle">
-                    Niski WWC → osady, zanieczyszczenia lub niewłaściwy przepływ
+                  <div className="bg-surface-elevated rounded-lg p-2.5 font-mono text-xs space-y-1">
+                    <p className="text-efficiency">WWC = 100 × (ΔT_rzecz / ΔT_opt)</p>
+                    <p className="text-foreground-subtle text-[10px]">ΔT_rzecz = T_zasilanie − T_powrót</p>
+                    <p className="text-foreground-subtle text-[10px]">ΔT_opt = 20 K (wartość projektowa)</p>
+                  </div>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-success" />
+                      <span className="text-foreground-muted">≥90% — Optymalna wymiana</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-warning" />
+                      <span className="text-foreground-muted">70-89% — Możliwe osady</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-critical" />
+                      <span className="text-foreground-muted">&lt;70% — Wymaga czyszczenia</span>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border-subtle">
+                    Źródło: MEC SCADA (T_zas, T_pow)
                   </p>
                 </div>
               }
@@ -392,14 +414,36 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
               value={indicators.sh.value}
               status={indicators.sh.status}
               tooltip={
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground text-sm">Stabilność Hydrauliczna (SH)</p>
-                  <p className="text-foreground-muted text-xs">
-                    Ocenia stabilność przepływów w czasie. Wahania wskazują na problemy
-                    z regulacją, pompami lub zaworem trójdrożnym.
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-semibold text-foreground">Stabilność Hydrauliczna (SH)</p>
+                    <p className="text-foreground-subtle text-xs mt-0.5">Wskaźnik poziomu 3 • Składnik KW</p>
+                  </div>
+                  <p className="text-foreground-muted text-sm">
+                    Ocenia równomierność przepływu w instalacji w ciągu doby.
+                    Bazuje na współczynniku zmienności (CV) z 96 pomiarów/24h.
                   </p>
-                  <p className="text-[10px] text-foreground-subtle pt-1 border-t border-border-subtle">
-                    Niski SH → problemy z regulacją lub pompą cyrkulacyjną
+                  <div className="bg-surface-elevated rounded-lg p-2.5 font-mono text-xs space-y-1">
+                    <p className="text-efficiency">SH = 100 − (CV × 100)</p>
+                    <p className="text-foreground-subtle text-[10px]">CV = σ(Q) / μ(Q)</p>
+                    <p className="text-foreground-subtle text-[10px]">σ = odchylenie std, μ = średnia przepływu</p>
+                  </div>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-success" />
+                      <span className="text-foreground-muted">≥90% — Stabilny przepływ</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-warning" />
+                      <span className="text-foreground-muted">70-89% — Wahania przepływu</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-critical" />
+                      <span className="text-foreground-muted">&lt;70% — Problemy hydrauliczne</span>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border-subtle">
+                    Źródło: MEC SCADA (Q_flow, seria 24h)
                   </p>
                 </div>
               }
@@ -410,14 +454,36 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
               value={indicators.es.value}
               status={indicators.es.status}
               tooltip={
-                <div className="space-y-2">
-                  <p className="font-semibold text-foreground text-sm">Efektywność Szczytowa (ES)</p>
-                  <p className="text-foreground-muted text-xs">
-                    Sprawność systemu w godzinach największego poboru (6-9 i 17-22).
-                    Pokazuje czy wymiennik nadąża z podgrzewaniem wody w szczytach.
+                <div className="space-y-3">
+                  <div>
+                    <p className="font-semibold text-foreground">Efektywność Szczytowa (ES)</p>
+                    <p className="text-foreground-subtle text-xs mt-0.5">Wskaźnik poziomu 3 • Składnik KW</p>
+                  </div>
+                  <p className="text-foreground-muted text-sm">
+                    Porównuje sprawność w godzinach szczytu (7-9, 17-21) ze
+                    średnią całodobową. Pokazuje czy system nadąża przy dużym poborze.
                   </p>
-                  <p className="text-[10px] text-foreground-subtle pt-1 border-t border-border-subtle">
-                    Niski ES → wymiennik za mały lub źle dobrany
+                  <div className="bg-surface-elevated rounded-lg p-2.5 font-mono text-xs space-y-1">
+                    <p className="text-efficiency">ES = 100 × (SE_szczyt / SE_średnia)</p>
+                    <p className="text-foreground-subtle text-[10px]">SE_szczyt = średnia SE z godz. 7-9, 17-21</p>
+                    <p className="text-foreground-subtle text-[10px]">SE_średnia = średnia SE całodobowa</p>
+                  </div>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-success" />
+                      <span className="text-foreground-muted">≥95% — Wymiennik dobrze dobrany</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-warning" />
+                      <span className="text-foreground-muted">80-94% — Spadek w szczytach</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-critical" />
+                      <span className="text-foreground-muted">&lt;80% — Wymiennik niedowymiarowany</span>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border-subtle">
+                    Źródło: MEC SCADA (delta_GJ, delta_m³, agregacja godz.)
                   </p>
                 </div>
               }
