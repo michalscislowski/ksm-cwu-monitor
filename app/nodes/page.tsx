@@ -1,16 +1,16 @@
 import Link from 'next/link';
 import { Card, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, TrendBadge } from '@/components/ui/Badge';
-import { MiniGauge } from '@/components/node-detail/IEZGauge';
+import { MiniGauge } from '@/components/node-detail/SEGauge';
 import { getNodesWithEfficiency, getDashboardStats } from '@/lib/data';
 
 export default function NodesPage() {
   const nodes = getNodesWithEfficiency();
   const stats = getDashboardStats();
 
-  // Sort by IEZ (worst first to highlight issues)
+  // Sort by SE (worst first to highlight issues)
   const sortedNodes = [...nodes].sort(
-    (a, b) => a.efficiency.iez.value - b.efficiency.iez.value
+    (a, b) => a.efficiency.hierarchy.se.value - b.efficiency.hierarchy.se.value
   );
 
   return (
@@ -61,12 +61,12 @@ export default function NodesPage() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MiniGauge value={node.efficiency.iez.value} />
+                    <MiniGauge value={node.efficiency.hierarchy.se.value} />
                     <div>
-                      <p className="text-xs text-foreground-subtle">Indeks IEZ</p>
+                      <p className="text-xs text-foreground-subtle">Sprawność SE</p>
                       <TrendBadge
-                        trend={node.efficiency.iez.trend}
-                        change={node.efficiency.iez.trend_change}
+                        trend={node.stats?.trend || 'stable'}
+                        change={node.stats?.trend_change || 0}
                       />
                     </div>
                   </div>

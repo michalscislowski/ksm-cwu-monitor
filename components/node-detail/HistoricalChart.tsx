@@ -22,17 +22,17 @@ interface HistoricalChartProps {
   nodeId: string;
 }
 
-type ViewMode = 'iez' | 'wskaznik' | 'consumption';
+type ViewMode = 'se' | 'wskaznik' | 'consumption';
 type TimeRange = 'all' | '3y' | '1y';
 
 const OPTIMAL_WSKAZNIK = 0.22;
 
-function calculateIEZ(wskaznik: number): number {
+function calculateSE(wskaznik: number): number {
   return Math.round((OPTIMAL_WSKAZNIK / wskaznik) * 100);
 }
 
 export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('iez');
+  const [viewMode, setViewMode] = useState<ViewMode>('se');
   const [timeRange, setTimeRange] = useState<TimeRange>('3y');
 
   // Filter readings by time range
@@ -50,14 +50,14 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
     date: `${formatMonth(r.month)} ${r.year}`,
     year: r.year,
     month: r.month,
-    iez: calculateIEZ(r.wskaznik),
+    se: calculateSE(r.wskaznik),
     wskaznik: Math.round(r.wskaznik * 1000) / 1000,
     gj: r.gj,
     m3: r.m3,
   }));
 
   // Calculate stats
-  const avgIez = Math.round(chartData.reduce((s, d) => s + d.iez, 0) / chartData.length);
+  const avgSe = Math.round(chartData.reduce((s, d) => s + d.se, 0) / chartData.length);
   const avgWskaznik = Math.round((chartData.reduce((s, d) => s + d.wskaznik, 0) / chartData.length) * 1000) / 1000;
   const totalGj = Math.round(chartData.reduce((s, d) => s + d.gj, 0) * 10) / 10;
   const totalM3 = Math.round(chartData.reduce((s, d) => s + d.m3, 0));
@@ -75,7 +75,7 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
           <p className="text-sm font-medium text-foreground mb-2">{label}</p>
           <div className="space-y-1 text-xs">
             <p className="text-foreground-muted">
-              IEZ: <span className="font-mono text-efficiency">{data.iez}</span>
+              SE: <span className="font-mono text-efficiency">{data.se}%</span>
             </p>
             <p className="text-foreground-muted">
               Wskaźnik: <span className="font-mono">{data.wskaznik}</span> GJ/m³
@@ -117,7 +117,7 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
             </div>
             {/* View mode selector */}
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-              {(['iez', 'wskaznik', 'consumption'] as ViewMode[]).map(mode => (
+              {(['se', 'wskaznik', 'consumption'] as ViewMode[]).map(mode => (
                 <button
                   key={mode}
                   onClick={() => setViewMode(mode)}
@@ -127,7 +127,7 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
                       : 'text-foreground-muted hover:text-foreground'
                   }`}
                 >
-                  {mode === 'iez' ? 'IEZ' : mode === 'wskaznik' ? 'GJ/m³' : 'Zużycie'}
+                  {mode === 'se' ? 'SE' : mode === 'wskaznik' ? 'GJ/m³' : 'Zużycie'}
                 </button>
               ))}
             </div>
@@ -143,9 +143,9 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
         {/* Stats summary */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="p-3 bg-surface-elevated rounded-lg">
-            <p className="text-xs text-foreground-subtle">Średni IEZ</p>
-            <p className={`font-mono font-bold text-lg ${avgIez >= 90 ? 'text-success' : avgIez >= 75 ? 'text-warning' : 'text-critical'}`}>
-              {avgIez}
+            <p className="text-xs text-foreground-subtle">Średnia SE</p>
+            <p className={`font-mono font-bold text-lg ${avgSe >= 80 ? 'text-success' : avgSe >= 70 ? 'text-efficiency' : avgSe >= 60 ? 'text-warning' : 'text-critical'}`}>
+              {avgSe}%
             </p>
           </div>
           <div className="p-3 bg-surface-elevated rounded-lg">
@@ -206,13 +206,14 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
                   tickLine={false}
                   axisLine={false}
                   width={40}
-                  domain={viewMode === 'iez' ? [50, 110] : ['auto', 'auto']}
+                  domain={viewMode === 'se' ? [50, 110] : ['auto', 'auto']}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                {viewMode === 'iez' && (
+                {viewMode === 'se' && (
                   <>
-                    <ReferenceLine y={90} stroke="#10b981" strokeDasharray="5 5" strokeOpacity={0.5} />
-                    <ReferenceLine y={75} stroke="#f59e0b" strokeDasharray="5 5" strokeOpacity={0.5} />
+                    <ReferenceLine y={80} stroke="#10b981" strokeDasharray="5 5" strokeOpacity={0.5} />
+                    <ReferenceLine y={70} stroke="#14b8a6" strokeDasharray="5 5" strokeOpacity={0.5} />
+                    <ReferenceLine y={60} stroke="#f59e0b" strokeDasharray="5 5" strokeOpacity={0.5} />
                   </>
                 )}
                 {viewMode === 'wskaznik' && (
@@ -232,15 +233,19 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
 
         {/* Legend */}
         <div className="flex items-center justify-center gap-6 mt-4 text-xs text-foreground-muted">
-          {viewMode === 'iez' && (
+          {viewMode === 'se' && (
             <>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-0.5 bg-success" />
-                <span>Kategoria A (≥90)</span>
+                <span>Optymalna (≥80%)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-0.5 bg-efficiency" />
+                <span>Dobra (≥70%)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-0.5 bg-warning" />
-                <span>Kategoria B (≥75)</span>
+                <span>Do poprawy (≥60%)</span>
               </div>
             </>
           )}

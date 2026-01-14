@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, TrendBadge } from '@/components/ui/Badge';
-import { MiniGauge } from '@/components/node-detail/IEZGauge';
+import { MiniGauge } from '@/components/node-detail/SEGauge';
 import type { NodeWithEfficiency, IndicatorStatus } from '@/lib/types';
 
 interface NodesTableProps {

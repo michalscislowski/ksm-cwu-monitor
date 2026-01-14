@@ -61,7 +61,7 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
           <span className="text-success">↗</span>
           Szacowana poprawa:{' '}
           <span className="font-mono font-semibold text-success">
-            +{recommendation.expected_improvement.iez_points} pkt IEZ
+            +{recommendation.expected_improvement.iez_points}% SE
           </span>
         </span>
 

@@ -2,69 +2,68 @@
 
 import { TrendBadge } from '@/components/ui/Badge';
 import { InfoTooltip } from '@/components/ui/Tooltip';
-import type { IEZ } from '@/lib/types';
 
-interface IEZGaugeProps {
-  iez: IEZ;
+interface SEGaugeProps {
+  value: number;
+  trend: 'improving' | 'declining' | 'stable';
+  trend_change: number;
   size?: 'sm' | 'md' | 'lg';
   showTooltip?: boolean;
 }
 
-const IEZTooltipContent = () => (
+const SETooltipContent = () => (
   <div className="space-y-3">
-    <p className="font-semibold text-foreground">Indeks Efektywności Zużycia (IEZ)</p>
+    <p className="font-semibold text-foreground">Sprawność Energetyczna (SE)</p>
 
     <div className="text-foreground-muted text-sm space-y-2">
       <p>
-        <span className="font-medium text-foreground">Co to jest IEZ?</span><br />
-        IEZ to syntetyczny wskaźnik pokazujący ogólną efektywność węzła cieplnego w skali 0-100.
-        Łączy informacje z danych historycznych (GJ/m³ z rozliczeń) z bieżącymi wskaźnikami operacyjnymi.
+        <span className="font-medium text-foreground">Co to jest SE?</span><br />
+        SE to główny wskaźnik efektywności węzła cieplnego pokazujący jaki procent
+        kupowanej energii cieplnej dociera do mieszkańców jako ciepła woda użytkowa.
       </p>
 
       <p>
-        <span className="font-medium text-foreground">Skąd się bierze?</span><br />
-        IEZ = (wskaźnik optymalny / wskaźnik rzeczywisty) × 100<br />
-        gdzie wskaźnik = GJ zużyte / m³ CWU pobranej przez mieszkańców.<br />
-        Optymalny wskaźnik dla CWU to około 0.22 GJ/m³.
+        <span className="font-medium text-foreground">Jak jest obliczany?</span><br />
+        SE = (Q teoretyczne / Q rzeczywiste) × 100%<br />
+        gdzie Q teoretyczne = energia minimalna potrzebna do podgrzania wody,<br />
+        a Q rzeczywiste = energia faktycznie pobrana z sieci ciepłowniczej.
       </p>
 
       <p>
         <span className="font-medium text-foreground">Interpretacja:</span><br />
-        • <span className="text-success">IEZ ≥90 (Kat. A)</span> — węzeł pracuje bardzo efektywnie<br />
-        • <span className="text-efficiency">IEZ 75-89 (Kat. B)</span> — dobra efektywność, możliwa optymalizacja<br />
-        • <span className="text-critical">IEZ &lt;75 (Kat. C)</span> — niska efektywność, wymaga interwencji
+        • <span className="text-success">SE ≥80%</span> — bardzo dobra sprawność<br />
+        • <span className="text-efficiency">SE 70-79%</span> — dobra sprawność<br />
+        • <span className="text-warning">SE 60-69%</span> — wymaga optymalizacji<br />
+        • <span className="text-critical">SE &lt;60%</span> — wymaga pilnej interwencji
       </p>
 
       <p>
-        <span className="font-medium text-foreground">Co wpływa na IEZ?</span><br />
-        • Nastawy zaworów MTCV na pionach CWU<br />
-        • Sprawność wymiennika ciepła<br />
-        • Równoważenie hydrauliczne instalacji<br />
-        • Wydajność i harmonogram pompy cyrkulacyjnej<br />
-        • Izolacja przewodów cyrkulacyjnych
+        <span className="font-medium text-foreground">Co oznaczają straty?</span><br />
+        Jeśli SE = 72%, to 28% energii jest tracone w systemie poprzez:<br />
+        • Cyrkulację CWU (główne źródło strat)<br />
+        • Straty na przewodach i izolacji<br />
+        • Nieefektywną wymianę ciepła
       </p>
 
       <p>
-        <span className="font-medium text-foreground">Różnica IEZ vs WWC/SH/ES:</span><br />
-        IEZ to wskaźnik ogólny oparty na danych rozliczeniowych (znany po miesiącu).
-        WWC, SH, ES to wskaźniki operacyjne z bieżących pomiarów — pokazują CO konkretnie
-        wymaga regulacji.
+        <span className="font-medium text-foreground">Powiązanie z innymi wskaźnikami:</span><br />
+        SE = KW (Kondycja Wymiennika) − SS (Straty Systemowe)<br />
+        Niska SE przy wysokim KW oznacza problem z cyrkulacją.<br />
+        Niska SE przy niskim KW oznacza problem z wymiennikiem.
       </p>
     </div>
   </div>
 );
 
-export function IEZGauge({ iez, size = 'lg', showTooltip = true }: IEZGaugeProps) {
-  const { value, trend, trend_change } = iez;
-
+export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip = true }: SEGaugeProps) {
   // Calculate the angle for the gauge (0-100 maps to 0-270 degrees)
   const angle = Math.min(Math.max((value / 100) * 270, 0), 270);
 
   // Determine color based on value
   const getColor = (val: number) => {
-    if (val >= 95) return { main: '#10b981', glow: 'rgba(16,185,129,0.3)' }; // success
-    if (val >= 85) return { main: '#14b8a6', glow: 'rgba(20,184,166,0.3)' }; // efficiency
-    if (val >= 70) return { main: '#f59e0b', glow: 'rgba(245,158,11,0.3)' }; // warning
+    if (val >= 80) return { main: '#10b981', glow: 'rgba(16,185,129,0.3)' }; // success
+    if (val >= 70) return { main: '#14b8a6', glow: 'rgba(20,184,166,0.3)' }; // efficiency
+    if (val >= 60) return { main: '#f59e0b', glow: 'rgba(245,158,11,0.3)' }; // warning
     return { main: '#ef4444', glow: 'rgba(239,68,68,0.3)' }; // critical
   };
 
@@ -168,11 +167,11 @@ export function IEZGauge({ iez, size = 'lg', showTooltip = true }: IEZGaugeProps
               textShadow: `0 0 20px ${color.glow}`,
             }}
           >
-            {value}
+            {value}%
           </span>
           <span className="text-foreground-muted text-sm -mt-1 flex items-center gap-1">
-            ze 100
-            {showTooltip && <InfoTooltip content={<IEZTooltipContent />} />}
+            sprawności
+            {showTooltip && <InfoTooltip content={<SETooltipContent />} />}
           </span>
         </div>
       </div>
@@ -186,16 +185,16 @@ export function IEZGauge({ iez, size = 'lg', showTooltip = true }: IEZGaugeProps
   );
 }
 
-// Mini gauge for lists
+// Mini gauge for lists - shows SE percentage
 interface MiniGaugeProps {
   value: number;
 }
 
 export function MiniGauge({ value }: MiniGaugeProps) {
   const getColor = (val: number) => {
-    if (val >= 95) return '#10b981';
-    if (val >= 85) return '#14b8a6';
-    if (val >= 70) return '#f59e0b';
+    if (val >= 80) return '#10b981';
+    if (val >= 70) return '#14b8a6';
+    if (val >= 60) return '#f59e0b';
     return '#ef4444';
   };
 
