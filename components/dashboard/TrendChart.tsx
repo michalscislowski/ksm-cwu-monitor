@@ -17,6 +17,13 @@ interface TrendChartProps {
   title?: string;
 }
 
+// Helper to get color based on SE value
+const getSeColor = (value: number): string => {
+  if (value >= 80) return '#22c55e'; // success - Category A
+  if (value >= 70) return '#eab308'; // warning - Category B
+  return '#ef4444'; // critical - Category C
+};
+
 export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: TrendChartProps) {
   // Format data for recharts - iez field contains SE value (same calculation)
   const chartData = data.map((entry) => ({
@@ -27,6 +34,22 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
     se: entry.iez, // Using iez field which contains SE value
     category: entry.category,
   }));
+
+  // Custom active dot that changes color based on value
+  const CustomActiveDot = (props: { cx: number; cy: number; payload: { se: number } }) => {
+    const { cx, cy, payload } = props;
+    const color = getSeColor(payload.se);
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={6}
+        fill={color}
+        stroke="#0c0e12"
+        strokeWidth={2}
+      />
+    );
+  };
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload, label }: {
@@ -91,9 +114,24 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             >
               <defs>
-                <linearGradient id="colorSe" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#14b8a6" stopOpacity={0.3} />
-                  <stop offset="100%" stopColor="#14b8a6" stopOpacity={0} />
+                {/* Gradient for fill - color bands based on SE thresholds */}
+                {/* Y-axis domain is [50, 100], so: 80=40%, 70=60% from top */}
+                <linearGradient id="colorSeFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
+                  <stop offset="40%" stopColor="#22c55e" stopOpacity={0.25} />
+                  <stop offset="40%" stopColor="#eab308" stopOpacity={0.25} />
+                  <stop offset="60%" stopColor="#eab308" stopOpacity={0.2} />
+                  <stop offset="60%" stopColor="#ef4444" stopOpacity={0.2} />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
+                </linearGradient>
+                {/* Gradient for stroke */}
+                <linearGradient id="colorSeStroke" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="40%" stopColor="#22c55e" />
+                  <stop offset="40%" stopColor="#eab308" />
+                  <stop offset="60%" stopColor="#eab308" />
+                  <stop offset="60%" stopColor="#ef4444" />
+                  <stop offset="100%" stopColor="#ef4444" />
                 </linearGradient>
               </defs>
 
@@ -114,22 +152,16 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
                 dx={-10}
               />
 
-              {/* Reference lines for categories */}
+              {/* Reference lines for category thresholds */}
               <ReferenceLine
                 y={80}
-                stroke="#10b981"
+                stroke="#22c55e"
                 strokeDasharray="3 3"
                 strokeOpacity={0.5}
               />
               <ReferenceLine
                 y={70}
-                stroke="#14b8a6"
-                strokeDasharray="3 3"
-                strokeOpacity={0.5}
-              />
-              <ReferenceLine
-                y={60}
-                stroke="#f59e0b"
+                stroke="#eab308"
                 strokeDasharray="3 3"
                 strokeOpacity={0.5}
               />
@@ -139,16 +171,11 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
               <Area
                 type="monotone"
                 dataKey="se"
-                stroke="#14b8a6"
+                stroke="url(#colorSeStroke)"
                 strokeWidth={2}
-                fill="url(#colorSe)"
+                fill="url(#colorSeFill)"
                 dot={false}
-                activeDot={{
-                  r: 6,
-                  fill: '#14b8a6',
-                  stroke: '#0c0e12',
-                  strokeWidth: 2,
-                }}
+                activeDot={<CustomActiveDot cx={0} cy={0} payload={{ se: 0 }} />}
               />
             </AreaChart>
           </ResponsiveContainer>
