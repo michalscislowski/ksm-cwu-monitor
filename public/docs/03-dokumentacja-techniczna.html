@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentacja Techniczna</title>
+  <style>
+    @page {
+      margin: 2cm 2cm;
+      size: A4;
+    }
+
+    @page:first {
+      margin-top: 1cm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #1a1a1a;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 40px;
+      background: white;
+    }
+
+    /* Header dokumentu */
+    .doc-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: white;
+      padding: 24px 32px;
+      border-radius: 12px;
+      margin: -32px -40px 32px -40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .doc-header-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc-header-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .doc-header-text h1 {
+      font-size: 22pt;
+      margin: 0;
+      border: none;
+      padding: 0;
+      color: white;
+    }
+
+    .doc-header-text p {
+      margin: 4px 0 0 0;
+      opacity: 0.85;
+      font-size: 11pt;
+    }
+
+    /* Nagłówki */
+    h1 {
+      font-size: 22pt;
+      color: #1e3a5f;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 15pt;
+      color: #1e3a5f;
+      border-bottom: 2px solid #bfdbfe;
+      padding-bottom: 6px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #1d4ed8;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      color: #2563eb;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* Tabele */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #1e3a5f;
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9pt;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Kolorowanie statusów w tabelach */
+    td:contains("optimal"), td:contains("Optimal"), td:contains("OPTIMAL") {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Status badges - ręczne znaczniki w tabelach */
+    .status-optimal { color: #059669; font-weight: 600; }
+    .status-good { color: #0284c7; font-weight: 600; }
+    .status-warning { color: #d97706; font-weight: 600; }
+    .status-critical { color: #dc2626; font-weight: 600; }
+
+    /* Kod inline */
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+      font-size: 9pt;
+      background-color: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Bloki kodu - domyślne */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+      margin: 16px 0;
+      border-left: 4px solid #3b82f6;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+      border: none;
+      font-size: 9pt;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    }
+
+    /* ============================================================
+       DIAGRAMY ASCII - Technical Blueprint Style
+       Inspiracja: schematy inżynierskie, terminale CRT, NASA docs
+       ============================================================ */
+
+    pre.diagram {
+      /* Tło - ciemny granat z subtelną siatką */
+      background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #020617 0%, #0a1628 50%, #0f172a 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+
+      /* Wymiary i spacing */
+      padding: 28px 32px 24px 32px;
+      margin: 24px 0;
+      border-radius: 8px;
+      overflow-x: auto;
+
+      /* Obramowanie - podwójna linia techniczna */
+      border: 1px solid #1e3a5f;
+      box-shadow:
+        inset 0 0 0 1px rgba(56, 189, 248, 0.1),
+        0 0 0 1px #0f172a,
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(56, 189, 248, 0.05);
+
+      /* Pozycjonowanie dla etykiety */
+      position: relative;
+    }
+
+
+    /* Tekst w diagramie */
+    pre.diagram code {
+      /* Font - czytelny monospace */
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 10pt;
+      line-height: 1.4;
+      letter-spacing: 0;
+
+      /* Kolor bazowy - jasny niebieskoszary */
+      color: #cbd5e1;
+
+      /* Wyłącz domyślne style */
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    /* ============================================================
+       DIAGRAMY - jednolity kolor tekstu, bez podświetleń
+       ============================================================ */
+
+    /* Formuły matematyczne */
+    pre.math-formula {
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+      color: #854d0e;
+      border: 2px solid #fbbf24;
+      border-left: 4px solid #f59e0b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 10pt;
+      text-align: center;
+    }
+
+    pre.math-formula code {
+      color: #713f12;
+      font-size: 10pt;
+      font-weight: 500;
+    }
+
+    /* Cytaty i uwagi */
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      margin: 16px 0;
+      padding: 12px 20px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-style: normal;
+      border-radius: 0 6px 6px 0;
+    }
+
+    blockquote p {
+      margin: 0;
+    }
+
+    blockquote strong {
+      color: #1d4ed8;
+    }
+
+    /* Listy */
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    li > ul, li > ol {
+      margin: 6px 0;
+    }
+
+    /* Linki */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Linie poziome */
+    hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 28px 0;
+    }
+
+    /* Paragraf */
+    p {
+      margin: 10px 0;
+    }
+
+    /* Strong */
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* Pierwsza tabela - meta info */
+    body > table:first-of-type,
+    h2#informacje-o-dokumencie + table {
+      background: #f8fafc;
+      border: 2px solid #3b82f6;
+    }
+
+    body > table:first-of-type th,
+    h2#informacje-o-dokumencie + table th {
+      background: #3b82f6;
+    }
+
+    /* Stopka */
+    .doc-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #e5e7eb;
+      text-align: center;
+      color: #64748b;
+      font-size: 9pt;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 0;
+        max-width: none;
+        font-size: 10pt;
+      }
+
+      .doc-header {
+        margin: 0 0 24px 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+      }
+
+      table, pre, blockquote {
+        page-break-inside: avoid;
+      }
+
+      pre {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: #1e3a5f;
+      }
+
+      a[href^="http"]:after {
+        content: none;
+      }
+    }
+
+    /* Spis treści */
+    nav#TOC {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+    }
+
+    nav#TOC > ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    nav#TOC > ul > li {
+      margin: 8px 0;
+    }
+
+    nav#TOC > ul > li > a {
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    nav#TOC ul ul {
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+
+    nav#TOC ul ul li {
+      margin: 4px 0;
+    }
+
+    nav#TOC ul ul a {
+      color: #475569;
+      font-size: 9.5pt;
+    }
+
+    /* Kategorie kolorów - dla tabel z kategoriami */
+    tr td:first-child:contains("A"),
+    td.cat-a {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("B"),
+    td.cat-b {
+      color: #d97706;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("C"),
+    td.cat-c {
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-header-icon">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div class="doc-header-text">
+    <h1>Dokumentacja Techniczna</h1>
+    <p>CWU Monitor — KSM Przylesie</p>
+  </div>
+</div>
+
+<nav id="TOC">
+<ul>
+<li><a href="#dokumentacja-techniczna-system-cwu-monitor"
+id="toc-dokumentacja-techniczna-system-cwu-monitor">Dokumentacja
+Techniczna — System CWU Monitor</a>
+<ul>
+<li><a href="#informacje-o-dokumencie"
+id="toc-informacje-o-dokumencie">Informacje o dokumencie</a></li>
+<li><a href="#spis-treści" id="toc-spis-treści">Spis treści</a></li>
+<li><a href="#przegląd-systemu" id="toc-przegląd-systemu">1. Przegląd
+systemu</a>
+<ul>
+<li><a href="#cel-biznesowy" id="toc-cel-biznesowy">1.1 Cel
+biznesowy</a></li>
+<li><a href="#zakres-funkcjonalny" id="toc-zakres-funkcjonalny">1.2
+Zakres funkcjonalny</a></li>
+<li><a href="#użytkownicy" id="toc-użytkownicy">1.3 Użytkownicy</a></li>
+<li><a href="#stack-technologiczny" id="toc-stack-technologiczny">1.4
+Stack technologiczny</a></li>
+</ul></li>
+<li><a href="#architektura" id="toc-architektura">2. Architektura</a>
+<ul>
+<li><a href="#diagram-architektury" id="toc-diagram-architektury">2.1
+Diagram architektury</a></li>
+<li><a href="#struktura-katalogów" id="toc-struktura-katalogów">2.2
+Struktura katalogów</a></li>
+<li><a href="#przepływ-danych" id="toc-przepływ-danych">2.3 Przepływ
+danych</a></li>
+</ul></li>
+<li><a href="#model-danych" id="toc-model-danych">3. Model danych</a>
+<ul>
+<li><a href="#dane-wejściowe-z-ksm" id="toc-dane-wejściowe-z-ksm">3.1
+Dane wejściowe z KSM</a></li>
+<li><a href="#dane-wejściowe-z-mec-docelowo"
+id="toc-dane-wejściowe-z-mec-docelowo">3.2 Dane wejściowe z MEC
+(docelowo)</a></li>
+<li><a href="#wskaźniki-obliczone" id="toc-wskaźniki-obliczone">3.3
+Wskaźniki obliczone</a></li>
+<li><a href="#hierarchia-efektywności"
+id="toc-hierarchia-efektywności">3.4 Hierarchia efektywności</a></li>
+<li><a href="#typy-pomocnicze" id="toc-typy-pomocnicze">3.5 Typy
+pomocnicze</a></li>
+</ul></li>
+<li><a href="#logika-obliczeniowa" id="toc-logika-obliczeniowa">4.
+Logika obliczeniowa</a>
+<ul>
+<li><a href="#stałe-fizyczne" id="toc-stałe-fizyczne">4.1 Stałe
+fizyczne</a></li>
+<li><a href="#wzory-obliczeniowe" id="toc-wzory-obliczeniowe">4.2 Wzory
+obliczeniowe</a></li>
+<li><a href="#przepływ-obliczeń" id="toc-przepływ-obliczeń">4.3 Przepływ
+obliczeń</a></li>
+<li><a href="#główne-funkcje-libdata.ts"
+id="toc-główne-funkcje-libdata.ts">4.4 Główne funkcje
+(lib/data.ts)</a></li>
+</ul></li>
+<li><a href="#interfejs-użytkownika" id="toc-interfejs-użytkownika">5.
+Interfejs użytkownika</a>
+<ul>
+<li><a href="#dashboard-strona-główna"
+id="toc-dashboard-strona-główna">5.1 Dashboard (strona główna)</a></li>
+<li><a href="#szczegóły-węzła" id="toc-szczegóły-węzła">5.2 Szczegóły
+węzła</a></li>
+<li><a href="#ranking" id="toc-ranking">5.3 Ranking</a></li>
+<li><a href="#alerty" id="toc-alerty">5.4 Alerty</a></li>
+<li><a href="#kolorystyka-i-statusy" id="toc-kolorystyka-i-statusy">5.5
+Kolorystyka i statusy</a></li>
+</ul></li>
+<li><a href="#integracje" id="toc-integracje">6. Integracje</a>
+<ul>
+<li><a href="#dane-ksm-obecne" id="toc-dane-ksm-obecne">6.1 Dane KSM
+(obecne)</a></li>
+<li><a href="#api-mec-docelowe" id="toc-api-mec-docelowe">6.2 API MEC
+(docelowe)</a></li>
+<li><a href="#eksport-danych" id="toc-eksport-danych">6.3 Eksport
+danych</a></li>
+</ul></li>
+<li><a href="#bezpieczeństwo" id="toc-bezpieczeństwo">7.
+Bezpieczeństwo</a>
+<ul>
+<li><a href="#dane-wrażliwe" id="toc-dane-wrażliwe">7.1 Dane
+wrażliwe</a></li>
+<li><a href="#autoryzacja-docelowo" id="toc-autoryzacja-docelowo">7.2
+Autoryzacja (docelowo)</a></li>
+<li><a href="#zmienne-środowiskowe" id="toc-zmienne-środowiskowe">7.3
+Zmienne środowiskowe</a></li>
+</ul></li>
+<li><a href="#wdrożenie" id="toc-wdrożenie">8. Wdrożenie</a>
+<ul>
+<li><a href="#środowiska" id="toc-środowiska">8.1 Środowiska</a></li>
+<li><a href="#deployment-vercel" id="toc-deployment-vercel">8.2
+Deployment (Vercel)</a></li>
+<li><a href="#konfiguracja-vercel" id="toc-konfiguracja-vercel">8.3
+Konfiguracja Vercel</a></li>
+<li><a href="#cicd" id="toc-cicd">8.4 CI/CD</a></li>
+</ul></li>
+<li><a href="#utrzymanie" id="toc-utrzymanie">9. Utrzymanie</a>
+<ul>
+<li><a href="#monitoring" id="toc-monitoring">9.1 Monitoring</a></li>
+<li><a href="#logi" id="toc-logi">9.2 Logi</a></li>
+<li><a href="#aktualizacja-danych-ksm"
+id="toc-aktualizacja-danych-ksm">9.3 Aktualizacja danych KSM</a></li>
+<li><a href="#backup" id="toc-backup">9.4 Backup</a></li>
+<li><a href="#kontakty" id="toc-kontakty">9.5 Kontakty</a></li>
+</ul></li>
+<li><a href="#załączniki" id="toc-załączniki">10. Załączniki</a>
+<ul>
+<li><a href="#a.-słownik-skrótów" id="toc-a.-słownik-skrótów">A. Słownik
+skrótów</a></li>
+<li><a href="#b.-referencje" id="toc-b.-referencje">B.
+Referencje</a></li>
+</ul></li>
+<li><a href="#historia-zmian" id="toc-historia-zmian">Historia
+zmian</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="dokumentacja-techniczna-system-cwu-monitor">Dokumentacja
+Techniczna — System CWU Monitor</h1>
+<h2 id="informacje-o-dokumencie">Informacje o dokumencie</h2>
+<table>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wersja</td>
+<td>1.1</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>2025-01-14</td>
+</tr>
+<tr>
+<td>Projekt</td>
+<td>KSM-Przylesie CWU Monitor</td>
+</tr>
+<tr>
+<td>Przeznaczenie</td>
+<td>Pełna dokumentacja techniczna systemu</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="spis-treści">Spis treści</h2>
+<ol type="1">
+<li><a href="#1-przegląd-systemu">Przegląd systemu</a></li>
+<li><a href="#2-architektura">Architektura</a></li>
+<li><a href="#3-model-danych">Model danych</a></li>
+<li><a href="#4-logika-obliczeniowa">Logika obliczeniowa</a></li>
+<li><a href="#5-interfejs-użytkownika">Interfejs użytkownika</a></li>
+<li><a href="#6-integracje">Integracje</a></li>
+<li><a href="#7-bezpieczeństwo">Bezpieczeństwo</a></li>
+<li><a href="#8-wdrożenie">Wdrożenie</a></li>
+<li><a href="#9-utrzymanie">Utrzymanie</a></li>
+</ol>
+<hr />
+<h2 id="przegląd-systemu">1. Przegląd systemu</h2>
+<h3 id="cel-biznesowy">1.1 Cel biznesowy</h3>
+<p>System CWU Monitor służy do monitorowania efektywności energetycznej
+węzłów cieplnych ciepłej wody użytkowej (CWU) w zasobach Koszalińskiej
+Spółdzielni Mieszkaniowej “Przylesie”.</p>
+<p><strong>Główne cele:</strong> - Identyfikacja węzłów o niskiej
+efektywności energetycznej - Diagnozowanie przyczyn strat energii
+(wymiennik vs cyrkulacja) - Generowanie rekomendacji działań
+optymalizacyjnych - Śledzenie trendów i porównywanie węzłów między
+sobą</p>
+<h3 id="zakres-funkcjonalny">1.2 Zakres funkcjonalny</h3>
+<table>
+<thead>
+<tr>
+<th>Funkcja</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dashboard</td>
+<td>Przegląd wszystkich 40 węzłów z alertami</td>
+</tr>
+<tr>
+<td>Szczegóły węzła</td>
+<td>Pełna analiza pojedynczego węzła</td>
+</tr>
+<tr>
+<td>Ranking</td>
+<td>Porównanie węzłów między sobą</td>
+</tr>
+<tr>
+<td>Profil dobowy</td>
+<td>Analiza efektywności w ciągu dnia</td>
+</tr>
+<tr>
+<td>Historia</td>
+<td>Trendy miesięczne i roczne</td>
+</tr>
+<tr>
+<td>Alerty</td>
+<td>Automatyczne powiadomienia o problemach</td>
+</tr>
+<tr>
+<td>Rekomendacje</td>
+<td>Sugestie działań optymalizacyjnych</td>
+</tr>
+</tbody>
+</table>
+<h3 id="użytkownicy">1.3 Użytkownicy</h3>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 26%" />
+<col style="width: 53%" />
+</colgroup>
+<thead>
+<tr>
+<th>Rola</th>
+<th>Dostęp</th>
+<th>Typowe zadania</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inżynier techniczny KSM</td>
+<td>Pełny</td>
+<td>Analiza węzłów, planowanie interwencji</td>
+</tr>
+<tr>
+<td>Zarząd KSM</td>
+<td>Dashboard + raporty</td>
+<td>Przegląd ogólny, decyzje strategiczne</td>
+</tr>
+<tr>
+<td>Administrator</td>
+<td>Pełny + konfiguracja</td>
+<td>Zarządzanie systemem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="stack-technologiczny">1.4 Stack technologiczny</h3>
+<table>
+<thead>
+<tr>
+<th>Warstwa</th>
+<th>Technologia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend</td>
+<td>Next.js 16.x, React 19.x, TypeScript</td>
+</tr>
+<tr>
+<td>Styling</td>
+<td>Tailwind CSS</td>
+</tr>
+<tr>
+<td>Wykresy</td>
+<td>Recharts</td>
+</tr>
+<tr>
+<td>Backend</td>
+<td>Next.js API Routes (SSR)</td>
+</tr>
+<tr>
+<td>Dane</td>
+<td>JSON (prototyp) → API MEC (docelowo)</td>
+</tr>
+<tr>
+<td>Hosting</td>
+<td>Vercel (docelowo)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architektura">2. Architektura</h2>
+<h3 id="diagram-architektury">2.1 Diagram architektury</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                           UŻYTKOWNICY                                   │
+│                     (Przeglądarki web)                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         NEXT.JS APPLICATION                             │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                      WARSTWA PREZENTACJI                        │   │
+│  │  ┌───────────┐  ┌───────────┐  ┌───────────┐  ┌───────────┐    │   │
+│  │  │ Dashboard │  │Node Detail│  │  Ranking  │  │  Alerts   │    │   │
+│  │  │   Page    │  │   Page    │  │   Page    │  │   Page    │    │   │
+│  │  └───────────┘  └───────────┘  └───────────┘  └───────────┘    │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                      WARSTWA KOMPONENTÓW                        │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐           │   │
+│  │  │ SEGauge  │ │TrendChart│ │NodesTable│ │ Hierarchy│           │   │
+│  │  │          │ │          │ │          │ │  Panel   │           │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘           │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                      WARSTWA DANYCH                             │   │
+│  │                                                                 │   │
+│  │                       lib/data.ts                               │   │
+│  │  ┌──────────────────────────────────────────────────────────┐  │   │
+│  │  │  • calculateEnergyEfficiency()   → SE                    │  │   │
+│  │  │  • generateOperationalIndicators() → WWC, SH, ES         │  │   │
+│  │  │  • calculateExchangerCondition()  → KW                   │  │   │
+│  │  │  • calculateSystemLosses()        → SS                   │  │   │
+│  │  │  • generateEfficiencyHierarchy()  → pełna hierarchia     │  │   │
+│  │  └──────────────────────────────────────────────────────────┘  │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                 ┌──────────────────┴──────────────────┐
+                 │                                     │
+                 ▼                                     ▼
+┌─────────────────────────────────┐  ┌─────────────────────────────────┐
+│        DANE KSM                 │  │        DANE MEC SCADA           │
+│  (nodes-data.json)              │  │  (API - docelowo)               │
+│                                 │  │                                 │
+│  • Odczyty miesięczne           │  │  • Pomiary co 15 min            │
+│  • GJ, m³, wskaźnik             │  │  • T_zas, T_pow, Q_flow         │
+│  • Dane historyczne             │  │  • delta_GJ, delta_m3           │
+└─────────────────────────────────┘  └─────────────────────────────────┘</code></pre>
+<h3 id="struktura-katalogów">2.2 Struktura katalogów</h3>
+<pre><code>ksm-cwu-monitor/
+├── app/                          # Next.js App Router
+│   ├── page.tsx                  # Dashboard (strona główna)
+│   ├── nodes/
+│   │   └── [id]/
+│   │       └── page.tsx          # Szczegóły węzła
+│   ├── ranking/
+│   │   └── page.tsx              # Ranking węzłów
+│   ├── alerts/
+│   │   └── page.tsx              # Lista alertów
+│   ├── layout.tsx                # Layout główny
+│   └── globals.css               # Style globalne
+│
+├── components/                   # Komponenty React
+│   ├── dashboard/                # Komponenty dashboardu
+│   │   ├── StatsGrid.tsx         # Kafelki statystyk
+│   │   ├── NodesTable.tsx        # Tabela węzłów
+│   │   ├── AlertsList.tsx        # Lista alertów
+│   │   └── CategoryChart.tsx     # Wykres kategorii
+│   │
+│   ├── node-detail/              # Komponenty szczegółów węzła
+│   │   ├── SEGauge.tsx           # Wskaźnik SE
+│   │   ├── EfficiencyHierarchyPanel.tsx  # Panel hierarchii
+│   │   ├── OperationalIndicatorsPanel.tsx # Panel WWC/SH/ES
+│   │   ├── TrendChart.tsx        # Wykres trendu
+│   │   ├── DailyProfileChart.tsx # Profil dobowy
+│   │   ├── RecommendationsPanel.tsx # Rekomendacje
+│   │   └── BenchmarkPanel.tsx    # Benchmarking
+│   │
+│   └── ui/                       # Komponenty UI (podstawowe)
+│       ├── Badge.tsx
+│       ├── Button.tsx
+│       ├── Card.tsx
+│       ├── ProgressBar.tsx
+│       └── Tooltip.tsx
+│
+├── lib/                          # Logika biznesowa
+│   ├── data.ts                   # Obliczenia i pobieranie danych
+│   └── types.ts                  # Definicje typów TypeScript
+│
+├── data/                         # Dane statyczne
+│   └── nodes-data.json           # Dane węzłów (prototyp)
+│
+├── public/                       # Zasoby statyczne
+│
+├── tailwind.config.js            # Konfiguracja Tailwind
+├── tsconfig.json                 # Konfiguracja TypeScript
+└── package.json                  # Zależności npm</code></pre>
+<h3 id="przepływ-danych">2.3 Przepływ danych</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                         PRZEPŁYW DANYCH                                 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+1. ŁADOWANIE STRONY
+   Browser → Next.js → page.tsx → getNodesWithEfficiency()
+
+2. POBIERANIE DANYCH
+   getNodesWithEfficiency() → rawNodes (z JSON/API)
+
+3. OBLICZENIA
+   rawNodes → generateOperationalIndicators() → WWC, SH, ES
+           → calculateExchangerCondition()    → KW
+           → calculateEnergyEfficiency()      → SE
+           → calculateSystemLosses()          → SS
+           → generateEfficiencyHierarchy()    → pełna hierarchia
+
+4. RENDEROWANIE
+   NodeWithEfficiency → React Components → HTML/CSS → Browser</code></pre>
+<hr />
+<h2 id="model-danych">3. Model danych</h2>
+<h3 id="dane-wejściowe-z-ksm">3.1 Dane wejściowe z KSM</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Odczyt miesięczny z KSM</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> MonthlyReading {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  year<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>           <span class="co">// Rok odczytu (np. 2024)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  month<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>          <span class="co">// Miesiąc (1-12)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  gj<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>             <span class="co">// Energia cieplna [GJ]</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  m3<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>             <span class="co">// Objętość wody [m³]</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  wskaznik<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>       <span class="co">// Wskaźnik GJ/m³</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Węzeł cieplny</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> <span class="bu">Node</span> {</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>             <span class="co">// ID węzła (np. &quot;WC-001&quot;)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  name<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>           <span class="co">// Nazwa budynku</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  address<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>        <span class="co">// Adres</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  apartments_count<span class="op">:</span> <span class="dt">number</span><span class="op">;</span> <span class="co">// Liczba mieszkań</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  building_volume_m3<span class="op">:</span> <span class="dt">number</span><span class="op">;</span> <span class="co">// Kubatura [m³]</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  mtcv_type<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>      <span class="co">// Typ zaworów MTCV</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  mtcv_count<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>     <span class="co">// Liczba zaworów</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  readings<span class="op">:</span> MonthlyReading[]<span class="op">;</span> <span class="co">// Odczyty historyczne</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  stats<span class="op">:</span> NodeStats<span class="op">;</span>       <span class="co">// Statystyki obliczone</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="dane-wejściowe-z-mec-docelowo">3.2 Dane wejściowe z MEC
+(docelowo)</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Pojedynczy pomiar z SCADA</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ScadaMeasurement {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  node_id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  timestamp<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>      <span class="co">// ISO 8601</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  T_zas<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>          <span class="co">// Temperatura zasilania [°C]</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  T_pow<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>          <span class="co">// Temperatura powrotu [°C]</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  Q_flow<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>         <span class="co">// Przepływ [m³/h]</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  delta_GJ<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>       <span class="co">// Przyrost energii [GJ]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  delta_m3<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>       <span class="co">// Przyrost wody [m³]</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Agregacja dobowa</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> DailyAggregation {</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  node_id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  date<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  wwc<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>            <span class="co">// Wydajność Wymiany Ciepła [%]</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  sh<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>             <span class="co">// Stabilność Hydrauliczna [%]</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  es<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>             <span class="co">// Efektywność Szczytowa [%]</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  se<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>             <span class="co">// Sprawność Energetyczna [%]</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="wskaźniki-obliczone">3.3 Wskaźniki obliczone</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// SE - Sprawność Energetyczna (główny wskaźnik)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> EnergyEfficiency {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>              <span class="co">// 0-100%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> IndicatorStatus<span class="op">;</span>    <span class="co">// optimal/good/warning/critical</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  losses_percent<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>     <span class="co">// Straty (100 - SE)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  q_theoretical<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>      <span class="co">// Energia teoretyczna [GJ]</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  q_actual<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>           <span class="co">// Energia rzeczywista [GJ]</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  t_cold_estimated<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>   <span class="co">// Szacowana T_zimna [°C]</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  interpretation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span>     <span class="co">// Opis po polsku</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">// KW - Kondycja Wymiennika</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> ExchangerCondition {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>              <span class="co">// 0-100%</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> IndicatorStatus<span class="op">;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  limiting_factor<span class="op">:</span> <span class="st">&#39;wwc&#39;</span> <span class="op">|</span> <span class="st">&#39;sh&#39;</span> <span class="op">|</span> <span class="st">&#39;es&#39;</span><span class="op">;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  interpretation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co">// SS - Straty Systemowe</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> SystemLosses {</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>              <span class="co">// 0-100%</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> IndicatorStatus<span class="op">;</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  estimated_circulation<span class="op">:</span> <span class="dt">number</span><span class="op">;</span> <span class="co">// Straty cyrkulacji [%]</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  estimated_pipes<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>       <span class="co">// Straty rur [%]</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  night_ratio<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>           <span class="co">// Q_noc / Q_dzień</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  interpretation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  action<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">// WWC - Wydajność Wymiany Ciepła</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> HeatExchangeIndex {</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>              <span class="co">// 0-100%</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> IndicatorStatus<span class="op">;</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  avg_delta_T<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>        <span class="co">// Średnia ΔT [K]</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  interpretation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  action<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="co">// SH - Stabilność Hydrauliczna</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> HydraulicStability {</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>              <span class="co">// 0-100%</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> IndicatorStatus<span class="op">;</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  flow_mean<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>          <span class="co">// μ(Q) [m³/h]</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  flow_std<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>           <span class="co">// σ(Q) [m³/h]</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  cv<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>                 <span class="co">// Współczynnik zmienności</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>  interpretation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>  action<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a><span class="co">// ES - Efektywność Szczytowa</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> PeakEfficiency {</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>  value<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>              <span class="co">// 0-100%</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> IndicatorStatus<span class="op">;</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>  se_peak<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>            <span class="co">// Średnia SE w szczycie [%]</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>  se_average<span class="op">:</span> <span class="dt">number</span><span class="op">;</span>         <span class="co">// Średnia SE całodobowa [%]</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  worst_hours<span class="op">:</span> <span class="dt">number</span>[]<span class="op">;</span>      <span class="co">// Godziny z najniższym SE</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>  interpretation<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>  action<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="hierarchia-efektywności">3.4 Hierarchia efektywności</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> EfficiencyHierarchy {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Poziom 1 - główny wskaźnik</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  se<span class="op">:</span> EnergyEfficiency<span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Poziom 2 - składowe</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  kw<span class="op">:</span> ExchangerCondition<span class="op">;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ss<span class="op">:</span> SystemLosses<span class="op">;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Diagnostyka</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  primary_issue<span class="op">:</span> <span class="st">&#39;exchanger&#39;</span> <span class="op">|</span> <span class="st">&#39;circulation&#39;</span> <span class="op">|</span> <span class="st">&#39;balanced&#39;</span> <span class="op">|</span> <span class="st">&#39;unknown&#39;</span><span class="op">;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  savings_potential_percent<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  savings_potential_gj<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> OperationalIndicators {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Poziom 3 - operacyjne</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  wwc<span class="op">:</span> HeatExchangeIndex<span class="op">;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  sh<span class="op">:</span> HydraulicStability<span class="op">;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  es<span class="op">:</span> PeakEfficiency<span class="op">;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  weekly_trend<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="typy-pomocnicze">3.5 Typy pomocnicze</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> IndicatorStatus <span class="op">=</span> <span class="st">&#39;optimal&#39;</span> <span class="op">|</span> <span class="st">&#39;good&#39;</span> <span class="op">|</span> <span class="st">&#39;warning&#39;</span> <span class="op">|</span> <span class="st">&#39;critical&#39;</span><span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Category <span class="op">=</span> <span class="st">&#39;A&#39;</span> <span class="op">|</span> <span class="st">&#39;B&#39;</span> <span class="op">|</span> <span class="st">&#39;C&#39;</span><span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> AlertSeverity <span class="op">=</span> <span class="st">&#39;info&#39;</span> <span class="op">|</span> <span class="st">&#39;warning&#39;</span> <span class="op">|</span> <span class="st">&#39;critical&#39;</span><span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> LoadLevel <span class="op">=</span> <span class="st">&#39;low&#39;</span> <span class="op">|</span> <span class="st">&#39;medium&#39;</span> <span class="op">|</span> <span class="st">&#39;high&#39;</span> <span class="op">|</span> <span class="st">&#39;peak&#39;</span><span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> Alert {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  type<span class="op">:</span> <span class="st">&#39;efficiency_drop&#39;</span> <span class="op">|</span> <span class="st">&#39;deviation_critical&#39;</span> <span class="op">|</span> <span class="st">&#39;trend_negative&#39;</span><span class="op">;</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  severity<span class="op">:</span> AlertSeverity<span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  created_at<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  message<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  status<span class="op">:</span> <span class="st">&#39;active&#39;</span> <span class="op">|</span> <span class="st">&#39;acknowledged&#39;</span><span class="op">;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  node_id<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  node_name<span class="op">?:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">interface</span> Recommendation {</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  id<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  priority<span class="op">:</span> <span class="st">&#39;high&#39;</span> <span class="op">|</span> <span class="st">&#39;medium&#39;</span> <span class="op">|</span> <span class="st">&#39;low&#39;</span><span class="op">;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  category<span class="op">:</span> <span class="st">&#39;mtcv_adjustment&#39;</span> <span class="op">|</span> <span class="st">&#39;hydraulic_balance&#39;</span> <span class="op">|</span> <span class="st">&#39;circulation_pump&#39;</span> <span class="op">|</span> <span class="st">&#39;insulation&#39;</span><span class="op">;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  title<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  description<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  expected_improvement<span class="op">:</span> { iez_points<span class="op">:</span> <span class="dt">number</span> }<span class="op">;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  affected_hours<span class="op">:</span> <span class="dt">number</span>[]<span class="op">;</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+<h2 id="logika-obliczeniowa">4. Logika obliczeniowa</h2>
+<h3 id="stałe-fizyczne">4.1 Stałe fizyczne</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> T_CWU <span class="op">=</span> <span class="dv">55</span><span class="op">;</span>                    <span class="co">// Temperatura docelowa CWU [°C]</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> SPECIFIC_HEAT <span class="op">=</span> <span class="fl">0.004186</span><span class="op">;</span>      <span class="co">// Ciepło właściwe wody [GJ/(m³·K)]</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> MIN_LOSSES_FACTOR <span class="op">=</span> <span class="fl">1.05</span><span class="op">;</span>      <span class="co">// 5% nieuniknionych strat</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> DELTA_T_OPTIMAL <span class="op">=</span> <span class="dv">20</span><span class="op">;</span>          <span class="co">// Optymalna różnica temperatur [K]</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> OPTIMAL_WSKAZNIK <span class="op">=</span> <span class="fl">0.22</span><span class="op">;</span>       <span class="co">// Optymalny wskaźnik [GJ/m³]</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> SEASONAL_T_COLD <span class="op">=</span> {</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">2</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dv">3</span><span class="op">:</span> <span class="dv">7</span><span class="op">,</span> <span class="dv">4</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dv">5</span><span class="op">:</span> <span class="dv">13</span><span class="op">,</span> <span class="dv">6</span><span class="op">:</span> <span class="dv">16</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="dv">7</span><span class="op">:</span> <span class="dv">18</span><span class="op">,</span> <span class="dv">8</span><span class="op">:</span> <span class="dv">18</span><span class="op">,</span> <span class="dv">9</span><span class="op">:</span> <span class="dv">15</span><span class="op">,</span> <span class="dv">10</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dv">11</span><span class="op">:</span> <span class="dv">9</span><span class="op">,</span> <span class="dv">12</span><span class="op">:</span> <span class="dv">6</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h3 id="wzory-obliczeniowe">4.2 Wzory obliczeniowe</h3>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 19%" />
+<col style="width: 48%" />
+</colgroup>
+<thead>
+<tr>
+<th>Wskaźnik</th>
+<th>Wzór</th>
+<th>Progi statusu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SE</strong></td>
+<td><code>(Q_teor / Q_rzecz) × 100</code></td>
+<td>≥80: optimal, ≥70: good, ≥60: warning, &lt;60: critical</td>
+</tr>
+<tr>
+<td><strong>WWC</strong></td>
+<td><code>(ΔT / 20) × 100</code></td>
+<td>≥95: optimal, ≥85: good, ≥70: warning, &lt;70: critical</td>
+</tr>
+<tr>
+<td><strong>SH</strong></td>
+<td><code>100 - CV × 100</code></td>
+<td>≥90: optimal, ≥80: good, ≥70: warning, &lt;70: critical</td>
+</tr>
+<tr>
+<td><strong>ES</strong></td>
+<td><code>(SE_szczyt / SE_śr) × 100</code></td>
+<td>≥90: optimal, ≥80: good, ≥70: warning, &lt;70: critical</td>
+</tr>
+<tr>
+<td><strong>KW</strong></td>
+<td><code>∛(WWC × SH × ES)</code></td>
+<td>jak WWC</td>
+</tr>
+<tr>
+<td><strong>SS</strong></td>
+<td><code>100 × (1 - SE/KW)</code></td>
+<td>&lt;10: optimal, &lt;20: good, &lt;30: warning, ≥30: critical</td>
+</tr>
+</tbody>
+</table>
+<h3 id="przepływ-obliczeń">4.3 Przepływ obliczeń</h3>
+<pre><code>KROK 1: Dane surowe
+        │
+        ├── T_zas, T_pow ──────────────► WWC = (ΔT/20) × 100
+        │
+        ├── Q_flow (96 pomiarów) ──────► SH = 100 - CV × 100
+        │
+        └── delta_GJ, delta_m3 ────────► SE_15min[] ──► ES = SE_szczyt/SE_śr
+                │
+                │
+KROK 2: Agregacja
+        │
+        ├── WWC, SH, ES ───────────────► KW = ∛(WWC × SH × ES)
+        │
+        └── suma delta_GJ, delta_m3 ───► SE_dobowe
+                │
+                │
+KROK 3: Straty
+        │
+        └── SE, KW ────────────────────► SS = 100 × (1 - SE/KW)
+                │
+                │
+KROK 4: Diagnostyka
+        │
+        ├── primary_issue = &#39;exchanger&#39; | &#39;circulation&#39; | &#39;balanced&#39;
+        │
+        └── savings_potential = max(0, losses - 20) × annual_GJ</code></pre>
+<h3 id="główne-funkcje-libdata.ts">4.4 Główne funkcje (lib/data.ts)</h3>
+<table>
+<thead>
+<tr>
+<th>Funkcja</th>
+<th>Linia</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>calculateEnergyEfficiency()</code></td>
+<td>251-309</td>
+<td>Oblicza SE z danych KSM</td>
+</tr>
+<tr>
+<td><code>generateOperationalIndicators()</code></td>
+<td>376-421</td>
+<td>Generuje WWC, SH, ES</td>
+</tr>
+<tr>
+<td><code>calculateExchangerCondition()</code></td>
+<td>169-201</td>
+<td>Oblicza KW</td>
+</tr>
+<tr>
+<td><code>calculateSystemLosses()</code></td>
+<td>203-249</td>
+<td>Oblicza SS</td>
+</tr>
+<tr>
+<td><code>generateEfficiencyHierarchy()</code></td>
+<td>311-367</td>
+<td>Składa całą hierarchię</td>
+</tr>
+<tr>
+<td><code>generateAlerts()</code></td>
+<td>583-633</td>
+<td>Generuje alerty</td>
+</tr>
+<tr>
+<td><code>generateRecommendations()</code></td>
+<td>635-677</td>
+<td>Generuje rekomendacje</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="interfejs-użytkownika">5. Interfejs użytkownika</h2>
+<h3 id="dashboard-strona-główna">5.1 Dashboard (strona główna)</h3>
+<p><strong>Ścieżka:</strong> <code>/</code> (app/page.tsx)</p>
+<p><strong>Sekcje:</strong> 1. <strong>Nagłówek</strong> - logo, tytuł,
+data aktualizacji 2. <strong>Kafelki statystyk</strong> (StatsGrid) -
+Liczba węzłów - Średnia SE - Aktywne alerty - Rozkład kategorii A/B/C 3.
+<strong>Lista alertów</strong> (AlertsList) - Sortowane: critical →
+warning → info 4. <strong>Tabela węzłów</strong> (NodesTable) - ID,
+nazwa, SE, kategoria, trend - Sortowanie po kolumnach - Link do
+szczegółów</p>
+<h3 id="szczegóły-węzła">5.2 Szczegóły węzła</h3>
+<p><strong>Ścieżka:</strong> <code>/nodes/[id]</code>
+(app/nodes/[id]/page.tsx)</p>
+<p><strong>Sekcje:</strong> 1. <strong>Nagłówek</strong> - nazwa, adres,
+metadata 2. <strong>Wskaźnik SE</strong> (SEGauge) - Gauge 0-100% -
+Kategoria A/B/C - Trend 3. <strong>Panel hierarchii</strong>
+(EfficiencyHierarchyPanel) - SE → KW + SS - Limiting factor - Potencjał
+oszczędności 4. <strong>Wskaźniki operacyjne</strong>
+(OperationalIndicatorsPanel) - WWC, SH, ES z progress barami - Status i
+interpretacja 5. <strong>Wykres trendu</strong> (TrendChart) - SE
+miesięczne - Linia trendu 6. <strong>Profil dobowy</strong>
+(DailyProfileChart) - SE godzinowe - Zaznaczone godziny szczytu 7.
+<strong>Rekomendacje</strong> (RecommendationsPanel) - Priorytet, tytuł,
+opis - Szacowana poprawa 8. <strong>Benchmark</strong> (BenchmarkPanel)
+- Percentyl w rankingu - Porównanie z podobnymi węzłami</p>
+<h3 id="ranking">5.3 Ranking</h3>
+<p><strong>Ścieżka:</strong> <code>/ranking</code></p>
+<p><strong>Funkcje:</strong> - Lista wszystkich węzłów sortowana po SE -
+Pozycja, kategoria, trend - Filtry: kategoria, trend - Link do
+szczegółów</p>
+<h3 id="alerty">5.4 Alerty</h3>
+<p><strong>Ścieżka:</strong> <code>/alerts</code></p>
+<p><strong>Funkcje:</strong> - Lista wszystkich alertów - Filtry:
+severity, status, węzeł - Możliwość potwierdzenia (acknowledge) -
+Historia alertów</p>
+<h3 id="kolorystyka-i-statusy">5.5 Kolorystyka i statusy</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Kategorie */</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>--category-a<span class="in">:</span> <span class="pp">#22c55e</span>;  <span class="co">/* Zielony - optymalna */</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>--category-b<span class="in">:</span> <span class="pp">#f59e0b</span>;  <span class="co">/* Pomarańczowy - dobra */</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>--category-c<span class="in">:</span> <span class="pp">#ef4444</span>;  <span class="co">/* Czerwony - ostrzegawcza */</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">/* Statusy wskaźników */</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>--status-optimal<span class="in">:</span> <span class="pp">#22c55e</span>;</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>--status-good<span class="in">:</span> <span class="pp">#84cc16</span>;</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>--status-warning<span class="in">:</span> <span class="pp">#f59e0b</span>;</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>--status-critical<span class="in">:</span> <span class="pp">#ef4444</span>;</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">/* Severity alertów */</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>--severity-info<span class="in">:</span> <span class="pp">#3b82f6</span>;</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>--severity-warning<span class="in">:</span> <span class="pp">#f59e0b</span>;</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>--severity-critical<span class="in">:</span> <span class="pp">#ef4444</span>;</span></code></pre></div>
+<hr />
+<h2 id="integracje">6. Integracje</h2>
+<h3 id="dane-ksm-obecne">6.1 Dane KSM (obecne)</h3>
+<p><strong>Format:</strong> JSON (nodes-data.json)</p>
+<p><strong>Aktualizacja:</strong> Ręczna (upload nowego pliku)</p>
+<p><strong>Struktura:</strong></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">[</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Jana Pawła II 2-2a&quot;</span><span class="fu">,</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;address&quot;</span><span class="fu">:</span> <span class="st">&quot;ul. Jana Pawła II 2-2a, 75-452 Koszalin&quot;</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;apartments_count&quot;</span><span class="fu">:</span> <span class="dv">48</span><span class="fu">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;building_volume_m3&quot;</span><span class="fu">:</span> <span class="dv">12500</span><span class="fu">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mtcv_type&quot;</span><span class="fu">:</span> <span class="st">&quot;Caleffi 116&quot;</span><span class="fu">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mtcv_count&quot;</span><span class="fu">:</span> <span class="dv">6</span><span class="fu">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;readings&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">{</span> <span class="dt">&quot;year&quot;</span><span class="fu">:</span> <span class="dv">2024</span><span class="fu">,</span> <span class="dt">&quot;month&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span> <span class="dt">&quot;gj&quot;</span><span class="fu">:</span> <span class="fl">145.2</span><span class="fu">,</span> <span class="dt">&quot;m3&quot;</span><span class="fu">:</span> <span class="dv">580</span><span class="fu">,</span> <span class="dt">&quot;wskaznik&quot;</span><span class="fu">:</span> <span class="fl">0.250</span> <span class="fu">}</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;stats&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;avg_wskaznik&quot;</span><span class="fu">:</span> <span class="fl">0.248</span><span class="fu">,</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;avg_iez&quot;</span><span class="fu">:</span> <span class="dv">88</span><span class="fu">,</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;A&quot;</span><span class="fu">,</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;trend&quot;</span><span class="fu">:</span> <span class="st">&quot;stable&quot;</span><span class="fu">,</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;trend_change&quot;</span><span class="fu">:</span> <span class="dv">-1</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div>
+<h3 id="api-mec-docelowe">6.2 API MEC (docelowe)</h3>
+<p><strong>Base URL:</strong>
+<code>https://api.mec-koszalin.pl/scada/v1</code> (do uzgodnienia z
+MEC)</p>
+<p><strong>Autoryzacja:</strong> API Key w nagłówku
+<code>X-API-Key</code></p>
+<p><strong>Endpointy:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Metoda</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/nodes</code></td>
+<td>GET</td>
+<td>Lista węzłów</td>
+</tr>
+<tr>
+<td><code>/nodes/{id}/current</code></td>
+<td>GET</td>
+<td>Bieżące pomiary</td>
+</tr>
+<tr>
+<td><code>/nodes/{id}/daily</code></td>
+<td>GET</td>
+<td>Agregacja dobowa</td>
+</tr>
+<tr>
+<td><code>/nodes/{id}/history</code></td>
+<td>GET</td>
+<td>Historia (max 90 dni)</td>
+</tr>
+<tr>
+<td><code>/nodes/{id}/alerts</code></td>
+<td>GET</td>
+<td>Alerty węzła</td>
+</tr>
+<tr>
+<td><code>/ranking</code></td>
+<td>GET</td>
+<td>Ranking wszystkich węzłów</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Przykład integracji:</strong></p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// lib/mec-api.ts (docelowo)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> MEC_BASE_URL <span class="op">=</span> <span class="bu">process</span><span class="op">.</span><span class="at">env</span><span class="op">.</span><span class="at">MEC_API_URL</span><span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> MEC_API_KEY <span class="op">=</span> <span class="bu">process</span><span class="op">.</span><span class="at">env</span><span class="op">.</span><span class="at">MEC_API_KEY</span><span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">fetchCurrentMeasurements</span>(nodeId<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>ScadaMeasurement<span class="op">&gt;</span> {</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(<span class="vs">`</span><span class="sc">${</span>MEC_BASE_URL<span class="sc">}</span><span class="vs">/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/current`</span><span class="op">,</span> {</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    headers<span class="op">:</span> {</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">&#39;X-API-Key&#39;</span><span class="op">:</span> MEC_API_KEY<span class="op">,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    }<span class="op">,</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">fetchDailyAggregation</span>(nodeId<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> date<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>DailyAggregation<span class="op">&gt;</span> {</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`</span><span class="sc">${</span>MEC_BASE_URL<span class="sc">}</span><span class="vs">/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/daily?date=</span><span class="sc">${</span>date<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    { headers<span class="op">:</span> { <span class="st">&#39;X-API-Key&#39;</span><span class="op">:</span> MEC_API_KEY } }</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="eksport-danych">6.3 Eksport danych</h3>
+<p><strong>Formaty (planowane):</strong> - CSV - eksport tabeli węzłów -
+PDF - raport dla pojedynczego węzła - Excel - pełny eksport z
+historią</p>
+<hr />
+<h2 id="bezpieczeństwo">7. Bezpieczeństwo</h2>
+<h3 id="dane-wrażliwe">7.1 Dane wrażliwe</h3>
+<p>System <strong>NIE przechowuje</strong> ani <strong>NIE
+wyświetla</strong>: - Absolutnych wartości GJ (tylko SE w %) -
+Absolutnych wartości m³ (tylko SE w %) - Danych rozliczeniowych - Danych
+osobowych mieszkańców</p>
+<h3 id="autoryzacja-docelowo">7.2 Autoryzacja (docelowo)</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// middleware.ts (docelowo)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> { NextResponse } <span class="im">from</span> <span class="st">&#39;next/server&#39;</span><span class="op">;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="im">type</span> { NextRequest } <span class="im">from</span> <span class="st">&#39;next/server&#39;</span><span class="op">;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">function</span> <span class="fu">middleware</span>(request<span class="op">:</span> NextRequest) {</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> token <span class="op">=</span> request<span class="op">.</span><span class="at">cookies</span><span class="op">.</span><span class="fu">get</span>(<span class="st">&#39;auth-token&#39;</span>)<span class="op">;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="op">!</span>token) {</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> NextResponse<span class="op">.</span><span class="fu">redirect</span>(<span class="kw">new</span> <span class="fu">URL</span>(<span class="st">&#39;/login&#39;</span><span class="op">,</span> request<span class="op">.</span><span class="at">url</span>))<span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> NextResponse<span class="op">.</span><span class="fu">next</span>()<span class="op">;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> config <span class="op">=</span> {</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  matcher<span class="op">:</span> [<span class="st">&#39;/((?!login|api/auth).*)&#39;</span>]<span class="op">,</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h3 id="zmienne-środowiskowe">7.3 Zmienne środowiskowe</h3>
+<pre class="env"><code># .env.local
+MEC_API_URL=https://api.mec-koszalin.pl/ksm/v1
+MEC_API_KEY=xxx-xxx-xxx
+NEXTAUTH_SECRET=xxx
+NEXTAUTH_URL=https://cwu.ksm-przylesie.pl</code></pre>
+<hr />
+<h2 id="wdrożenie">8. Wdrożenie</h2>
+<h3 id="środowiska">8.1 Środowiska</h3>
+<table>
+<thead>
+<tr>
+<th>Środowisko</th>
+<th>URL</th>
+<th>Przeznaczenie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Development</td>
+<td>localhost:3000</td>
+<td>Rozwój lokalny</td>
+</tr>
+<tr>
+<td>Staging</td>
+<td>staging.cwu.ksm-przylesie.pl</td>
+<td>Testy przed produkcją</td>
+</tr>
+<tr>
+<td>Production</td>
+<td>cwu.ksm-przylesie.pl</td>
+<td>Produkcja</td>
+</tr>
+</tbody>
+</table>
+<h3 id="deployment-vercel">8.2 Deployment (Vercel)</h3>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Instalacja zależności</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> install</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build produkcyjny</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run build</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Start lokalny</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="ex">npm</span> run dev</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Deploy na Vercel</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="ex">vercel</span> <span class="at">--prod</span></span></code></pre></div>
+<h3 id="konfiguracja-vercel">8.3 Konfiguracja Vercel</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="er">//</span> <span class="er">vercel.json</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;framework&quot;</span><span class="fu">:</span> <span class="st">&quot;nextjs&quot;</span><span class="fu">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;buildCommand&quot;</span><span class="fu">:</span> <span class="st">&quot;npm run build&quot;</span><span class="fu">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;installCommand&quot;</span><span class="fu">:</span> <span class="st">&quot;npm install&quot;</span><span class="fu">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;outputDirectory&quot;</span><span class="fu">:</span> <span class="st">&quot;.next&quot;</span><span class="fu">,</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;regions&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;fra1&quot;</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;MEC_API_URL&quot;</span><span class="fu">:</span> <span class="st">&quot;@mec-api-url&quot;</span><span class="fu">,</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;MEC_API_KEY&quot;</span><span class="fu">:</span> <span class="st">&quot;@mec-api-key&quot;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="cicd">8.4 CI/CD</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .github/workflows/deploy.yml</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Deploy</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">on</span><span class="kw">:</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">push</span><span class="kw">:</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">branches</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="at">main</span><span class="kw">]</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">jobs</span><span class="kw">:</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">deploy</span><span class="kw">:</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">runs-on</span><span class="kw">:</span><span class="at"> ubuntu-latest</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/checkout@v4</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> actions/setup-node@v4</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">node-version</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;20&#39;</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm ci</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm run lint</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">run</span><span class="kw">:</span><span class="at"> npm run build</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">uses</span><span class="kw">:</span><span class="at"> amondnet/vercel-action@v25</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">with</span><span class="kw">:</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">vercel-token</span><span class="kw">:</span><span class="at"> ${{ secrets.VERCEL_TOKEN }}</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">vercel-org-id</span><span class="kw">:</span><span class="at"> ${{ secrets.VERCEL_ORG_ID }}</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">vercel-project-id</span><span class="kw">:</span><span class="at"> ${{ secrets.VERCEL_PROJECT_ID }}</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">vercel-args</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;--prod&#39;</span></span></code></pre></div>
+<hr />
+<h2 id="utrzymanie">9. Utrzymanie</h2>
+<h3 id="monitoring">9.1 Monitoring</h3>
+<p><strong>Metryki do śledzenia:</strong> - Czas ładowania stron (&lt;
+2s) - Błędy API MEC (rate, typy) - Liczba aktywnych alertów - Pokrycie
+danych SCADA (% pomiarów)</p>
+<h3 id="logi">9.2 Logi</h3>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// lib/logger.ts (docelowo)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pino <span class="im">from</span> <span class="st">&#39;pino&#39;</span><span class="op">;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> logger <span class="op">=</span> <span class="fu">pino</span>({</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  level<span class="op">:</span> <span class="bu">process</span><span class="op">.</span><span class="at">env</span><span class="op">.</span><span class="at">LOG_LEVEL</span> <span class="op">||</span> <span class="st">&#39;info&#39;</span><span class="op">,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  transport<span class="op">:</span> {</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    target<span class="op">:</span> <span class="st">&#39;pino-pretty&#39;</span><span class="op">,</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    options<span class="op">:</span> { colorize<span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Użycie</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>logger<span class="op">.</span><span class="fu">info</span>({ nodeId<span class="op">,</span> se<span class="op">:</span> result<span class="op">.</span><span class="at">se</span><span class="op">.</span><span class="at">value</span> }<span class="op">,</span> <span class="st">&#39;Calculated SE for node&#39;</span>)<span class="op">;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>logger<span class="op">.</span><span class="fu">error</span>({ error<span class="op">,</span> nodeId }<span class="op">,</span> <span class="st">&#39;Failed to fetch MEC data&#39;</span>)<span class="op">;</span></span></code></pre></div>
+<h3 id="aktualizacja-danych-ksm">9.3 Aktualizacja danych KSM</h3>
+<p><strong>Procedura miesięczna:</strong> 1. Otrzymanie Excela z
+odczytami od KSM 2. Konwersja do JSON (skrypt lub ręcznie) 3. Walidacja
+danych 4. Aktualizacja <code>nodes-data.json</code> 5. Commit i
+deploy</p>
+<h3 id="backup">9.4 Backup</h3>
+<p><strong>Dane do backupu:</strong> - <code>nodes-data.json</code>
+(dane węzłów) - <code>.env.local</code> (konfiguracja) - Baza alertów
+(gdy będzie)</p>
+<h3 id="kontakty">9.5 Kontakty</h3>
+<table>
+<thead>
+<tr>
+<th>Rola</th>
+<th>Osoba</th>
+<th>Kontakt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Product Owner</td>
+<td>[KSM]</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Developer</td>
+<td>[Dev]</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Admin MEC</td>
+<td>[MEC]</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="załączniki">10. Załączniki</h2>
+<h3 id="a.-słownik-skrótów">A. Słownik skrótów</h3>
+<table>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Pełna nazwa</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CWU</td>
+<td>Ciepła Woda Użytkowa</td>
+<td>-</td>
+</tr>
+<tr>
+<td>SE</td>
+<td>Sprawność Energetyczna</td>
+<td>Główny wskaźnik</td>
+</tr>
+<tr>
+<td>KW</td>
+<td>Kondycja Wymiennika</td>
+<td>∛(WWC×SH×ES)</td>
+</tr>
+<tr>
+<td>SS</td>
+<td>Straty Systemowe</td>
+<td>Straty poza wymiennikiem</td>
+</tr>
+<tr>
+<td>WWC</td>
+<td>Wydajność Wymiany Ciepła</td>
+<td>Z różnicy temperatur</td>
+</tr>
+<tr>
+<td>SH</td>
+<td>Stabilność Hydrauliczna</td>
+<td>Z wahań przepływu</td>
+</tr>
+<tr>
+<td>ES</td>
+<td>Efektywność Szczytowa</td>
+<td>Szczyt vs średnia</td>
+</tr>
+<tr>
+<td>MTCV</td>
+<td>-</td>
+<td>Zawór termostatyczny</td>
+</tr>
+<tr>
+<td>SCADA</td>
+<td>Supervisory Control and Data Acquisition</td>
+<td>System nadzoru</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b.-referencje">B. Referencje</h3>
+<ul>
+<li><code>docs/data-contract.md</code> - Kontrakt danych MEC-KSM</li>
+<li><code>docs/calculation-guide.md</code> - Przewodnik
+obliczeniowy</li>
+<li><code>docs/api-specification.md</code> - Specyfikacja API MEC</li>
+</ul>
+<hr />
+<h2 id="historia-zmian">Historia zmian</h2>
+<table>
+<colgroup>
+<col style="width: 27%" />
+<col style="width: 20%" />
+<col style="width: 24%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th>Wersja</th>
+<th>Data</th>
+<th>Autor</th>
+<th>Zmiany</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>2025-01-14</td>
+<td>-</td>
+<td>Wersja początkowa</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>2025-01-14</td>
+<td>-</td>
+<td>Uzgodnienie typów z api-specification.md (WWC, SH, ES), Base
+URL</td>
+</tr>
+</tbody>
+</table>
+
+<div class="doc-footer">
+  CWU Monitor • KSM Przylesie • Koszalin • Wersja dokumentacji: 2025-01-14
+</div>
+
+<script>
+// Automatyczne wykrywanie diagramów ASCII i formuł matematycznych
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre code').forEach(function(block) {
+    var text = block.textContent;
+    var pre = block.parentElement;
+
+    // Wykryj diagramy ASCII (box-drawing characters)
+    var isDiagram = text.includes('┌') || text.includes('│') || text.includes('└') ||
+                    text.includes('├') || text.includes('┬') || text.includes('─') ||
+                    text.includes('▼') || text.includes('▲') || text.includes('►') ||
+                    text.includes('═') || text.includes('║') || text.includes('╔');
+
+    if (isDiagram) {
+      pre.classList.add('diagram');
+      return;
+    }
+
+    // Wykryj formuły matematyczne
+    var hasEquals = text.includes('=');
+    var hasMathSymbols = text.includes('×') || text.includes('÷') ||
+                         text.includes('∛') || text.includes('√');
+    var hasCode = text.includes('function') || text.includes('const ') ||
+                  text.includes('interface') || text.includes('async') ||
+                  text.includes('return ') || text.includes('import ') ||
+                  text.includes('//') || text.includes('=>');
+    var lines = text.trim().split('\n');
+    var isShort = lines.length <= 15;
+
+    // Dodatkowe sygnały że to wzór fizyczny
+    var hasPhysicsTerms = text.includes('gdzie:') || text.includes('Q_') ||
+                          text.includes('T_') || text.includes('ΔT') ||
+                          text.includes('[GJ]') || text.includes('[m³]') ||
+                          text.includes('[K]') || text.includes('[°C]');
+
+    if (((hasEquals || hasMathSymbols) && !hasCode && isShort) ||
+        (hasPhysicsTerms && hasEquals && !hasCode)) {
+      pre.classList.add('math-formula');
+    }
+  });
+});
+</script>
+</body>
+</html>

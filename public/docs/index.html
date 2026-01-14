@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CWU Monitor - Dokumentacja</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e40af 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border-radius: 20px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+    }
+
+    .logo svg {
+      width: 48px;
+      height: 48px;
+      fill: white;
+    }
+
+    h1 {
+      font-size: 42px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-top: 16px;
+    }
+
+    .docs-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .doc-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .doc-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .doc-number {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .doc-info {
+      flex: 1;
+    }
+
+    .doc-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 6px;
+    }
+
+    .doc-description {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .doc-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .doc-tag {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .tag-contract { background: #dcfce7; color: #166534; }
+    .tag-technical { background: #dbeafe; color: #1e40af; }
+    .tag-api { background: #fef3c7; color: #92400e; }
+    .tag-backlog { background: #f3e8ff; color: #7c3aed; }
+
+    .doc-arrow {
+      width: 40px;
+      height: 40px;
+      background: #f1f5f9;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .doc-card:hover .doc-arrow {
+      background: #3b82f6;
+    }
+
+    .doc-card:hover .doc-arrow svg {
+      stroke: white;
+    }
+
+    .doc-arrow svg {
+      width: 20px;
+      height: 20px;
+      stroke: #64748b;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .print-instructions {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 32px;
+      color: #e2e8f0;
+      font-size: 14px;
+    }
+
+    .print-instructions h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: white;
+    }
+
+    .print-instructions code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 28px; }
+      .doc-card { padding: 20px; gap: 16px; }
+      .doc-number { width: 44px; height: 44px; font-size: 18px; }
+      .doc-title { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <h1>CWU Monitor</h1>
+      <p class="subtitle">Dokumentacja systemu monitorowania efektywnosci energetycznej</p>
+      <span class="version-badge">KSM Przylesie - Koszalin</span>
+    </header>
+
+    <div class="docs-grid">
+      <a href="01-data-contract.html" class="doc-card">
+        <div class="doc-number">1</div>
+        <div class="doc-info">
+          <div class="doc-title">Kontrakt Danych MEC-KSM</div>
+          <div class="doc-description">Definicje wskaznikow SE, KW, SS, WWC, SH, ES. Zrodla danych, progi alertow, wzory obliczeniowe.</div>
+          <div class="doc-meta">
+            <span class="doc-tag tag-contract">Kontrakt</span>
+          </div>
+        </div>
+        <div class="doc-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="02-calculation-guide.html" class="doc-card">
+        <div class="doc-number">2</div>
+        <div class="doc-info">
+          <div class="doc-title">Przewodnik Obliczeniowy</div>
+          <div class="doc-description">Krok po kroku: od danych surowych SCADA do wskaznikow. Implementacja TypeScript, przyklady obliczen.</div>
+          <div class="doc-meta">
+            <span class="doc-tag tag-technical">Techniczny</span>
+          </div>
+        </div>
+        <div class="doc-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="03-dokumentacja-techniczna.html" class="doc-card">
+        <div class="doc-number">3</div>
+        <div class="doc-info">
+          <div class="doc-title">Dokumentacja Techniczna</div>
+          <div class="doc-description">Architektura systemu, struktura kodu, komponenty UI, modele danych, wdrozenie i utrzymanie.</div>
+          <div class="doc-meta">
+            <span class="doc-tag tag-technical">Techniczny</span>
+          </div>
+        </div>
+        <div class="doc-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="04-api-specification.html" class="doc-card">
+        <div class="doc-number">4</div>
+        <div class="doc-info">
+          <div class="doc-title">Specyfikacja API</div>
+          <div class="doc-description">Endpointy MEC SCADA i CWU Monitor. Modele request/response, kody bledow, przyklady uzycia.</div>
+          <div class="doc-meta">
+            <span class="doc-tag tag-api">API</span>
+          </div>
+        </div>
+        <div class="doc-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <a href="05-next-steps.html" class="doc-card">
+        <div class="doc-number">5</div>
+        <div class="doc-info">
+          <div class="doc-title">Backlog Projektu</div>
+          <div class="doc-description">Nastepne kroki, priorytety, zaleznosci. Fazy: integracja MEC, UI/UX, backend, testy.</div>
+          <div class="doc-meta">
+            <span class="doc-tag tag-backlog">Backlog</span>
+          </div>
+        </div>
+        <div class="doc-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+
+    <div class="print-instructions">
+      <h3>Jak zapisac jako PDF?</h3>
+      <p>1. Otworz wybrany dokument klikajac na kafelek powyzej<br>
+      2. Nacisnij <code>Cmd+P</code> (Mac) lub <code>Ctrl+P</code> (Windows)<br>
+      3. Wybierz "Zapisz jako PDF" jako drukarkę<br>
+      4. Kliknij "Zapisz"</p>
+    </div>
+
+    <footer>
+      <p>CWU Monitor &copy; 2025 KSM Przylesie | Wersja dokumentacji: 2025-01-14</p>
+    </footer>
+  </div>
+</body>
+</html>

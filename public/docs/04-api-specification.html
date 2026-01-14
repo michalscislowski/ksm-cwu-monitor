@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Specyfikacja API</title>
+  <style>
+    @page {
+      margin: 2cm 2cm;
+      size: A4;
+    }
+
+    @page:first {
+      margin-top: 1cm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #1a1a1a;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 40px;
+      background: white;
+    }
+
+    /* Header dokumentu */
+    .doc-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: white;
+      padding: 24px 32px;
+      border-radius: 12px;
+      margin: -32px -40px 32px -40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .doc-header-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc-header-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .doc-header-text h1 {
+      font-size: 22pt;
+      margin: 0;
+      border: none;
+      padding: 0;
+      color: white;
+    }
+
+    .doc-header-text p {
+      margin: 4px 0 0 0;
+      opacity: 0.85;
+      font-size: 11pt;
+    }
+
+    /* Nagłówki */
+    h1 {
+      font-size: 22pt;
+      color: #1e3a5f;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 15pt;
+      color: #1e3a5f;
+      border-bottom: 2px solid #bfdbfe;
+      padding-bottom: 6px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #1d4ed8;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      color: #2563eb;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* Tabele */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #1e3a5f;
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9pt;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Kolorowanie statusów w tabelach */
+    td:contains("optimal"), td:contains("Optimal"), td:contains("OPTIMAL") {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Status badges - ręczne znaczniki w tabelach */
+    .status-optimal { color: #059669; font-weight: 600; }
+    .status-good { color: #0284c7; font-weight: 600; }
+    .status-warning { color: #d97706; font-weight: 600; }
+    .status-critical { color: #dc2626; font-weight: 600; }
+
+    /* Kod inline */
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+      font-size: 9pt;
+      background-color: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Bloki kodu - domyślne */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+      margin: 16px 0;
+      border-left: 4px solid #3b82f6;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+      border: none;
+      font-size: 9pt;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    }
+
+    /* ============================================================
+       DIAGRAMY ASCII - Technical Blueprint Style
+       Inspiracja: schematy inżynierskie, terminale CRT, NASA docs
+       ============================================================ */
+
+    pre.diagram {
+      /* Tło - ciemny granat z subtelną siatką */
+      background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #020617 0%, #0a1628 50%, #0f172a 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+
+      /* Wymiary i spacing */
+      padding: 28px 32px 24px 32px;
+      margin: 24px 0;
+      border-radius: 8px;
+      overflow-x: auto;
+
+      /* Obramowanie - podwójna linia techniczna */
+      border: 1px solid #1e3a5f;
+      box-shadow:
+        inset 0 0 0 1px rgba(56, 189, 248, 0.1),
+        0 0 0 1px #0f172a,
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(56, 189, 248, 0.05);
+
+      /* Pozycjonowanie dla etykiety */
+      position: relative;
+    }
+
+
+    /* Tekst w diagramie */
+    pre.diagram code {
+      /* Font - czytelny monospace */
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 10pt;
+      line-height: 1.4;
+      letter-spacing: 0;
+
+      /* Kolor bazowy - jasny niebieskoszary */
+      color: #cbd5e1;
+
+      /* Wyłącz domyślne style */
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    /* ============================================================
+       DIAGRAMY - jednolity kolor tekstu, bez podświetleń
+       ============================================================ */
+
+    /* Formuły matematyczne */
+    pre.math-formula {
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+      color: #854d0e;
+      border: 2px solid #fbbf24;
+      border-left: 4px solid #f59e0b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 10pt;
+      text-align: center;
+    }
+
+    pre.math-formula code {
+      color: #713f12;
+      font-size: 10pt;
+      font-weight: 500;
+    }
+
+    /* Cytaty i uwagi */
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      margin: 16px 0;
+      padding: 12px 20px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-style: normal;
+      border-radius: 0 6px 6px 0;
+    }
+
+    blockquote p {
+      margin: 0;
+    }
+
+    blockquote strong {
+      color: #1d4ed8;
+    }
+
+    /* Listy */
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    li > ul, li > ol {
+      margin: 6px 0;
+    }
+
+    /* Linki */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Linie poziome */
+    hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 28px 0;
+    }
+
+    /* Paragraf */
+    p {
+      margin: 10px 0;
+    }
+
+    /* Strong */
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* Pierwsza tabela - meta info */
+    body > table:first-of-type,
+    h2#informacje-o-dokumencie + table {
+      background: #f8fafc;
+      border: 2px solid #3b82f6;
+    }
+
+    body > table:first-of-type th,
+    h2#informacje-o-dokumencie + table th {
+      background: #3b82f6;
+    }
+
+    /* Stopka */
+    .doc-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #e5e7eb;
+      text-align: center;
+      color: #64748b;
+      font-size: 9pt;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 0;
+        max-width: none;
+        font-size: 10pt;
+      }
+
+      .doc-header {
+        margin: 0 0 24px 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+      }
+
+      table, pre, blockquote {
+        page-break-inside: avoid;
+      }
+
+      pre {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: #1e3a5f;
+      }
+
+      a[href^="http"]:after {
+        content: none;
+      }
+    }
+
+    /* Spis treści */
+    nav#TOC {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+    }
+
+    nav#TOC > ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    nav#TOC > ul > li {
+      margin: 8px 0;
+    }
+
+    nav#TOC > ul > li > a {
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    nav#TOC ul ul {
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+
+    nav#TOC ul ul li {
+      margin: 4px 0;
+    }
+
+    nav#TOC ul ul a {
+      color: #475569;
+      font-size: 9.5pt;
+    }
+
+    /* Kategorie kolorów - dla tabel z kategoriami */
+    tr td:first-child:contains("A"),
+    td.cat-a {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("B"),
+    td.cat-b {
+      color: #d97706;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("C"),
+    td.cat-c {
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-header-icon">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div class="doc-header-text">
+    <h1>Specyfikacja API</h1>
+    <p>CWU Monitor — KSM Przylesie</p>
+  </div>
+</div>
+
+<nav id="TOC">
+<ul>
+<li><a href="#specyfikacja-api-system-cwu-monitor"
+id="toc-specyfikacja-api-system-cwu-monitor">Specyfikacja API — System
+CWU Monitor</a>
+<ul>
+<li><a href="#informacje-o-dokumencie"
+id="toc-informacje-o-dokumencie">Informacje o dokumencie</a></li>
+<li><a href="#spis-treści" id="toc-spis-treści">Spis treści</a></li>
+<li><a href="#przegląd" id="toc-przegląd">1. Przegląd</a>
+<ul>
+<li><a href="#dwa-api" id="toc-dwa-api">1.1 Dwa API</a></li>
+</ul></li>
+<li><a href="#api-mec-scada-źródło-danych"
+id="toc-api-mec-scada-źródło-danych">2. API MEC SCADA (źródło
+danych)</a>
+<ul>
+<li><a href="#informacje-ogólne" id="toc-informacje-ogólne">2.1
+Informacje ogólne</a></li>
+<li><a href="#autoryzacja" id="toc-autoryzacja">2.2 Autoryzacja</a></li>
+<li><a href="#endpointy-mec-scada" id="toc-endpointy-mec-scada">2.3
+Endpointy MEC SCADA</a></li>
+</ul></li>
+<li><a href="#api-aplikacji-cwu-monitor"
+id="toc-api-aplikacji-cwu-monitor">3. API Aplikacji CWU Monitor</a>
+<ul>
+<li><a href="#informacje-ogólne-1" id="toc-informacje-ogólne-1">3.1
+Informacje ogólne</a></li>
+<li><a href="#endpointy-aplikacji" id="toc-endpointy-aplikacji">3.2
+Endpointy aplikacji</a></li>
+</ul></li>
+<li><a href="#modele-danych" id="toc-modele-danych">4. Modele danych</a>
+<ul>
+<li><a href="#typy-statusów" id="toc-typy-statusów">4.1 Typy
+statusów</a></li>
+<li><a href="#progi-wskaźników" id="toc-progi-wskaźników">4.2 Progi
+wskaźników</a></li>
+<li><a href="#progi-kategorii" id="toc-progi-kategorii">4.3 Progi
+kategorii</a></li>
+<li><a href="#warunki-alertów" id="toc-warunki-alertów">4.4 Warunki
+alertów</a></li>
+</ul></li>
+<li><a href="#kody-błędów" id="toc-kody-błędów">5. Kody błędów</a>
+<ul>
+<li><a href="#kody-http" id="toc-kody-http">5.1 Kody HTTP</a></li>
+<li><a href="#format-błędu" id="toc-format-błędu">5.2 Format
+błędu</a></li>
+<li><a href="#kody-błędów-1" id="toc-kody-błędów-1">5.3 Kody
+błędów</a></li>
+</ul></li>
+<li><a href="#przykłady-użycia" id="toc-przykłady-użycia">6. Przykłady
+użycia</a>
+<ul>
+<li><a href="#pobranie-danych-dla-dashboardu"
+id="toc-pobranie-danych-dla-dashboardu">6.1 Pobranie danych dla
+dashboardu</a></li>
+<li><a href="#pobranie-szczegółów-węzła"
+id="toc-pobranie-szczegółów-węzła">6.2 Pobranie szczegółów
+węzła</a></li>
+<li><a href="#synchronizacja-z-mec-backend"
+id="toc-synchronizacja-z-mec-backend">6.3 Synchronizacja z MEC
+(backend)</a></li>
+<li><a href="#implementacja-klienta-mec"
+id="toc-implementacja-klienta-mec">6.4 Implementacja klienta
+MEC</a></li>
+</ul></li>
+<li><a href="#webhook-opcjonalnie" id="toc-webhook-opcjonalnie">7.
+Webhook (opcjonalnie)</a>
+<ul>
+<li><a href="#mec-cwu-monitor" id="toc-mec-cwu-monitor">7.1 MEC → CWU
+Monitor</a></li>
+<li><a href="#cwu-monitor-external" id="toc-cwu-monitor-external">7.2
+CWU Monitor → External</a></li>
+</ul></li>
+<li><a href="#notatki-implementacyjne"
+id="toc-notatki-implementacyjne">8. Notatki implementacyjne</a>
+<ul>
+<li><a href="#cache" id="toc-cache">8.1 Cache</a></li>
+<li><a href="#rate-limiting" id="toc-rate-limiting">8.2 Rate
+limiting</a></li>
+<li><a href="#timezone" id="toc-timezone">8.3 Timezone</a></li>
+<li><a href="#wersjonowanie" id="toc-wersjonowanie">8.4
+Wersjonowanie</a></li>
+</ul></li>
+<li><a href="#historia-zmian" id="toc-historia-zmian">Historia
+zmian</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="specyfikacja-api-system-cwu-monitor">Specyfikacja API — System
+CWU Monitor</h1>
+<h2 id="informacje-o-dokumencie">Informacje o dokumencie</h2>
+<table>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wersja</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>2025-01-14</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Draft</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="spis-treści">Spis treści</h2>
+<ol type="1">
+<li><a href="#1-przegląd">Przegląd</a></li>
+<li><a href="#2-api-mec-scada-źródło-danych">API MEC SCADA (źródło
+danych)</a></li>
+<li><a href="#3-api-aplikacji-cwu-monitor">API Aplikacji CWU
+Monitor</a></li>
+<li><a href="#4-modele-danych">Modele danych</a></li>
+<li><a href="#5-kody-błędów">Kody błędów</a></li>
+<li><a href="#6-przykłady-użycia">Przykłady użycia</a></li>
+</ol>
+<hr />
+<h2 id="przegląd">1. Przegląd</h2>
+<p>System CWU Monitor komunikuje się z dwoma API:</p>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                         PRZEPŁYW DANYCH                                 │
+│                                                                         │
+│  ┌─────────────────┐                      ┌─────────────────────────┐   │
+│  │   MEC SCADA     │  ───── pobiera ────► │   CWU Monitor App       │   │
+│  │   (źródło)      │      dane surowe     │   (przetwarza)          │   │
+│  │                 │                      │                         │   │
+│  │ • Pomiary 15min │                      │ • Oblicza SE,KW,SS     │   │
+│  │ • T_zas, T_pow  │                      │ • Generuje alerty       │   │
+│  │ • Q_flow        │                      │ • Tworzy rekomendacje   │   │
+│  │ • delta_GJ/m3   │                      │                         │   │
+│  └─────────────────┘                      └───────────┬─────────────┘   │
+│                                                       │                 │
+│                                                       │ udostępnia      │
+│                                                       ▼                 │
+│                                           ┌─────────────────────────┐   │
+│                                           │   Frontend (React)      │   │
+│                                           │                         │   │
+│                                           │ • Dashboard             │   │
+│                                           │ • Szczegóły węzła       │   │
+│                                           │ • Ranking               │   │
+│                                           └─────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="dwa-api">1.1 Dwa API</h3>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 33%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>API</th>
+<th>Kierunek</th>
+<th>Przeznaczenie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MEC SCADA API</strong></td>
+<td>MEC → CWU Monitor</td>
+<td>Pobieranie surowych danych pomiarowych</td>
+</tr>
+<tr>
+<td><strong>CWU Monitor API</strong></td>
+<td>CWU Monitor → Frontend</td>
+<td>Udostępnianie przetworzonych wskaźników</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="api-mec-scada-źródło-danych">2. API MEC SCADA (źródło
+danych)</h2>
+<h3 id="informacje-ogólne">2.1 Informacje ogólne</h3>
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base URL</td>
+<td><code>https://api.mec-koszalin.pl/scada/v1</code> (uwaga: uzgodnić z
+MEC)</td>
+</tr>
+<tr>
+<td>Format</td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>Autoryzacja</td>
+<td>API Key w nagłówku</td>
+</tr>
+<tr>
+<td>Rate limit</td>
+<td>1000 żądań/dzień</td>
+</tr>
+<tr>
+<td>Cache TTL</td>
+<td>15 minut</td>
+</tr>
+</tbody>
+</table>
+<h3 id="autoryzacja">2.2 Autoryzacja</h3>
+<pre class="http"><code>GET /nodes/WC-001/measurements
+X-API-Key: {klucz_api_mec}
+Content-Type: application/json</code></pre>
+<h3 id="endpointy-mec-scada">2.3 Endpointy MEC SCADA</h3>
+<hr />
+<h4 id="get-nodes">GET /nodes</h4>
+<p>Lista węzłów cieplnych.</p>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;nodes&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Jana Pawła II 2-2a&quot;</span><span class="fu">,</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;address&quot;</span><span class="fu">:</span> <span class="st">&quot;ul. Jana Pawła II 2-2a, 75-452 Koszalin&quot;</span><span class="fu">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;apartments_count&quot;</span><span class="fu">:</span> <span class="dv">48</span><span class="fu">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;building_volume_m3&quot;</span><span class="fu">:</span> <span class="dv">12500</span><span class="fu">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;mtcv_type&quot;</span><span class="fu">:</span> <span class="st">&quot;Caleffi 116&quot;</span><span class="fu">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;mtcv_count&quot;</span><span class="fu">:</span> <span class="dv">6</span><span class="fu">,</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">40</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-nodesnode_idmeasurementscurrent">GET
+/nodes/{node_id}/measurements/current</h4>
+<p><strong>Pojedynczy pomiar (najnowszy).</strong></p>
+<p>Zwraca ostatni pomiar z SCADA (max 15 min opóźnienia).</p>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:15:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;measurements&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;T_zas&quot;</span><span class="fu">:</span> <span class="fl">68.5</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;T_pow&quot;</span><span class="fu">:</span> <span class="fl">52.3</span><span class="fu">,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">2.45</span><span class="fu">,</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;delta_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.142</span><span class="fu">,</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;delta_m3&quot;</span><span class="fu">:</span> <span class="fl">0.58</span><span class="fu">,</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;P_zas&quot;</span><span class="fu">:</span> <span class="fl">4.2</span><span class="fu">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;P_pow&quot;</span><span class="fu">:</span> <span class="fl">2.8</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;quality&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;valid&quot;</span><span class="fu">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;missing_sensors&quot;</span><span class="fu">:</span> <span class="ot">[]</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Opis pól measurements:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pole</th>
+<th>Jednostka</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T_zas</code></td>
+<td>°C</td>
+<td>Temperatura zasilania CWU</td>
+</tr>
+<tr>
+<td><code>T_pow</code></td>
+<td>°C</td>
+<td>Temperatura powrotu CWU</td>
+</tr>
+<tr>
+<td><code>Q_flow</code></td>
+<td>m³/h</td>
+<td>Przepływ chwilowy</td>
+</tr>
+<tr>
+<td><code>delta_GJ</code></td>
+<td>GJ</td>
+<td>Przyrost energii od ostatniego pomiaru</td>
+</tr>
+<tr>
+<td><code>delta_m3</code></td>
+<td>m³</td>
+<td>Przyrost objętości od ostatniego pomiaru</td>
+</tr>
+<tr>
+<td><code>P_zas</code></td>
+<td>bar</td>
+<td>Ciśnienie zasilania (opcjonalne)</td>
+</tr>
+<tr>
+<td><code>P_pow</code></td>
+<td>bar</td>
+<td>Ciśnienie powrotu (opcjonalne)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="get-nodesnode_idmeasurementsrange">GET
+/nodes/{node_id}/measurements/range</h4>
+<p><strong>Seria pomiarów (zakres czasowy).</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from</code></td>
+<td>datetime</td>
+<td>Tak</td>
+<td>Początek zakresu (ISO 8601)</td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td>datetime</td>
+<td>Tak</td>
+<td>Koniec zakresu (ISO 8601)</td>
+</tr>
+<tr>
+<td><code>interval</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>15min</code> (default), <code>hourly</code>,
+<code>daily</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Przykład:</strong></p>
+<pre><code>GET /nodes/WC-001/measurements/range?from=2025-01-14T00:00:00Z&amp;to=2025-01-14T23:59:59Z&amp;interval=15min</code></pre>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;from&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T00:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;to&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T23:59:59Z&quot;</span><span class="fu">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;interval&quot;</span><span class="fu">:</span> <span class="st">&quot;15min&quot;</span><span class="fu">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;measurements&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T00:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;T_zas&quot;</span><span class="fu">:</span> <span class="fl">67.2</span><span class="fu">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;T_pow&quot;</span><span class="fu">:</span> <span class="fl">51.8</span><span class="fu">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">1.82</span><span class="fu">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.08</span><span class="fu">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_m3&quot;</span><span class="fu">:</span> <span class="fl">0.32</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T00:15:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;T_zas&quot;</span><span class="fu">:</span> <span class="fl">67.5</span><span class="fu">,</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;T_pow&quot;</span><span class="fu">:</span> <span class="fl">52.1</span><span class="fu">,</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">1.75</span><span class="fu">,</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.07</span><span class="fu">,</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_m3&quot;</span><span class="fu">:</span> <span class="fl">0.30</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">...</span> <span class="dv">94</span> <span class="er">kolejne</span> <span class="er">pomiary</span> <span class="er">dla</span> <span class="er">interval=</span><span class="dv">15</span><span class="er">min</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;statistics&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;count&quot;</span><span class="fu">:</span> <span class="dv">96</span><span class="fu">,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;missing&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;coverage_percent&quot;</span><span class="fu">:</span> <span class="dv">100</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Limity:</strong> - Max 7 dni dla <code>interval=15min</code>
+- Max 90 dni dla <code>interval=hourly</code> - Max 365 dni dla
+<code>interval=daily</code></p>
+<hr />
+<h4 id="get-nodesnode_idmeasurementsdaily">GET
+/nodes/{node_id}/measurements/daily</h4>
+<p><strong>Agregacja dobowa (obliczona przez MEC).</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code></td>
+<td>date</td>
+<td>Nie</td>
+<td>Data (YYYY-MM-DD), domyślnie wczoraj</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-13&quot;</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;aggregated&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total_GJ&quot;</span><span class="fu">:</span> <span class="fl">4.82</span><span class="fu">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total_m3&quot;</span><span class="fu">:</span> <span class="fl">19.2</span><span class="fu">,</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_T_zas&quot;</span><span class="fu">:</span> <span class="fl">67.8</span><span class="fu">,</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_T_pow&quot;</span><span class="fu">:</span> <span class="fl">52.1</span><span class="fu">,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_delta_T&quot;</span><span class="fu">:</span> <span class="fl">15.7</span><span class="fu">,</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_Q_flow&quot;</span><span class="fu">:</span> <span class="fl">2.45</span><span class="fu">,</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;flow_std&quot;</span><span class="fu">:</span> <span class="fl">0.52</span><span class="fu">,</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;flow_cv&quot;</span><span class="fu">:</span> <span class="fl">0.212</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;hourly&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hour&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sum_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.15</span><span class="fu">,</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sum_m3&quot;</span><span class="fu">:</span> <span class="fl">0.62</span><span class="fu">,</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;avg_delta_T&quot;</span><span class="fu">:</span> <span class="fl">15.2</span><span class="fu">,</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;avg_Q_flow&quot;</span><span class="fu">:</span> <span class="fl">1.78</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hour&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sum_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.12</span><span class="fu">,</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sum_m3&quot;</span><span class="fu">:</span> <span class="fl">0.51</span><span class="fu">,</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;avg_delta_T&quot;</span><span class="fu">:</span> <span class="fl">15.5</span><span class="fu">,</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;avg_Q_flow&quot;</span><span class="fu">:</span> <span class="fl">1.65</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">...</span> <span class="dv">22</span> <span class="er">kolejne</span> <span class="er">godziny</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;quality&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;measurements_expected&quot;</span><span class="fu">:</span> <span class="dv">96</span><span class="fu">,</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;measurements_received&quot;</span><span class="fu">:</span> <span class="dv">96</span><span class="fu">,</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;coverage_percent&quot;</span><span class="fu">:</span> <span class="dv">100</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="api-aplikacji-cwu-monitor">3. API Aplikacji CWU Monitor</h2>
+<h3 id="informacje-ogólne-1">3.1 Informacje ogólne</h3>
+<table>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base URL</td>
+<td><code>/api</code> (wewnętrzne Next.js API Routes)</td>
+</tr>
+<tr>
+<td>Format</td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>Autoryzacja</td>
+<td>Session cookie (NextAuth)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="endpointy-aplikacji">3.2 Endpointy aplikacji</h3>
+<hr />
+<h4 id="get-apinodes">GET /api/nodes</h4>
+<p><strong>Lista wszystkich węzłów z podstawowymi
+wskaźnikami.</strong></p>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;nodes&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Jana Pawła II 2-2a&quot;</span><span class="fu">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;address&quot;</span><span class="fu">:</span> <span class="st">&quot;ul. Jana Pawła II 2-2a, 75-452 Koszalin&quot;</span><span class="fu">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;apartments_count&quot;</span><span class="fu">:</span> <span class="dv">48</span><span class="fu">,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">78</span><span class="fu">,</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;good&quot;</span><span class="fu">,</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;trend&quot;</span><span class="fu">:</span> <span class="st">&quot;stable&quot;</span><span class="fu">,</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;trend_change&quot;</span><span class="fu">:</span> <span class="dv">-2</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;B&quot;</span><span class="fu">,</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;alerts_count&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:30:00Z&quot;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apinodesnode_id">GET /api/nodes/{node_id}</h4>
+<p><strong>Pełne dane węzła z hierarchią efektywności.</strong></p>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Jana Pawła II 2-2a&quot;</span><span class="fu">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;address&quot;</span><span class="fu">:</span> <span class="st">&quot;ul. Jana Pawła II 2-2a, 75-452 Koszalin&quot;</span><span class="fu">,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;apartments_count&quot;</span><span class="fu">:</span> <span class="dv">48</span><span class="fu">,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;building_volume_m3&quot;</span><span class="fu">:</span> <span class="dv">12500</span><span class="fu">,</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mtcv_type&quot;</span><span class="fu">:</span> <span class="st">&quot;Caleffi 116&quot;</span><span class="fu">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;mtcv_count&quot;</span><span class="fu">:</span> <span class="dv">6</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;efficiency&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:30:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;hierarchy&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">78</span><span class="fu">,</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;good&quot;</span><span class="fu">,</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;losses_percent&quot;</span><span class="fu">:</span> <span class="dv">22</span><span class="fu">,</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;q_theoretical&quot;</span><span class="fu">:</span> <span class="fl">4.22</span><span class="fu">,</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;q_actual&quot;</span><span class="fu">:</span> <span class="fl">5.41</span><span class="fu">,</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;t_cold_estimated&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;interpretation&quot;</span><span class="fu">:</span> <span class="st">&quot;78% energii wykorzystane, 22% strat w systemie&quot;</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">83</span><span class="fu">,</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;good&quot;</span><span class="fu">,</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;limiting_factor&quot;</span><span class="fu">:</span> <span class="st">&quot;sh&quot;</span><span class="fu">,</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;interpretation&quot;</span><span class="fu">:</span> <span class="st">&quot;Wymiennik sprawny, ogranicza: stabilność hydrauliczna&quot;</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">6</span><span class="fu">,</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;optimal&quot;</span><span class="fu">,</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;estimated_circulation&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;estimated_pipes&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;night_ratio&quot;</span><span class="fu">:</span> <span class="fl">0.18</span><span class="fu">,</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;interpretation&quot;</span><span class="fu">:</span> <span class="st">&quot;Minimalne straty systemowe&quot;</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;indicators&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;wwc&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">81</span><span class="fu">,</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;good&quot;</span><span class="fu">,</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;avg_delta_T&quot;</span><span class="fu">:</span> <span class="fl">16.2</span><span class="fu">,</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;interpretation&quot;</span><span class="fu">:</span> <span class="st">&quot;Dobra wymiana ciepła, możliwa drobna optymalizacja&quot;</span><span class="fu">,</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;Sprawdź nastawy MTCV przy okazji przeglądu&quot;</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sh&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">79</span><span class="fu">,</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;warning&quot;</span><span class="fu">,</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;flow_mean&quot;</span><span class="fu">:</span> <span class="fl">2.45</span><span class="fu">,</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;flow_std&quot;</span><span class="fu">:</span> <span class="fl">0.52</span><span class="fu">,</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;cv&quot;</span><span class="fu">:</span> <span class="fl">0.212</span><span class="fu">,</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;interpretation&quot;</span><span class="fu">:</span> <span class="st">&quot;Znaczne wahania przepływu - nierównomierne obciążenie pionów&quot;</span><span class="fu">,</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;Sprawdź równoważenie MTCV między pionami&quot;</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;es&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">88</span><span class="fu">,</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;good&quot;</span><span class="fu">,</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;se_peak&quot;</span><span class="fu">:</span> <span class="dv">75</span><span class="fu">,</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;se_average&quot;</span><span class="fu">:</span> <span class="dv">85</span><span class="fu">,</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;worst_hours&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">17</span><span class="ot">,</span> <span class="dv">18</span><span class="ot">,</span> <span class="dv">7</span><span class="ot">,</span> <span class="dv">8</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;interpretation&quot;</span><span class="fu">:</span> <span class="st">&quot;Lekki spadek w szczycie (17:00, 18:00, 7:00, 8:00)&quot;</span><span class="fu">,</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;action&quot;</span><span class="fu">:</span> <span class="st">&quot;Rozważ optymalizację harmonogramu pompy&quot;</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;diagnostic&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;primary_issue&quot;</span><span class="fu">:</span> <span class="st">&quot;balanced&quot;</span><span class="fu">,</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;savings_potential_percent&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;savings_potential_gj&quot;</span><span class="fu">:</span> <span class="dv">24</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;benchmark&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;percentile&quot;</span><span class="fu">:</span> <span class="dv">65</span><span class="fu">,</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;B&quot;</span><span class="fu">,</span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;rank&quot;</span><span class="fu">:</span> <span class="dv">14</span><span class="fu">,</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;total_nodes&quot;</span><span class="fu">:</span> <span class="dv">40</span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:30:00Z&quot;</span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apinodesnode_iddaily-profile">GET
+/api/nodes/{node_id}/daily-profile</h4>
+<p><strong>Profil efektywności w ciągu dnia.</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>date</code></td>
+<td>date</td>
+<td>Nie</td>
+<td>Data (YYYY-MM-DD), domyślnie dzisiaj</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14&quot;</span><span class="fu">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;hours&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hour&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">95</span><span class="fu">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;load&quot;</span><span class="fu">:</span> <span class="st">&quot;low&quot;</span><span class="fu">,</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_T&quot;</span><span class="fu">:</span> <span class="fl">16.8</span><span class="fu">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">1.78</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hour&quot;</span><span class="fu">:</span> <span class="dv">7</span><span class="fu">,</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">78</span><span class="fu">,</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;load&quot;</span><span class="fu">:</span> <span class="st">&quot;peak&quot;</span><span class="fu">,</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_T&quot;</span><span class="fu">:</span> <span class="fl">14.2</span><span class="fu">,</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">3.85</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;hour&quot;</span><span class="fu">:</span> <span class="dv">18</span><span class="fu">,</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">72</span><span class="fu">,</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;load&quot;</span><span class="fu">:</span> <span class="st">&quot;high&quot;</span><span class="fu">,</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;delta_T&quot;</span><span class="fu">:</span> <span class="fl">13.5</span><span class="fu">,</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">4.12</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">...</span> <span class="er">pozostałe</span> <span class="er">godziny</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_se&quot;</span><span class="fu">:</span> <span class="dv">85</span><span class="fu">,</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;min_se&quot;</span><span class="fu">:</span> <span class="dv">72</span><span class="fu">,</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;max_se&quot;</span><span class="fu">:</span> <span class="dv">98</span><span class="fu">,</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;best_hours&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">2</span><span class="ot">,</span> <span class="dv">3</span><span class="ot">,</span> <span class="dv">4</span><span class="ot">,</span> <span class="dv">14</span><span class="ot">,</span> <span class="dv">15</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;worst_hours&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">7</span><span class="ot">,</span> <span class="dv">8</span><span class="ot">,</span> <span class="dv">17</span><span class="ot">,</span> <span class="dv">18</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;peak_hours&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">7</span><span class="ot">,</span> <span class="dv">8</span><span class="ot">,</span> <span class="dv">17</span><span class="ot">,</span> <span class="dv">18</span><span class="ot">,</span> <span class="dv">19</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">]</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apinodesnode_idhistory">GET
+/api/nodes/{node_id}/history</h4>
+<p><strong>Historia wskaźników.</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from</code></td>
+<td>date</td>
+<td>Tak</td>
+<td>Data początkowa (YYYY-MM-DD)</td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td>date</td>
+<td>Tak</td>
+<td>Data końcowa (YYYY-MM-DD)</td>
+</tr>
+<tr>
+<td><code>granularity</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>daily</code>, <code>weekly</code>, <code>monthly</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;from&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-12-01&quot;</span><span class="fu">,</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;to&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14&quot;</span><span class="fu">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;granularity&quot;</span><span class="fu">:</span> <span class="st">&quot;daily&quot;</span><span class="fu">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;data&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-12-01&quot;</span><span class="fu">,</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">82</span><span class="fu">,</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="dv">85</span><span class="fu">,</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="dv">4</span><span class="fu">,</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;A&quot;</span><span class="fu">,</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;wwc&quot;</span><span class="fu">:</span> <span class="dv">84</span><span class="fu">,</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sh&quot;</span><span class="fu">:</span> <span class="dv">82</span><span class="fu">,</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;es&quot;</span><span class="fu">:</span> <span class="dv">89</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2024-12-02&quot;</span><span class="fu">,</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">79</span><span class="fu">,</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="dv">83</span><span class="fu">,</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;B&quot;</span><span class="fu">,</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;wwc&quot;</span><span class="fu">:</span> <span class="dv">81</span><span class="fu">,</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;sh&quot;</span><span class="fu">:</span> <span class="dv">80</span><span class="fu">,</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;es&quot;</span><span class="fu">:</span> <span class="dv">88</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    <span class="er">//</span> <span class="er">...</span> <span class="er">kolejne</span> <span class="er">dni</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;statistics&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_se&quot;</span><span class="fu">:</span> <span class="dv">80</span><span class="fu">,</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;min_se&quot;</span><span class="fu">:</span> <span class="dv">68</span><span class="fu">,</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;max_se&quot;</span><span class="fu">:</span> <span class="dv">92</span><span class="fu">,</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;days_category_a&quot;</span><span class="fu">:</span> <span class="dv">18</span><span class="fu">,</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;days_category_b&quot;</span><span class="fu">:</span> <span class="dv">24</span><span class="fu">,</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;days_category_c&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;trend&quot;</span><span class="fu">:</span> <span class="st">&quot;stable&quot;</span><span class="fu">,</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;trend_change&quot;</span><span class="fu">:</span> <span class="dv">-2</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apinodesnode_idalerts">GET /api/nodes/{node_id}/alerts</h4>
+<p><strong>Alerty węzła.</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>active</code>, <code>acknowledged</code>,
+<code>all</code></td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>number</td>
+<td>Nie</td>
+<td>Max liczba (default 20, max 100)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;alerts&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;ALR-2025-0114-001&quot;</span><span class="fu">,</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;indicator_warning&quot;</span><span class="fu">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;warning&quot;</span><span class="fu">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;indicator&quot;</span><span class="fu">:</span> <span class="st">&quot;sh&quot;</span><span class="fu">,</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T06:30:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Stabilność hydrauliczna (SH) spadła poniżej 80%&quot;</span><span class="fu">,</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;current_value&quot;</span><span class="fu">:</span> <span class="dv">79</span><span class="fu">,</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;threshold&quot;</span><span class="fu">:</span> <span class="dv">80</span><span class="fu">,</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;duration_hours&quot;</span><span class="fu">:</span> <span class="dv">4</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span><span class="fu">,</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;acknowledged_at&quot;</span><span class="fu">:</span> <span class="kw">null</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_critical&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_warning&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_info&quot;</span><span class="fu">:</span> <span class="dv">0</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Typy alertów:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Typ</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>se_info</code></td>
+<td>SE &lt; 80% przez &gt; 2h</td>
+</tr>
+<tr>
+<td><code>se_warning</code></td>
+<td>SE &lt; 70% przez &gt; 4h</td>
+</tr>
+<tr>
+<td><code>se_critical</code></td>
+<td>SE &lt; 60% przez &gt; 2h</td>
+</tr>
+<tr>
+<td><code>kw_warning</code></td>
+<td>KW &lt; 80% przez &gt; 4h</td>
+</tr>
+<tr>
+<td><code>kw_critical</code></td>
+<td>KW &lt; 70% przez &gt; 2h</td>
+</tr>
+<tr>
+<td><code>ss_warning</code></td>
+<td>SS &gt; 20% przez &gt; 6h</td>
+</tr>
+<tr>
+<td><code>ss_critical</code></td>
+<td>SS &gt; 30% przez &gt; 4h</td>
+</tr>
+<tr>
+<td><code>indicator_warning</code></td>
+<td>WWC/SH/ES &lt; 80% przez &gt; 4h</td>
+</tr>
+<tr>
+<td><code>indicator_critical</code></td>
+<td>WWC/SH/ES &lt; 70% przez &gt; 2h</td>
+</tr>
+<tr>
+<td><code>trend_negative</code></td>
+<td>SE spada &gt; 5% przez 3 dni</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="get-apinodesnode_idrecommendations">GET
+/api/nodes/{node_id}/recommendations</h4>
+<p><strong>Rekomendacje działań.</strong></p>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;recommendations&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;REC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;priority&quot;</span><span class="fu">:</span> <span class="st">&quot;high&quot;</span><span class="fu">,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;hydraulic_balance&quot;</span><span class="fu">,</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Równoważenie hydrauliczne pionów&quot;</span><span class="fu">,</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;SH = 79% wskazuje na znaczne wahania przepływu. Sprawdź równoważenie MTCV między pionami.&quot;</span><span class="fu">,</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;related_indicator&quot;</span><span class="fu">:</span> <span class="st">&quot;sh&quot;</span><span class="fu">,</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expected_improvement&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;se_points&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;+5 punktów SE&quot;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;affected_hours&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">7</span><span class="ot">,</span> <span class="dv">8</span><span class="ot">,</span> <span class="dv">17</span><span class="ot">,</span> <span class="dv">18</span><span class="ot">,</span> <span class="dv">19</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">]</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;REC-002&quot;</span><span class="fu">,</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;priority&quot;</span><span class="fu">:</span> <span class="st">&quot;medium&quot;</span><span class="fu">,</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;mtcv_adjustment&quot;</span><span class="fu">,</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Regulacja zaworów MTCV&quot;</span><span class="fu">,</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;WWC = 81% - woda wraca zbyt ciepła. Rozważ korektę nastaw MTCV.&quot;</span><span class="fu">,</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;related_indicator&quot;</span><span class="fu">:</span> <span class="st">&quot;wwc&quot;</span><span class="fu">,</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;expected_improvement&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;se_points&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;+3 punkty SE&quot;</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;affected_hours&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">17</span><span class="ot">,</span> <span class="dv">18</span><span class="ot">,</span> <span class="dv">19</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">]</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Kategorie rekomendacji:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Kategoria</th>
+<th>Opis</th>
+<th>Powiązany wskaźnik</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mtcv_adjustment</code></td>
+<td>Regulacja zaworów MTCV</td>
+<td>WWC</td>
+</tr>
+<tr>
+<td><code>hydraulic_balance</code></td>
+<td>Równoważenie hydrauliczne</td>
+<td>SH</td>
+</tr>
+<tr>
+<td><code>circulation_pump</code></td>
+<td>Optymalizacja pompy</td>
+<td>ES</td>
+</tr>
+<tr>
+<td><code>insulation</code></td>
+<td>Poprawa izolacji rur</td>
+<td>SS</td>
+</tr>
+<tr>
+<td><code>maintenance</code></td>
+<td>Przegląd/konserwacja</td>
+<td>KW</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="get-apiranking">GET /api/ranking</h4>
+<p><strong>Ranking wszystkich węzłów.</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sort_by</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>se</code>, <code>kw</code>, <code>ss</code> (default:
+<code>se</code>)</td>
+</tr>
+<tr>
+<td><code>order</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>asc</code>, <code>desc</code> (default:
+<code>desc</code>)</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>A</code>, <code>B</code>, <code>C</code> (filtr)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T00:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;period&quot;</span><span class="fu">:</span> <span class="st">&quot;last_30_days&quot;</span><span class="fu">,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;sort_by&quot;</span><span class="fu">:</span> <span class="st">&quot;se&quot;</span><span class="fu">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;order&quot;</span><span class="fu">:</span> <span class="st">&quot;desc&quot;</span><span class="fu">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;ranking&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;position&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-015&quot;</span><span class="fu">,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Lelewela 13&quot;</span><span class="fu">,</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">92</span><span class="fu">,</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="dv">94</span><span class="fu">,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;A&quot;</span><span class="fu">,</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;trend&quot;</span><span class="fu">:</span> <span class="st">&quot;stable&quot;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;position&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-008&quot;</span><span class="fu">,</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Kołłątaja 10&quot;</span><span class="fu">,</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">89</span><span class="fu">,</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="dv">91</span><span class="fu">,</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="dv">2</span><span class="fu">,</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;A&quot;</span><span class="fu">,</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;trend&quot;</span><span class="fu">:</span> <span class="st">&quot;improving&quot;</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;position&quot;</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-031&quot;</span><span class="fu">,</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;Bukowa 35&quot;</span><span class="fu">,</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;se&quot;</span><span class="fu">:</span> <span class="dv">62</span><span class="fu">,</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="dv">78</span><span class="fu">,</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="dv">21</span><span class="fu">,</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;category&quot;</span><span class="fu">:</span> <span class="st">&quot;C&quot;</span><span class="fu">,</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;trend&quot;</span><span class="fu">:</span> <span class="st">&quot;declining&quot;</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total_nodes&quot;</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_se&quot;</span><span class="fu">:</span> <span class="dv">81</span><span class="fu">,</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;category_a_count&quot;</span><span class="fu">:</span> <span class="dv">28</span><span class="fu">,</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;category_b_count&quot;</span><span class="fu">:</span> <span class="dv">9</span><span class="fu">,</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;category_c_count&quot;</span><span class="fu">:</span> <span class="dv">3</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apialerts">GET /api/alerts</h4>
+<p><strong>Wszystkie aktywne alerty (cross-node).</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>severity</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>critical</code>, <code>warning</code>, <code>info</code></td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>number</td>
+<td>Nie</td>
+<td>Max liczba (default 50)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;alerts&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;ALR-2025-0114-001&quot;</span><span class="fu">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Jana Pawła II 2-2a&quot;</span><span class="fu">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;indicator_warning&quot;</span><span class="fu">,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;warning&quot;</span><span class="fu">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;indicator&quot;</span><span class="fu">:</span> <span class="st">&quot;sh&quot;</span><span class="fu">,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T06:30:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;SH spadła poniżej 80%&quot;</span><span class="fu">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;ALR-2025-0113-002&quot;</span><span class="fu">,</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-023&quot;</span><span class="fu">,</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_name&quot;</span><span class="fu">:</span> <span class="st">&quot;Śniadeckich 17&quot;</span><span class="fu">,</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;se_critical&quot;</span><span class="fu">,</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;severity&quot;</span><span class="fu">:</span> <span class="st">&quot;critical&quot;</span><span class="fu">,</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;created_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-13T14:00:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;SE &lt; 60% - krytycznie niska sprawność&quot;</span><span class="fu">,</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;active&quot;</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;summary&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total_active&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;critical&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;warning&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;info&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apidashboardstats">GET /api/dashboard/stats</h4>
+<p><strong>Statystyki do dashboardu.</strong></p>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;generated_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:30:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;nodes&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total&quot;</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;category_a&quot;</span><span class="fu">:</span> <span class="dv">28</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;category_b&quot;</span><span class="fu">:</span> <span class="dv">9</span><span class="fu">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;category_c&quot;</span><span class="fu">:</span> <span class="dv">3</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;efficiency&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_se&quot;</span><span class="fu">:</span> <span class="dv">81</span><span class="fu">,</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_kw&quot;</span><span class="fu">:</span> <span class="dv">84</span><span class="fu">,</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_ss&quot;</span><span class="fu">:</span> <span class="dv">8</span><span class="fu">,</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;min_se&quot;</span><span class="fu">:</span> <span class="dv">58</span><span class="fu">,</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;max_se&quot;</span><span class="fu">:</span> <span class="dv">95</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;alerts&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_total&quot;</span><span class="fu">:</span> <span class="dv">5</span><span class="fu">,</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_critical&quot;</span><span class="fu">:</span> <span class="dv">1</span><span class="fu">,</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_warning&quot;</span><span class="fu">:</span> <span class="dv">3</span><span class="fu">,</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;active_info&quot;</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;trends&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;improving&quot;</span><span class="fu">:</span> <span class="dv">12</span><span class="fu">,</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;stable&quot;</span><span class="fu">:</span> <span class="dv">23</span><span class="fu">,</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;declining&quot;</span><span class="fu">:</span> <span class="dv">5</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="post-apialertsalert_idacknowledge">POST
+/api/alerts/{alert_id}/acknowledge</h4>
+<p><strong>Potwierdzenie alertu.</strong></p>
+<p><strong>Request body:</strong></p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;acknowledged_by&quot;</span><span class="fu">:</span> <span class="st">&quot;jan.kowalski@ksm-przylesie.pl&quot;</span><span class="fu">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;note&quot;</span><span class="fu">:</span> <span class="st">&quot;Zaplanowano interwencję na 16.01&quot;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><strong>Response 200:</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;id&quot;</span><span class="fu">:</span> <span class="st">&quot;ALR-2025-0114-001&quot;</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;acknowledged&quot;</span><span class="fu">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;acknowledged_at&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T09:15:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;acknowledged_by&quot;</span><span class="fu">:</span> <span class="st">&quot;jan.kowalski@ksm-przylesie.pl&quot;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h4 id="get-apiexportnodes">GET /api/export/nodes</h4>
+<p><strong>Eksport danych węzłów (CSV).</strong></p>
+<p><strong>Query params:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Param</th>
+<th>Typ</th>
+<th>Wymagany</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>format</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>csv</code>, <code>json</code> (default: <code>csv</code>)</td>
+</tr>
+<tr>
+<td><code>include</code></td>
+<td>string</td>
+<td>Nie</td>
+<td><code>basic</code>, <code>full</code> (default:
+<code>basic</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Response 200 (CSV):</strong></p>
+<pre class="csv"><code>id,name,se,kw,ss,wwc,sh,es,category,trend
+WC-001,Jana Pawła II 2-2a,78,83,6,81,79,88,B,stable
+WC-002,Jana Pawła II 2b-2c,82,85,4,84,82,89,A,improving</code></pre>
+<hr />
+<h2 id="modele-danych">4. Modele danych</h2>
+<h3 id="typy-statusów">4.1 Typy statusów</h3>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> IndicatorStatus <span class="op">=</span> <span class="st">&#39;optimal&#39;</span> <span class="op">|</span> <span class="st">&#39;good&#39;</span> <span class="op">|</span> <span class="st">&#39;warning&#39;</span> <span class="op">|</span> <span class="st">&#39;critical&#39;</span><span class="op">;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Category <span class="op">=</span> <span class="st">&#39;A&#39;</span> <span class="op">|</span> <span class="st">&#39;B&#39;</span> <span class="op">|</span> <span class="st">&#39;C&#39;</span><span class="op">;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Trend <span class="op">=</span> <span class="st">&#39;improving&#39;</span> <span class="op">|</span> <span class="st">&#39;stable&#39;</span> <span class="op">|</span> <span class="st">&#39;declining&#39;</span><span class="op">;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> LoadLevel <span class="op">=</span> <span class="st">&#39;low&#39;</span> <span class="op">|</span> <span class="st">&#39;medium&#39;</span> <span class="op">|</span> <span class="st">&#39;high&#39;</span> <span class="op">|</span> <span class="st">&#39;peak&#39;</span><span class="op">;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> AlertSeverity <span class="op">=</span> <span class="st">&#39;info&#39;</span> <span class="op">|</span> <span class="st">&#39;warning&#39;</span> <span class="op">|</span> <span class="st">&#39;critical&#39;</span><span class="op">;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> AlertStatus <span class="op">=</span> <span class="st">&#39;active&#39;</span> <span class="op">|</span> <span class="st">&#39;acknowledged&#39;</span><span class="op">;</span></span></code></pre></div>
+<h3 id="progi-wskaźników">4.2 Progi wskaźników</h3>
+<table>
+<thead>
+<tr>
+<th>Wskaźnik</th>
+<th>Optimal</th>
+<th>Good</th>
+<th>Warning</th>
+<th>Critical</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SE</td>
+<td>≥80%</td>
+<td>≥70%</td>
+<td>≥60%</td>
+<td>&lt;60%</td>
+</tr>
+<tr>
+<td>WWC</td>
+<td>≥95%</td>
+<td>≥85%</td>
+<td>≥70%</td>
+<td>&lt;70%</td>
+</tr>
+<tr>
+<td>SH</td>
+<td>≥90%</td>
+<td>≥80%</td>
+<td>≥70%</td>
+<td>&lt;70%</td>
+</tr>
+<tr>
+<td>ES</td>
+<td>≥90%</td>
+<td>≥80%</td>
+<td>≥70%</td>
+<td>&lt;70%</td>
+</tr>
+<tr>
+<td>KW</td>
+<td>≥90%</td>
+<td>≥80%</td>
+<td>≥70%</td>
+<td>&lt;70%</td>
+</tr>
+<tr>
+<td>SS</td>
+<td>&lt;10%</td>
+<td>&lt;20%</td>
+<td>&lt;30%</td>
+<td>≥30%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="progi-kategorii">4.3 Progi kategorii</h3>
+<table>
+<thead>
+<tr>
+<th>Kategoria</th>
+<th>Warunek SE</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>SE ≥ 80%</td>
+<td>Optymalna</td>
+</tr>
+<tr>
+<td>B</td>
+<td>SE ≥ 70%</td>
+<td>Dobra</td>
+</tr>
+<tr>
+<td>C</td>
+<td>SE &lt; 70%</td>
+<td>Ostrzegawcza</td>
+</tr>
+</tbody>
+</table>
+<h3 id="warunki-alertów">4.4 Warunki alertów</h3>
+<table>
+<thead>
+<tr>
+<th>Typ</th>
+<th>Warunek</th>
+<th>Severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>se_info</code></td>
+<td>SE &lt; 80% przez &gt; 2h</td>
+<td>info</td>
+</tr>
+<tr>
+<td><code>se_warning</code></td>
+<td>SE &lt; 70% przez &gt; 4h</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>se_critical</code></td>
+<td>SE &lt; 60% przez &gt; 2h</td>
+<td>critical</td>
+</tr>
+<tr>
+<td><code>kw_warning</code></td>
+<td>KW &lt; 80% przez &gt; 4h</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>kw_critical</code></td>
+<td>KW &lt; 70% przez &gt; 2h</td>
+<td>critical</td>
+</tr>
+<tr>
+<td><code>ss_warning</code></td>
+<td>SS &gt; 20% przez &gt; 6h</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>ss_critical</code></td>
+<td>SS &gt; 30% przez &gt; 4h</td>
+<td>critical</td>
+</tr>
+<tr>
+<td><code>indicator_warning</code></td>
+<td>WWC/SH/ES &lt; 80% przez &gt; 4h</td>
+<td>warning</td>
+</tr>
+<tr>
+<td><code>indicator_critical</code></td>
+<td>WWC/SH/ES &lt; 70% przez &gt; 2h</td>
+<td>critical</td>
+</tr>
+<tr>
+<td><code>trend_negative</code></td>
+<td>SE spada &gt; 5% przez 3 dni</td>
+<td>warning</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kody-błędów">5. Kody błędów</h2>
+<h3 id="kody-http">5.1 Kody HTTP</h3>
+<table>
+<thead>
+<tr>
+<th>Kod</th>
+<th>Znaczenie</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>OK</td>
+<td>Sukces</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>Nieprawidłowe parametry</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>Brak autoryzacji</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden</td>
+<td>Brak dostępu</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>Zasób nie istnieje</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests</td>
+<td>Przekroczony limit</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>Błąd serwera</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable</td>
+<td>Serwis niedostępny</td>
+</tr>
+</tbody>
+</table>
+<h3 id="format-błędu">5.2 Format błędu</h3>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;error&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;code&quot;</span><span class="fu">:</span> <span class="st">&quot;NODE_NOT_FOUND&quot;</span><span class="fu">,</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;message&quot;</span><span class="fu">:</span> <span class="st">&quot;Węzeł o ID &#39;WC-999&#39; nie istnieje&quot;</span><span class="fu">,</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;details&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-999&quot;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:30:00Z&quot;</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="kody-błędów-1">5.3 Kody błędów</h3>
+<table>
+<thead>
+<tr>
+<th>Kod</th>
+<th>HTTP</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INVALID_PARAMS</code></td>
+<td>400</td>
+<td>Nieprawidłowe parametry zapytania</td>
+</tr>
+<tr>
+<td><code>INVALID_DATE_RANGE</code></td>
+<td>400</td>
+<td>Nieprawidłowy zakres dat</td>
+</tr>
+<tr>
+<td><code>UNAUTHORIZED</code></td>
+<td>401</td>
+<td>Brak lub nieprawidłowy API key</td>
+</tr>
+<tr>
+<td><code>FORBIDDEN</code></td>
+<td>403</td>
+<td>Brak dostępu do zasobu</td>
+</tr>
+<tr>
+<td><code>NODE_NOT_FOUND</code></td>
+<td>404</td>
+<td>Węzeł nie istnieje</td>
+</tr>
+<tr>
+<td><code>ALERT_NOT_FOUND</code></td>
+<td>404</td>
+<td>Alert nie istnieje</td>
+</tr>
+<tr>
+<td><code>RATE_LIMIT_EXCEEDED</code></td>
+<td>429</td>
+<td>Przekroczony limit zapytań</td>
+</tr>
+<tr>
+<td><code>MEC_UNAVAILABLE</code></td>
+<td>503</td>
+<td>API MEC niedostępne</td>
+</tr>
+<tr>
+<td><code>DATA_INCOMPLETE</code></td>
+<td>503</td>
+<td>Niekompletne dane z SCADA</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="przykłady-użycia">6. Przykłady użycia</h2>
+<h3 id="pobranie-danych-dla-dashboardu">6.1 Pobranie danych dla
+dashboardu</h3>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Frontend: Dashboard page</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">loadDashboard</span>() {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> [stats<span class="op">,</span> alerts<span class="op">,</span> nodes] <span class="op">=</span> <span class="cf">await</span> <span class="bu">Promise</span><span class="op">.</span><span class="fu">all</span>([</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="st">&#39;/api/dashboard/stats&#39;</span>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="st">&#39;/api/alerts?limit=5&#39;</span>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="st">&#39;/api/nodes&#39;</span>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">,</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { stats<span class="op">,</span> alerts<span class="op">,</span> nodes }<span class="op">;</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="pobranie-szczegółów-węzła">6.2 Pobranie szczegółów węzła</h3>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Frontend: Node detail page</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">loadNodeDetail</span>(nodeId<span class="op">:</span> <span class="dt">string</span>) {</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> [node<span class="op">,</span> profile<span class="op">,</span> history] <span class="op">=</span> <span class="cf">await</span> <span class="bu">Promise</span><span class="op">.</span><span class="fu">all</span>([</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="vs">`/api/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">`</span>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">,</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="vs">`/api/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/daily-profile`</span>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">,</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fetch</span>(<span class="vs">`/api/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/history?from=2024-12-01&amp;to=2025-01-14`</span>)<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">,</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  ])<span class="op">;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { node<span class="op">,</span> profile<span class="op">,</span> history }<span class="op">;</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="synchronizacja-z-mec-backend">6.3 Synchronizacja z MEC
+(backend)</h3>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Backend: Sync service</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">syncNodeFromMEC</span>(nodeId<span class="op">:</span> <span class="dt">string</span>) {</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 1. Pobierz pomiary z MEC</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> measurements <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="vs">`</span><span class="sc">${</span>MEC_API_URL<span class="sc">}</span><span class="vs">/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/measurements/range?from=</span><span class="sc">${</span>yesterday<span class="sc">}</span><span class="vs">&amp;to=</span><span class="sc">${</span>today<span class="sc">}</span><span class="vs">`</span><span class="op">,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    { headers<span class="op">:</span> { <span class="st">&#39;X-API-Key&#39;</span><span class="op">:</span> MEC_API_KEY } }</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  )<span class="op">.</span><span class="fu">then</span>(r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="fu">json</span>())<span class="op">;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 2. Oblicz wskaźniki</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> wwc <span class="op">=</span> <span class="fu">calculateWWC</span>(measurements<span class="op">.</span><span class="at">measurements</span>)<span class="op">;</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sh <span class="op">=</span> <span class="fu">calculateSH</span>(measurements<span class="op">.</span><span class="at">measurements</span>)<span class="op">;</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> se15min <span class="op">=</span> <span class="fu">calculateAllSE15min</span>(measurements<span class="op">.</span><span class="at">measurements</span><span class="op">,</span> currentMonth)<span class="op">;</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> es <span class="op">=</span> <span class="fu">calculateES</span>(se15min)<span class="op">;</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> kw <span class="op">=</span> <span class="fu">calculateKW</span>(wwc<span class="op">.</span><span class="at">value</span><span class="op">,</span> sh<span class="op">.</span><span class="at">value</span><span class="op">,</span> es<span class="op">.</span><span class="at">value</span>)<span class="op">;</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> se <span class="op">=</span> <span class="fu">calculateSEDaily</span>(measurements<span class="op">.</span><span class="at">measurements</span><span class="op">,</span> currentMonth)<span class="op">;</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> ss <span class="op">=</span> <span class="fu">calculateSS</span>(se<span class="op">.</span><span class="at">value</span><span class="op">,</span> kw<span class="op">.</span><span class="at">value</span><span class="op">,</span> measurements<span class="op">.</span><span class="at">measurements</span>)<span class="op">;</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 3. Zapisz wyniki</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> <span class="fu">saveNodeEfficiency</span>(nodeId<span class="op">,</span> { se<span class="op">,</span> kw<span class="op">,</span> ss<span class="op">,</span> wwc<span class="op">,</span> sh<span class="op">,</span> es })<span class="op">;</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 4. Sprawdź alerty</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">await</span> <span class="fu">checkAndGenerateAlerts</span>(nodeId<span class="op">,</span> { se<span class="op">,</span> kw<span class="op">,</span> ss<span class="op">,</span> wwc<span class="op">,</span> sh<span class="op">,</span> es })<span class="op">;</span></span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<h3 id="implementacja-klienta-mec">6.4 Implementacja klienta MEC</h3>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// lib/mec-client.ts</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MECClient {</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> baseUrl<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">private</span> apiKey<span class="op">:</span> <span class="dt">string</span><span class="op">;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">constructor</span>() {</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">baseUrl</span> <span class="op">=</span> <span class="bu">process</span><span class="op">.</span><span class="at">env</span><span class="op">.</span><span class="at">MEC_API_URL</span><span class="op">!;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="at">apiKey</span> <span class="op">=</span> <span class="bu">process</span><span class="op">.</span><span class="at">env</span><span class="op">.</span><span class="at">MEC_API_KEY</span><span class="op">!;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">async</span> <span class="fu">getCurrentMeasurement</span>(nodeId<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>ScadaMeasurement<span class="op">&gt;</span> {</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>      <span class="vs">`</span><span class="sc">${</span><span class="kw">this</span><span class="op">.</span><span class="at">baseUrl</span><span class="sc">}</span><span class="vs">/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/measurements/current`</span><span class="op">,</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">:</span> {</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;X-API-Key&#39;</span><span class="op">:</span> <span class="kw">this</span><span class="op">.</span><span class="at">apiKey</span><span class="op">,</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;Content-Type&#39;</span><span class="op">:</span> <span class="st">&#39;application/json&#39;</span><span class="op">,</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>        }<span class="op">,</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>response<span class="op">.</span><span class="at">ok</span>) {</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>      <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">MECError</span>(response<span class="op">.</span><span class="at">status</span><span class="op">,</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>())<span class="op">;</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>  <span class="kw">async</span> <span class="fu">getDailyMeasurements</span>(nodeId<span class="op">:</span> <span class="dt">string</span><span class="op">,</span> date<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>DailyMeasurements<span class="op">&gt;</span> {</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> <span class="im">from</span> <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>date<span class="sc">}</span><span class="vs">T00:00:00Z`</span><span class="op">;</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> to <span class="op">=</span> <span class="vs">`</span><span class="sc">${</span>date<span class="sc">}</span><span class="vs">T23:59:59Z`</span><span class="op">;</span></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> response <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>      <span class="vs">`</span><span class="sc">${</span><span class="kw">this</span><span class="op">.</span><span class="at">baseUrl</span><span class="sc">}</span><span class="vs">/nodes/</span><span class="sc">${</span>nodeId<span class="sc">}</span><span class="vs">/measurements/range?from=</span><span class="sc">${</span><span class="im">from</span><span class="sc">}</span><span class="vs">&amp;to=</span><span class="sc">${</span>to<span class="sc">}</span><span class="vs">&amp;interval=15min`</span><span class="op">,</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>        headers<span class="op">:</span> {</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;X-API-Key&#39;</span><span class="op">:</span> <span class="kw">this</span><span class="op">.</span><span class="at">apiKey</span><span class="op">,</span></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>          <span class="st">&#39;Content-Type&#39;</span><span class="op">:</span> <span class="st">&#39;application/json&#39;</span><span class="op">,</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>        }<span class="op">,</span></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="op">!</span>response<span class="op">.</span><span class="at">ok</span>) {</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>      <span class="cf">throw</span> <span class="kw">new</span> <span class="fu">MECError</span>(response<span class="op">.</span><span class="at">status</span><span class="op">,</span> <span class="cf">await</span> response<span class="op">.</span><span class="fu">json</span>())<span class="op">;</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> response<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="kw">const</span> mecClient <span class="op">=</span> <span class="kw">new</span> <span class="fu">MECClient</span>()<span class="op">;</span></span></code></pre></div>
+<hr />
+<h2 id="webhook-opcjonalnie">7. Webhook (opcjonalnie)</h2>
+<h3 id="mec-cwu-monitor">7.1 MEC → CWU Monitor</h3>
+<p>MEC może wysyłać powiadomienia push o nowych pomiarach.</p>
+<pre class="http"><code>POST {CWU_MONITOR_WEBHOOK_URL}/api/webhooks/mec
+Content-Type: application/json
+X-MEC-Signature: {hmac_sha256_signature}
+
+{
+  &quot;event&quot;: &quot;measurement_batch&quot;,
+  &quot;node_id&quot;: &quot;WC-001&quot;,
+  &quot;timestamp&quot;: &quot;2025-01-14T08:15:00Z&quot;,
+  &quot;measurements_count&quot;: 96
+}</code></pre>
+<h3 id="cwu-monitor-external">7.2 CWU Monitor → External</h3>
+<p>CWU Monitor może wysyłać powiadomienia o alertach.</p>
+<pre class="http"><code>POST {EXTERNAL_WEBHOOK_URL}
+Content-Type: application/json
+
+{
+  &quot;event&quot;: &quot;alert_created&quot;,
+  &quot;alert&quot;: {
+    &quot;id&quot;: &quot;ALR-2025-0114-001&quot;,
+    &quot;node_id&quot;: &quot;WC-001&quot;,
+    &quot;node_name&quot;: &quot;Jana Pawła II 2-2a&quot;,
+    &quot;type&quot;: &quot;se_critical&quot;,
+    &quot;severity&quot;: &quot;critical&quot;,
+    &quot;message&quot;: &quot;SE &lt; 60% - krytycznie niska sprawność&quot;
+  },
+  &quot;timestamp&quot;: &quot;2025-01-14T08:30:00Z&quot;
+}</code></pre>
+<hr />
+<h2 id="notatki-implementacyjne">8. Notatki implementacyjne</h2>
+<h3 id="cache">8.1 Cache</h3>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>TTL</th>
+<th>Strategia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/nodes</code></td>
+<td>5 min</td>
+<td>stale-while-revalidate</td>
+</tr>
+<tr>
+<td><code>/api/nodes/{id}</code></td>
+<td>1 min</td>
+<td>stale-while-revalidate</td>
+</tr>
+<tr>
+<td><code>/api/dashboard/stats</code></td>
+<td>5 min</td>
+<td>stale-while-revalidate</td>
+</tr>
+<tr>
+<td><code>/api/ranking</code></td>
+<td>15 min</td>
+<td>cache-first</td>
+</tr>
+<tr>
+<td><code>/api/alerts</code></td>
+<td>30 sek</td>
+<td>no-cache</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rate-limiting">8.2 Rate limiting</h3>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Limit</th>
+<th>Okno</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MEC SCADA</td>
+<td>1000 req</td>
+<td>dzień</td>
+</tr>
+<tr>
+<td>CWU Monitor (auth)</td>
+<td>100 req</td>
+<td>minuta</td>
+</tr>
+<tr>
+<td>CWU Monitor (unauth)</td>
+<td>10 req</td>
+<td>minuta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="timezone">8.3 Timezone</h3>
+<ul>
+<li>Wszystkie timestampy w UTC (ISO 8601)</li>
+<li>Konwersja do CET/CEST po stronie frontendu</li>
+<li>Daty (bez czasu) w formacie YYYY-MM-DD</li>
+</ul>
+<h3 id="wersjonowanie">8.4 Wersjonowanie</h3>
+<ul>
+<li>MEC SCADA: <code>/scada/v1/</code></li>
+<li>CWU Monitor: <code>/api/</code> (bez wersji, breaking changes = nowy
+endpoint)</li>
+</ul>
+<hr />
+<h2 id="historia-zmian">Historia zmian</h2>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 27%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr>
+<th>Wersja</th>
+<th>Data</th>
+<th>Zmiany</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>2025-01-10</td>
+<td>Wersja początkowa</td>
+</tr>
+<tr>
+<td>2.0</td>
+<td>2025-01-14</td>
+<td>Pełna specyfikacja z hierarchią SE/KW/SS, endpointy MEC SCADA</td>
+</tr>
+<tr>
+<td>2.1</td>
+<td>2025-01-14</td>
+<td>Uzgodnienie z data-contract.md: dodano se_info, kw_critical,
+ss_critical</td>
+</tr>
+</tbody>
+</table>
+
+<div class="doc-footer">
+  CWU Monitor • KSM Przylesie • Koszalin • Wersja dokumentacji: 2025-01-14
+</div>
+
+<script>
+// Automatyczne wykrywanie diagramów ASCII i formuł matematycznych
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre code').forEach(function(block) {
+    var text = block.textContent;
+    var pre = block.parentElement;
+
+    // Wykryj diagramy ASCII (box-drawing characters)
+    var isDiagram = text.includes('┌') || text.includes('│') || text.includes('└') ||
+                    text.includes('├') || text.includes('┬') || text.includes('─') ||
+                    text.includes('▼') || text.includes('▲') || text.includes('►') ||
+                    text.includes('═') || text.includes('║') || text.includes('╔');
+
+    if (isDiagram) {
+      pre.classList.add('diagram');
+      return;
+    }
+
+    // Wykryj formuły matematyczne
+    var hasEquals = text.includes('=');
+    var hasMathSymbols = text.includes('×') || text.includes('÷') ||
+                         text.includes('∛') || text.includes('√');
+    var hasCode = text.includes('function') || text.includes('const ') ||
+                  text.includes('interface') || text.includes('async') ||
+                  text.includes('return ') || text.includes('import ') ||
+                  text.includes('//') || text.includes('=>');
+    var lines = text.trim().split('\n');
+    var isShort = lines.length <= 15;
+
+    // Dodatkowe sygnały że to wzór fizyczny
+    var hasPhysicsTerms = text.includes('gdzie:') || text.includes('Q_') ||
+                          text.includes('T_') || text.includes('ΔT') ||
+                          text.includes('[GJ]') || text.includes('[m³]') ||
+                          text.includes('[K]') || text.includes('[°C]');
+
+    if (((hasEquals || hasMathSymbols) && !hasCode && isShort) ||
+        (hasPhysicsTerms && hasEquals && !hasCode)) {
+      pre.classList.add('math-formula');
+    }
+  });
+});
+</script>
+</body>
+</html>

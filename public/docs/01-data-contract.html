@@ -1,0 +1,1881 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontrakt Danych CWU Monitor</title>
+  <style>
+    @page {
+      margin: 2cm 2cm;
+      size: A4;
+    }
+
+    @page:first {
+      margin-top: 1cm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #1a1a1a;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 40px;
+      background: white;
+    }
+
+    /* Header dokumentu */
+    .doc-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: white;
+      padding: 24px 32px;
+      border-radius: 12px;
+      margin: -32px -40px 32px -40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .doc-header-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc-header-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .doc-header-text h1 {
+      font-size: 22pt;
+      margin: 0;
+      border: none;
+      padding: 0;
+      color: white;
+    }
+
+    .doc-header-text p {
+      margin: 4px 0 0 0;
+      opacity: 0.85;
+      font-size: 11pt;
+    }
+
+    /* Nagłówki */
+    h1 {
+      font-size: 22pt;
+      color: #1e3a5f;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 15pt;
+      color: #1e3a5f;
+      border-bottom: 2px solid #bfdbfe;
+      padding-bottom: 6px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #1d4ed8;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      color: #2563eb;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* Tabele */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #1e3a5f;
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9pt;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Kolorowanie statusów w tabelach */
+    td:contains("optimal"), td:contains("Optimal"), td:contains("OPTIMAL") {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Status badges - ręczne znaczniki w tabelach */
+    .status-optimal { color: #059669; font-weight: 600; }
+    .status-good { color: #0284c7; font-weight: 600; }
+    .status-warning { color: #d97706; font-weight: 600; }
+    .status-critical { color: #dc2626; font-weight: 600; }
+
+    /* Kod inline */
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+      font-size: 9pt;
+      background-color: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Bloki kodu - domyślne */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+      margin: 16px 0;
+      border-left: 4px solid #3b82f6;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+      border: none;
+      font-size: 9pt;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    }
+
+    /* ============================================================
+       DIAGRAMY ASCII - Technical Blueprint Style
+       Inspiracja: schematy inżynierskie, terminale CRT, NASA docs
+       ============================================================ */
+
+    pre.diagram {
+      /* Tło - ciemny granat z subtelną siatką */
+      background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #020617 0%, #0a1628 50%, #0f172a 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+
+      /* Wymiary i spacing */
+      padding: 28px 32px 24px 32px;
+      margin: 24px 0;
+      border-radius: 8px;
+      overflow-x: auto;
+
+      /* Obramowanie - podwójna linia techniczna */
+      border: 1px solid #1e3a5f;
+      box-shadow:
+        inset 0 0 0 1px rgba(56, 189, 248, 0.1),
+        0 0 0 1px #0f172a,
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(56, 189, 248, 0.05);
+
+      /* Pozycjonowanie dla etykiety */
+      position: relative;
+    }
+
+
+    /* Tekst w diagramie */
+    pre.diagram code {
+      /* Font - czytelny monospace */
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 10pt;
+      line-height: 1.4;
+      letter-spacing: 0;
+
+      /* Kolor bazowy - jasny niebieskoszary */
+      color: #cbd5e1;
+
+      /* Wyłącz domyślne style */
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    /* ============================================================
+       DIAGRAMY - jednolity kolor tekstu, bez podświetleń
+       ============================================================ */
+
+    /* Formuły matematyczne */
+    pre.math-formula {
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+      color: #854d0e;
+      border: 2px solid #fbbf24;
+      border-left: 4px solid #f59e0b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 10pt;
+      text-align: center;
+    }
+
+    pre.math-formula code {
+      color: #713f12;
+      font-size: 10pt;
+      font-weight: 500;
+    }
+
+    /* Cytaty i uwagi */
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      margin: 16px 0;
+      padding: 12px 20px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-style: normal;
+      border-radius: 0 6px 6px 0;
+    }
+
+    blockquote p {
+      margin: 0;
+    }
+
+    blockquote strong {
+      color: #1d4ed8;
+    }
+
+    /* Listy */
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    li > ul, li > ol {
+      margin: 6px 0;
+    }
+
+    /* Linki */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Linie poziome */
+    hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 28px 0;
+    }
+
+    /* Paragraf */
+    p {
+      margin: 10px 0;
+    }
+
+    /* Strong */
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* Pierwsza tabela - meta info */
+    body > table:first-of-type,
+    h2#informacje-o-dokumencie + table {
+      background: #f8fafc;
+      border: 2px solid #3b82f6;
+    }
+
+    body > table:first-of-type th,
+    h2#informacje-o-dokumencie + table th {
+      background: #3b82f6;
+    }
+
+    /* Stopka */
+    .doc-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #e5e7eb;
+      text-align: center;
+      color: #64748b;
+      font-size: 9pt;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 0;
+        max-width: none;
+        font-size: 10pt;
+      }
+
+      .doc-header {
+        margin: 0 0 24px 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+      }
+
+      table, pre, blockquote {
+        page-break-inside: avoid;
+      }
+
+      pre {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: #1e3a5f;
+      }
+
+      a[href^="http"]:after {
+        content: none;
+      }
+    }
+
+    /* Spis treści */
+    nav#TOC {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+    }
+
+    nav#TOC > ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    nav#TOC > ul > li {
+      margin: 8px 0;
+    }
+
+    nav#TOC > ul > li > a {
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    nav#TOC ul ul {
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+
+    nav#TOC ul ul li {
+      margin: 4px 0;
+    }
+
+    nav#TOC ul ul a {
+      color: #475569;
+      font-size: 9.5pt;
+    }
+
+    /* Kategorie kolorów - dla tabel z kategoriami */
+    tr td:first-child:contains("A"),
+    td.cat-a {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("B"),
+    td.cat-b {
+      color: #d97706;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("C"),
+    td.cat-c {
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-header-icon">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div class="doc-header-text">
+    <h1>Kontrakt Danych CWU Monitor</h1>
+    <p>CWU Monitor — KSM Przylesie</p>
+  </div>
+</div>
+
+<nav id="TOC">
+<ul>
+<li><a href="#kontrakt-danych-mec-ksm-przylesie"
+id="toc-kontrakt-danych-mec-ksm-przylesie">Kontrakt Danych MEC-KSM
+Przylesie</a>
+<ul>
+<li><a href="#informacje-o-dokumencie"
+id="toc-informacje-o-dokumencie">Informacje o dokumencie</a></li>
+<li><a href="#cel-i-zakres" id="toc-cel-i-zakres">1. Cel i zakres</a>
+<ul>
+<li><a href="#cel-systemu" id="toc-cel-systemu">1.1 Cel systemu</a></li>
+<li><a href="#zakres" id="toc-zakres">1.2 Zakres</a></li>
+</ul></li>
+<li><a href="#źródła-danych" id="toc-źródła-danych">2. Źródła danych</a>
+<ul>
+<li><a href="#dane-z-ksm-miesięczne" id="toc-dane-z-ksm-miesięczne">2.1
+Dane z KSM (miesięczne)</a></li>
+<li><a href="#dane-z-mec-scada-bieżące"
+id="toc-dane-z-mec-scada-bieżące">2.2 Dane z MEC SCADA
+(bieżące)</a></li>
+</ul></li>
+<li><a href="#hierarchia-wskaźników" id="toc-hierarchia-wskaźników">3.
+Hierarchia wskaźników</a></li>
+<li><a href="#definicje-wskaźników" id="toc-definicje-wskaźników">4.
+Definicje wskaźników</a>
+<ul>
+<li><a href="#se-sprawność-energetyczna-energy-efficiency"
+id="toc-se-sprawność-energetyczna-energy-efficiency">4.1 SE — Sprawność
+Energetyczna (Energy Efficiency)</a></li>
+<li><a href="#wwc-wydajność-wymiany-ciepła-heat-exchange-efficiency"
+id="toc-wwc-wydajność-wymiany-ciepła-heat-exchange-efficiency">4.2 WWC —
+Wydajność Wymiany Ciepła (Heat Exchange Efficiency)</a></li>
+<li><a href="#sh-stabilność-hydrauliczna-hydraulic-stability"
+id="toc-sh-stabilność-hydrauliczna-hydraulic-stability">4.3 SH —
+Stabilność Hydrauliczna (Hydraulic Stability)</a></li>
+<li><a href="#es-efektywność-szczytowa-peak-efficiency"
+id="toc-es-efektywność-szczytowa-peak-efficiency">4.4 ES — Efektywność
+Szczytowa (Peak Efficiency)</a></li>
+<li><a href="#kw-kondycja-wymiennika-heat-exchanger-condition"
+id="toc-kw-kondycja-wymiennika-heat-exchanger-condition">4.5 KW —
+Kondycja Wymiennika (Heat Exchanger Condition)</a></li>
+<li><a href="#ss-straty-systemowe-system-losses"
+id="toc-ss-straty-systemowe-system-losses">4.6 SS — Straty Systemowe
+(System Losses)</a></li>
+</ul></li>
+<li><a href="#stałe-fizyczne" id="toc-stałe-fizyczne">5. Stałe
+fizyczne</a></li>
+<li><a href="#parametry-sezonowe" id="toc-parametry-sezonowe">6.
+Parametry sezonowe</a>
+<ul>
+<li><a href="#temperatura-wody-zimnej-t_zimna"
+id="toc-temperatura-wody-zimnej-t_zimna">6.1 Temperatura wody zimnej
+(T_zimna)</a></li>
+</ul></li>
+<li><a href="#przepływ-danych" id="toc-przepływ-danych">7. Przepływ
+danych</a>
+<ul>
+<li><a href="#dane-ksm-se-miesięczne"
+id="toc-dane-ksm-se-miesięczne">7.1 Dane KSM → SE miesięczne</a></li>
+<li><a href="#dane-mec-wskaźniki-operacyjne-wwc-sh-es"
+id="toc-dane-mec-wskaźniki-operacyjne-wwc-sh-es">7.2 Dane MEC →
+Wskaźniki operacyjne (WWC, SH, ES)</a></li>
+<li><a href="#pełny-przepływ-se-kw-ss"
+id="toc-pełny-przepływ-se-kw-ss">7.3 Pełny przepływ → SE, KW,
+SS</a></li>
+</ul></li>
+<li><a href="#alerty-i-powiadomienia" id="toc-alerty-i-powiadomienia">8.
+Alerty i powiadomienia</a>
+<ul>
+<li><a href="#alert-niska-sprawność-se"
+id="toc-alert-niska-sprawność-se">8.1 Alert: Niska sprawność SE</a></li>
+<li><a href="#alert-problem-z-wymiennikiem-kw"
+id="toc-alert-problem-z-wymiennikiem-kw">8.2 Alert: Problem z
+wymiennikiem (KW)</a></li>
+<li><a href="#alert-wysokie-straty-systemowe-ss"
+id="toc-alert-wysokie-straty-systemowe-ss">8.3 Alert: Wysokie straty
+systemowe (SS)</a></li>
+<li><a href="#alert-wskaźnik-operacyjny"
+id="toc-alert-wskaźnik-operacyjny">8.4 Alert: Wskaźnik
+operacyjny</a></li>
+</ul></li>
+<li><a href="#rekomendacje-automatyczne"
+id="toc-rekomendacje-automatyczne">9. Rekomendacje automatyczne</a>
+<ul>
+<li><a href="#drzewo-diagnostyczne" id="toc-drzewo-diagnostyczne">9.1
+Drzewo diagnostyczne</a></li>
+<li><a href="#szacowana-poprawa" id="toc-szacowana-poprawa">9.2
+Szacowana poprawa</a></li>
+</ul></li>
+<li><a href="#gwarancje-i-ograniczenia"
+id="toc-gwarancje-i-ograniczenia">10. Gwarancje i ograniczenia</a>
+<ul>
+<li><a href="#co-system-gwarantuje" id="toc-co-system-gwarantuje">10.1
+Co system gwarantuje</a></li>
+<li><a href="#co-system-nie-gwarantuje"
+id="toc-co-system-nie-gwarantuje">10.2 Co system NIE gwarantuje</a></li>
+</ul></li>
+<li><a href="#format-wymiany-danych" id="toc-format-wymiany-danych">11.
+Format wymiany danych</a>
+<ul>
+<li><a href="#endpoint-dane-bieżące-z-mec"
+id="toc-endpoint-dane-bieżące-z-mec">11.1 Endpoint: Dane bieżące z
+MEC</a></li>
+<li><a href="#endpoint-agregacja-dobowa-z-mec"
+id="toc-endpoint-agregacja-dobowa-z-mec">11.2 Endpoint: Agregacja dobowa
+z MEC</a></li>
+</ul></li>
+<li><a href="#słownik-pojęć" id="toc-słownik-pojęć">12. Słownik
+pojęć</a></li>
+<li><a href="#historia-zmian" id="toc-historia-zmian">13. Historia
+zmian</a></li>
+<li><a href="#oświadczenia-stron" id="toc-oświadczenia-stron">14.
+Oświadczenia stron</a>
+<ul>
+<li><a href="#mec-koszalin-oświadcza"
+id="toc-mec-koszalin-oświadcza">14.1 MEC Koszalin oświadcza:</a></li>
+<li><a href="#ksm-przylesie-oświadcza"
+id="toc-ksm-przylesie-oświadcza">14.2 KSM Przylesie oświadcza:</a></li>
+<li><a href="#ograniczenie-odpowiedzialności"
+id="toc-ograniczenie-odpowiedzialności">14.3 Ograniczenie
+odpowiedzialności</a></li>
+</ul></li>
+<li><a href="#podpisy" id="toc-podpisy">Podpisy</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="kontrakt-danych-mec-ksm-przylesie">Kontrakt Danych MEC-KSM
+Przylesie</h1>
+<h2 id="informacje-o-dokumencie">Informacje o dokumencie</h2>
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wersja</td>
+<td>3.2</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>2025-01-14</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Do uzgodnienia</td>
+</tr>
+<tr>
+<td>Strony</td>
+<td>MEC Koszalin (Dostawca danych SCADA), KSM Przylesie (Odbiorca)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="cel-i-zakres">1. Cel i zakres</h2>
+<h3 id="cel-systemu">1.1 Cel systemu</h3>
+<p>System CWU Monitor służy do monitorowania efektywności energetycznej
+węzłów cieplnych ciepłej wody użytkowej (CWU) w zasobach KSM Przylesie.
+System:</p>
+<ul>
+<li>Oblicza wskaźniki efektywności na podstawie danych z dwóch
+źródeł</li>
+<li>Identyfikuje węzły wymagające optymalizacji</li>
+<li>Generuje rekomendacje działań dla służb technicznych</li>
+<li>NIE służy do weryfikacji rozliczeń z MEC</li>
+</ul>
+<p><strong>Ochrona danych:</strong> System operuje na wskaźnikach
+względnych (procentowych), które NIE ujawniają wartości absolutnych (GJ,
+m³, °C) możliwych do weryfikacji rozliczeń. Surowe dane pozostają
+wyłącznie po stronie MEC.</p>
+<h3 id="zakres">1.2 Zakres</h3>
+<ul>
+<li>40 węzłów cieplnych CWU w zasobach KSM Przylesie</li>
+<li>Dane historyczne z KSM (miesięczne odczyty liczników)</li>
+<li>Dane operacyjne z MEC SCADA (pomiary co 15 minut)</li>
+</ul>
+<hr />
+<h2 id="źródła-danych">2. Źródła danych</h2>
+<p>System wykorzystuje <strong>dwa niezależne źródła
+danych</strong>:</p>
+<h3 id="dane-z-ksm-miesięczne">2.1 Dane z KSM (miesięczne)</h3>
+<p><strong>Źródło:</strong> Odczyty liczników wykonywane przez służby
+KSM</p>
+<p><strong>Częstotliwość:</strong> Raz w miesiącu (za poprzedni
+miesiąc)</p>
+<p><strong>Format:</strong> Excel / JSON</p>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 22%" />
+<col style="width: 31%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Symbol</th>
+<th>Jednostka</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Energia cieplna</td>
+<td><code>GJ_miesiac</code></td>
+<td>GJ</td>
+<td>Odczyt z licznika ciepła (różnica stanów)</td>
+</tr>
+<tr>
+<td>Objętość wody</td>
+<td><code>m3_miesiac</code></td>
+<td>m³</td>
+<td>Odczyt z wodomierza (różnica stanów)</td>
+</tr>
+<tr>
+<td>Wskaźnik</td>
+<td><code>wskaznik</code></td>
+<td>GJ/m³</td>
+<td>Obliczony: GJ/m³</td>
+</tr>
+<tr>
+<td>Rok</td>
+<td><code>year</code></td>
+<td>-</td>
+<td>Rok odczytu</td>
+</tr>
+<tr>
+<td>Miesiąc</td>
+<td><code>month</code></td>
+<td>1-12</td>
+<td>Miesiąc odczytu</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Przykład danych KSM:</strong></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;readings&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;year&quot;</span><span class="fu">:</span> <span class="dv">2024</span><span class="fu">,</span> <span class="dt">&quot;month&quot;</span><span class="fu">:</span> <span class="dv">11</span><span class="fu">,</span> <span class="dt">&quot;gj&quot;</span><span class="fu">:</span> <span class="fl">142.5</span><span class="fu">,</span> <span class="dt">&quot;m3&quot;</span><span class="fu">:</span> <span class="dv">570</span><span class="fu">,</span> <span class="dt">&quot;wskaznik&quot;</span><span class="fu">:</span> <span class="fl">0.250</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">&quot;year&quot;</span><span class="fu">:</span> <span class="dv">2024</span><span class="fu">,</span> <span class="dt">&quot;month&quot;</span><span class="fu">:</span> <span class="dv">12</span><span class="fu">,</span> <span class="dt">&quot;gj&quot;</span><span class="fu">:</span> <span class="fl">148.2</span><span class="fu">,</span> <span class="dt">&quot;m3&quot;</span><span class="fu">:</span> <span class="dv">590</span><span class="fu">,</span> <span class="dt">&quot;wskaznik&quot;</span><span class="fu">:</span> <span class="fl">0.251</span> <span class="fu">}</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="dane-z-mec-scada-bieżące">2.2 Dane z MEC SCADA (bieżące)</h3>
+<p><strong>Źródło:</strong> System SCADA MEC Koszalin</p>
+<p><strong>Częstotliwość:</strong> Co 15 minut (96 pomiarów/dobę)</p>
+<p><strong>Format:</strong> API REST / JSON</p>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 22%" />
+<col style="width: 31%" />
+<col style="width: 17%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Symbol</th>
+<th>Jednostka</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Temperatura zasilania</td>
+<td><code>T_zas</code></td>
+<td>°C</td>
+<td>Temperatura wody na wejściu do wymiennika</td>
+</tr>
+<tr>
+<td>Temperatura powrotu</td>
+<td><code>T_pow</code></td>
+<td>°C</td>
+<td>Temperatura wody na wyjściu z wymiennika</td>
+</tr>
+<tr>
+<td>Przepływ chwilowy</td>
+<td><code>Q_flow</code></td>
+<td>m³/h</td>
+<td>Przepływ wody przez wymiennik</td>
+</tr>
+<tr>
+<td>Przyrost energii</td>
+<td><code>delta_GJ</code></td>
+<td>GJ</td>
+<td>Przyrost licznika energii w okresie 15 min</td>
+</tr>
+<tr>
+<td>Przyrost objętości</td>
+<td><code>delta_m3</code></td>
+<td>m³</td>
+<td>Przyrost wodomierza w okresie 15 min</td>
+</tr>
+<tr>
+<td>Ciśnienie zasilania</td>
+<td><code>P_zas</code></td>
+<td>bar</td>
+<td>Ciśnienie na zasilaniu (opcjonalne)</td>
+</tr>
+<tr>
+<td>Ciśnienie powrotu</td>
+<td><code>P_pow</code></td>
+<td>bar</td>
+<td>Ciśnienie na powrocie (opcjonalne)</td>
+</tr>
+<tr>
+<td>Timestamp</td>
+<td><code>timestamp</code></td>
+<td>ISO 8601</td>
+<td>Czas pomiaru</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Przykład danych MEC (pojedynczy pomiar):</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:15:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;T_zas&quot;</span><span class="fu">:</span> <span class="fl">68.5</span><span class="fu">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;T_pow&quot;</span><span class="fu">:</span> <span class="fl">52.3</span><span class="fu">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">2.45</span><span class="fu">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;delta_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.142</span><span class="fu">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;delta_m3&quot;</span><span class="fu">:</span> <span class="fl">0.58</span><span class="fu">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;P_zas&quot;</span><span class="fu">:</span> <span class="fl">4.2</span><span class="fu">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;P_pow&quot;</span><span class="fu">:</span> <span class="fl">2.8</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="hierarchia-wskaźników">3. Hierarchia wskaźników</h2>
+<p>System oblicza wskaźniki w hierarchicznej strukturze:</p>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│                    POZIOM 1: GŁÓWNY WSKAŹNIK                            │
+│                                                                         │
+│                 SE (Sprawność Energetyczna)                             │
+│                 ════════════════════════════                            │
+│                 SE = (Q_teoretyczne / Q_rzeczywiste) × 100              │
+│                                                                         │
+│                 Źródło: dane KSM (miesięczne) lub MEC (bieżące)         │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                 ┌──────────────────┴──────────────────┐
+                 │                                     │
+                 ▼                                     ▼
+┌────────────────────────────────┐    ┌────────────────────────────────┐
+│   POZIOM 2A: WYMIENNIK         │    │   POZIOM 2B: STRATY            │
+│                                │    │                                │
+│   KW (Kondycja Wymiennika)     │    │   SS (Straty Systemowe)        │
+│   ════════════════════════     │    │   ═════════════════════        │
+│   KW = ∛(WWC × SH × ES)        │    │   SS = 100 × (1 - SE/KW)       │
+│                                │    │                                │
+│   Źródło: obliczane z MEC      │    │   Źródło: obliczane            │
+└────────────────────────────────┘    └────────────────────────────────┘
+                 │
+     ┌───────────┼───────────┐
+     │           │           │
+     ▼           ▼           ▼
+┌─────────┐ ┌─────────┐ ┌─────────┐
+│POZIOM 3 │ │POZIOM 3 │ │POZIOM 3 │
+│         │ │         │ │         │
+│   WWC   │ │   SH    │ │   ES    │
+│─────────│ │─────────│ │─────────│
+│Wydajność│ │Stabiln. │ │Efektywn.│
+│Wymiany  │ │Hydraul. │ │Szczytowa│
+│Ciepła   │ │         │ │         │
+│         │ │         │ │         │
+│Z: T_zas │ │Z: Q_flow│ │Z: SE    │
+│   T_pow │ │  (24h)  │ │  (24h)  │
+└─────────┘ └─────────┘ └─────────┘</code></pre>
+<hr />
+<h2 id="definicje-wskaźników">4. Definicje wskaźników</h2>
+<h3 id="se-sprawność-energetyczna-energy-efficiency">4.1 SE — Sprawność
+Energetyczna (Energy Efficiency)</h3>
+<p><strong>Poziom:</strong> 1 (główny wskaźnik)</p>
+<p><strong>Definicja:</strong> Jaki procent zakupionej energii cieplnej
+dociera do mieszkańców jako użyteczna ciepła woda.</p>
+<p><strong>Wzór:</strong></p>
+<pre><code>SE = (Q_teoretyczne / Q_rzeczywiste) × 100
+
+gdzie:
+  Q_teoretyczne = V × c × ΔT × k_straty
+  Q_rzeczywiste = energia z licznika [GJ]
+
+  V = objętość zużytej wody [m³]
+  c = 0.004186 GJ/(m³·K) — ciepło właściwe wody
+  ΔT = T_CWU − T_zimna = 55°C − T_zimna
+  k_straty = 1.05 (5% nieuniknionych strat)</code></pre>
+<p><strong>Źródło danych:</strong> - Dane KSM → SE miesięczne (z sumy GJ
+i m³ za miesiąc) - Dane MEC → SE chwilowe (z delta_GJ i delta_m3 co 15
+min)</p>
+<p><strong>Progi:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SE</th>
+<th>Kategoria</th>
+<th>Status</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 80%</td>
+<td>A</td>
+<td>Optymalna</td>
+<td>Monitoring</td>
+</tr>
+<tr>
+<td>≥ 70%</td>
+<td>B</td>
+<td>Dobra</td>
+<td>Optymalizacja</td>
+</tr>
+<tr>
+<td>≥ 60%</td>
+<td>C</td>
+<td>Ostrzegawcza</td>
+<td>Interwencja</td>
+</tr>
+<tr>
+<td>&lt; 60%</td>
+<td>-</td>
+<td>Krytyczna</td>
+<td>Pilna interwencja</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="wwc-wydajność-wymiany-ciepła-heat-exchange-efficiency">4.2 WWC —
+Wydajność Wymiany Ciepła (Heat Exchange Efficiency)</h3>
+<p><strong>Poziom:</strong> 3 (wskaźnik operacyjny)</p>
+<p><strong>Definicja:</strong> Ocena efektywności przekazywania ciepła w
+wymienniku na podstawie różnicy temperatur.</p>
+<p><strong>Wzór:</strong></p>
+<pre><code>WWC = 100 × (ΔT_rzeczywiste / ΔT_optymalne)
+
+gdzie:
+  ΔT_rzeczywiste = T_zas − T_pow [K]
+  ΔT_optymalne = 20 K (wartość projektowa)
+
+  Wynik ograniczony do zakresu 0-100%</code></pre>
+<p><strong>Źródło danych:</strong> MEC SCADA (T_zas, T_pow)</p>
+<p><strong>Interpretacja fizyczna:</strong> - Większe ΔT = więcej ciepła
+oddanego = lepsza wymiana - Mniejsze ΔT = woda wraca za ciepła = słaba
+wymiana</p>
+<p><strong>Progi:</strong></p>
+<table>
+<thead>
+<tr>
+<th>WWC</th>
+<th>Status</th>
+<th>Interpretacja</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 95%</td>
+<td>Optimal</td>
+<td>Zgodna z projektem</td>
+<td>Brak</td>
+</tr>
+<tr>
+<td>≥ 85%</td>
+<td>Good</td>
+<td>Dobra wymiana</td>
+<td>Opcjonalna optymalizacja</td>
+</tr>
+<tr>
+<td>≥ 70%</td>
+<td>Warning</td>
+<td>ΔT poniżej normy</td>
+<td>Sprawdź nastawy MTCV</td>
+</tr>
+<tr>
+<td>&lt; 70%</td>
+<td>Critical</td>
+<td>Znacząco obniżona</td>
+<td>Pilna regulacja MTCV</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="sh-stabilność-hydrauliczna-hydraulic-stability">4.3 SH —
+Stabilność Hydrauliczna (Hydraulic Stability)</h3>
+<p><strong>Poziom:</strong> 3 (wskaźnik operacyjny)</p>
+<p><strong>Definicja:</strong> Ocena równomierności przepływu w
+instalacji w ciągu doby.</p>
+<p><strong>Wzór:</strong></p>
+<pre><code>SH = 100 − (CV × 100)
+
+gdzie:
+  CV = σ(Q) / μ(Q) — współczynnik zmienności przepływu
+  σ(Q) = odchylenie standardowe przepływu z 96 pomiarów (24h)
+  μ(Q) = średni przepływ z 96 pomiarów (24h)
+
+  Wynik ograniczony do zakresu 0-100%</code></pre>
+<p><strong>Źródło danych:</strong> MEC SCADA (Q_flow, seria 24h)</p>
+<p><strong>Interpretacja fizyczna:</strong> - CV = 0 (brak wahań) → SH =
+100% - CV = 0.3 (30% wahań) → SH = 70% - Wysokie wahania = problemy
+hydrauliczne</p>
+<p><strong>Progi:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SH</th>
+<th>Status</th>
+<th>Interpretacja</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 90%</td>
+<td>Optimal</td>
+<td>Stabilna praca</td>
+<td>Brak</td>
+</tr>
+<tr>
+<td>≥ 80%</td>
+<td>Good</td>
+<td>Lekkie wahania</td>
+<td>Monitoruj</td>
+</tr>
+<tr>
+<td>≥ 70%</td>
+<td>Warning</td>
+<td>Nierównomierne obciążenie</td>
+<td>Równoważenie MTCV</td>
+</tr>
+<tr>
+<td>&lt; 70%</td>
+<td>Critical</td>
+<td>Problem hydrauliczny</td>
+<td>Diagnostyka pompy/MTCV</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="es-efektywność-szczytowa-peak-efficiency">4.4 ES — Efektywność
+Szczytowa (Peak Efficiency)</h3>
+<p><strong>Poziom:</strong> 3 (wskaźnik operacyjny)</p>
+<p><strong>Definicja:</strong> Ocena zdolności węzła do utrzymania
+efektywności w godzinach szczytu.</p>
+<p><strong>Godziny szczytu:</strong> 7:00-9:00 (rano) oraz 17:00-21:00
+(wieczór)</p>
+<p><strong>Wzór:</strong></p>
+<pre><code>ES = 100 × (SE_szczyt / SE_średnia)
+
+gdzie:
+  SE_szczyt = średnia SE z godzin szczytu (7-9, 17-21)
+  SE_średnia = średnia SE całodobowa
+
+  Wynik ograniczony do zakresu 0-100%</code></pre>
+<p><strong>Źródło danych:</strong> MEC SCADA (delta_GJ, delta_m3,
+agregacja godzinowa)</p>
+<p><strong>Interpretacja fizyczna:</strong> - ES = 100% → sprawność w
+szczycie = sprawność średnia - ES &lt; 100% → spadek sprawności podczas
+szczytu - ES &gt; 100% → teoretycznie możliwe, ale nietypowe</p>
+<p><strong>Progi:</strong></p>
+<table>
+<thead>
+<tr>
+<th>ES</th>
+<th>Status</th>
+<th>Interpretacja</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 90%</td>
+<td>Optimal</td>
+<td>Dobra obsługa szczytów</td>
+<td>Brak</td>
+</tr>
+<tr>
+<td>≥ 80%</td>
+<td>Good</td>
+<td>Lekki spadek w szczycie</td>
+<td>Monitoruj</td>
+</tr>
+<tr>
+<td>≥ 70%</td>
+<td>Warning</td>
+<td>Słaba efektywność szczytowa</td>
+<td>Optymalizuj pompę</td>
+</tr>
+<tr>
+<td>&lt; 70%</td>
+<td>Critical</td>
+<td>Przeciążenie w szczycie</td>
+<td>Pilna interwencja</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="kw-kondycja-wymiennika-heat-exchanger-condition">4.5 KW —
+Kondycja Wymiennika (Heat Exchanger Condition)</h3>
+<p><strong>Poziom:</strong> 2 (wskaźnik zagregowany)</p>
+<p><strong>Definicja:</strong> Agregacja wskaźników operacyjnych w jeden
+wskaźnik stanu wymiennika.</p>
+<p><strong>Wzór:</strong></p>
+<pre><code>KW = ∛(WWC × SH × ES)
+   = (WWC × SH × ES)^(1/3)</code></pre>
+<p><strong>Dlaczego średnia geometryczna:</strong> - Penalizuje niskie
+wartości bardziej niż średnia arytmetyczna - Jeden słaby komponent
+znacząco obniża całość - Przykład: WWC=90, SH=90, ES=50 → KW=74% (nie
+77%)</p>
+<p><strong>Źródło danych:</strong> Obliczane z WWC, SH, ES</p>
+<p><strong>Progi:</strong></p>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 21%" />
+<col style="width: 39%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr>
+<th>KW</th>
+<th>Status</th>
+<th>Interpretacja</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>≥ 90%</td>
+<td>Optimal</td>
+<td>Wymiennik pracuje bardzo dobrze</td>
+<td>Brak</td>
+</tr>
+<tr>
+<td>≥ 80%</td>
+<td>Good</td>
+<td>Wymiennik sprawny</td>
+<td>Monitoruj limiting_factor</td>
+</tr>
+<tr>
+<td>≥ 70%</td>
+<td>Warning</td>
+<td>Wymiennik wymaga uwagi</td>
+<td>Sprawdź czynnik ograniczający</td>
+</tr>
+<tr>
+<td>&lt; 70%</td>
+<td>Critical</td>
+<td>Stan krytyczny wymiennika</td>
+<td>Pilna diagnostyka</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dodatkowa informacja:</strong> <code>limiting_factor</code> —
+który wskaźnik jest najniższy</p>
+<hr />
+<h3 id="ss-straty-systemowe-system-losses">4.6 SS — Straty Systemowe
+(System Losses)</h3>
+<p><strong>Poziom:</strong> 2 (wskaźnik obliczany)</p>
+<p><strong>Definicja:</strong> Straty energii występujące poza
+wymiennikiem — w cyrkulacji i rurach.</p>
+<p><strong>Wzór:</strong></p>
+<pre><code>SS = 100 × (1 − SE / KW)    gdy KW &gt; SE
+SS = 0                       gdy KW ≤ SE</code></pre>
+<p><strong>Logika:</strong> - KW = jak sprawny jest wymiennik - SE = jak
+sprawny jest cały system - Różnica = straty w cyrkulacji i izolacji</p>
+<p><strong>Źródło danych:</strong> Obliczane z SE i KW</p>
+<p><strong>Progi:</strong></p>
+<table>
+<thead>
+<tr>
+<th>SS</th>
+<th>Status</th>
+<th>Interpretacja</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 10%</td>
+<td>Optimal</td>
+<td>Minimalne straty</td>
+<td>Brak</td>
+</tr>
+<tr>
+<td>10-20%</td>
+<td>Good</td>
+<td>Umiarkowane straty</td>
+<td>Monitoruj cyrkulację</td>
+</tr>
+<tr>
+<td>20-30%</td>
+<td>Warning</td>
+<td>Znaczące straty</td>
+<td>Sprawdź pompę i izolację</td>
+</tr>
+<tr>
+<td>&gt; 30%</td>
+<td>Critical</td>
+<td>Bardzo wysokie straty</td>
+<td>Pilna optymalizacja</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="stałe-fizyczne">5. Stałe fizyczne</h2>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 16%" />
+<col style="width: 18%" />
+<col style="width: 22%" />
+<col style="width: 28%" />
+</colgroup>
+<thead>
+<tr>
+<th>Stała</th>
+<th>Symbol</th>
+<th>Wartość</th>
+<th>Jednostka</th>
+<th>Uzasadnienie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ciepło właściwe wody</td>
+<td>c</td>
+<td>0.004186</td>
+<td>GJ/(m³·K)</td>
+<td>4.186 kJ/(kg·K) × 1000 kg/m³</td>
+</tr>
+<tr>
+<td>Temperatura docelowa CWU</td>
+<td>T_CWU</td>
+<td>55</td>
+<td>°C</td>
+<td>Norma sanitarna</td>
+</tr>
+<tr>
+<td>Optymalna różnica temperatur</td>
+<td>ΔT_opt</td>
+<td>20</td>
+<td>K</td>
+<td>Wartość projektowa</td>
+</tr>
+<tr>
+<td>Współczynnik strat minimalnych</td>
+<td>k_straty</td>
+<td>1.05</td>
+<td>-</td>
+<td>5% nieuniknionych strat</td>
+</tr>
+<tr>
+<td>Optymalny wskaźnik</td>
+<td>OPTIMAL</td>
+<td>0.22</td>
+<td>GJ/m³</td>
+<td>Wartość referencyjna</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="parametry-sezonowe">6. Parametry sezonowe</h2>
+<h3 id="temperatura-wody-zimnej-t_zimna">6.1 Temperatura wody zimnej
+(T_zimna)</h3>
+<p>Temperatura wody doprowadzanej do budynku dla regionu Koszalina:</p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 20%" />
+<col style="width: 35%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>Miesiąc</th>
+<th>T_zimna [°C]</th>
+<th>ΔT = 55 - T_zimna [K]</th>
+<th>Q_teor na 1 m³ [GJ]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Styczeń</td>
+<td>5</td>
+<td>50</td>
+<td>0.220</td>
+</tr>
+<tr>
+<td>Luty</td>
+<td>5</td>
+<td>50</td>
+<td>0.220</td>
+</tr>
+<tr>
+<td>Marzec</td>
+<td>7</td>
+<td>48</td>
+<td>0.211</td>
+</tr>
+<tr>
+<td>Kwiecień</td>
+<td>10</td>
+<td>45</td>
+<td>0.198</td>
+</tr>
+<tr>
+<td>Maj</td>
+<td>13</td>
+<td>42</td>
+<td>0.185</td>
+</tr>
+<tr>
+<td>Czerwiec</td>
+<td>16</td>
+<td>39</td>
+<td>0.171</td>
+</tr>
+<tr>
+<td>Lipiec</td>
+<td>18</td>
+<td>37</td>
+<td>0.163</td>
+</tr>
+<tr>
+<td>Sierpień</td>
+<td>18</td>
+<td>37</td>
+<td>0.163</td>
+</tr>
+<tr>
+<td>Wrzesień</td>
+<td>15</td>
+<td>40</td>
+<td>0.176</td>
+</tr>
+<tr>
+<td>Październik</td>
+<td>12</td>
+<td>43</td>
+<td>0.189</td>
+</tr>
+<tr>
+<td>Listopad</td>
+<td>9</td>
+<td>46</td>
+<td>0.202</td>
+</tr>
+<tr>
+<td>Grudzień</td>
+<td>6</td>
+<td>49</td>
+<td>0.215</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Wzór na Q_teoretyczne na 1 m³:</strong></p>
+<pre><code>Q_teor_per_m3 = c × ΔT × k_straty = 0.004186 × ΔT × 1.05</code></pre>
+<hr />
+<h2 id="przepływ-danych">7. Przepływ danych</h2>
+<h3 id="dane-ksm-se-miesięczne">7.1 Dane KSM → SE miesięczne</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│              DANE KSM (raz w miesiącu)                      │
+│                                                             │
+│   GJ_miesiac = 145.2 GJ                                     │
+│   m3_miesiac = 580 m³                                       │
+│   month = 12 (grudzień)                                     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│              OBLICZENIE SE MIESIĘCZNEGO                     │
+│                                                             │
+│   T_zimna = SEASONAL[12] = 6°C                              │
+│   ΔT = 55 - 6 = 49 K                                        │
+│   Q_teor = 580 × 0.004186 × 49 × 1.05 = 124.9 GJ            │
+│   SE = (124.9 / 145.2) × 100 = 86%                          │
+└─────────────────────────────────────────────────────────────┘</code></pre>
+<h3 id="dane-mec-wskaźniki-operacyjne-wwc-sh-es">7.2 Dane MEC →
+Wskaźniki operacyjne (WWC, SH, ES)</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│              DANE MEC SCADA (co 15 min × 96 = 24h)          │
+│                                                             │
+│   Pomiar 1: T_zas=68.5, T_pow=52.3, Q_flow=2.45, ...        │
+│   Pomiar 2: T_zas=68.2, T_pow=51.8, Q_flow=2.52, ...        │
+│   ...                                                       │
+│   Pomiar 96: T_zas=67.8, T_pow=52.1, Q_flow=2.38, ...       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+│     WWC       │    │      SH       │    │      ES       │
+│               │    │               │    │               │
+│ΔT_śr = 16.2 K │    │μ(Q) = 2.45    │    │SE_szczyt = 74%│
+│WWC = 16.2/20  │    │σ(Q) = 0.52    │    │SE_średnia= 82%│
+│    = 81%      │    │CV = 0.21      │    │ES = 74/82     │
+│               │    │SH = 100-21    │    │   = 90%       │
+│               │    │   = 79%       │    │               │
+└───────────────┘    └───────────────┘    └───────────────┘
+                              │
+                              ▼
+                    ┌───────────────┐
+                    │      KW       │
+                    │               │
+                    │∛(81×79×90)    │
+                    │   = 83%       │
+                    └───────────────┘</code></pre>
+<h3 id="pełny-przepływ-se-kw-ss">7.3 Pełny przepływ → SE, KW, SS</h3>
+<pre><code>┌────────────────────────────────────────────────────────────────────┐
+│                         PEŁNY PRZEPŁYW                             │
+│                                                                    │
+│  SE (z KSM lub MEC) ────────────────────────────────┐              │
+│       = 78%                                         │              │
+│                                                     │              │
+│  KW (z MEC: WWC, SH, ES) ────────────────────┐      │              │
+│       = 83%                                  │      │              │
+│                                              ▼      ▼              │
+│                                    ┌─────────────────────────┐     │
+│                                    │           SS            │     │
+│                                    │                         │     │
+│                                    │  SS = 100×(1-78/83) = 6%│     │
+│                                    │                         │     │
+│                                    └─────────────────────────┘     │
+└────────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="alerty-i-powiadomienia">8. Alerty i powiadomienia</h2>
+<h3 id="alert-niska-sprawność-se">8.1 Alert: Niska sprawność SE</h3>
+<table>
+<thead>
+<tr>
+<th>Poziom</th>
+<th>Warunek</th>
+<th>Czas trwania</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Info</td>
+<td>SE &lt; 80%</td>
+<td>&gt; 2h</td>
+<td>Monitoruj</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>SE &lt; 70%</td>
+<td>&gt; 4h</td>
+<td>Sprawdź MTCV</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>SE &lt; 60%</td>
+<td>&gt; 2h</td>
+<td>Pilna interwencja</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alert-problem-z-wymiennikiem-kw">8.2 Alert: Problem z
+wymiennikiem (KW)</h3>
+<table>
+<thead>
+<tr>
+<th>Poziom</th>
+<th>Warunek</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warning</td>
+<td>KW &lt; 80% przez &gt; 4h</td>
+<td>Sprawdź limiting_factor</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>KW &lt; 70% przez &gt; 2h</td>
+<td>Pilna diagnostyka</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alert-wysokie-straty-systemowe-ss">8.3 Alert: Wysokie straty
+systemowe (SS)</h3>
+<table>
+<thead>
+<tr>
+<th>Poziom</th>
+<th>Warunek</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warning</td>
+<td>SS &gt; 20% przez &gt; 6h</td>
+<td>Sprawdź cyrkulację</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>SS &gt; 30% przez &gt; 4h</td>
+<td>Pilna optymalizacja</td>
+</tr>
+</tbody>
+</table>
+<h3 id="alert-wskaźnik-operacyjny">8.4 Alert: Wskaźnik operacyjny</h3>
+<table>
+<thead>
+<tr>
+<th>Poziom</th>
+<th>Warunek</th>
+<th>Działanie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warning</td>
+<td>WWC/SH/ES &lt; 80% przez &gt; 4h</td>
+<td>Sprawdź przyczynę</td>
+</tr>
+<tr>
+<td>Critical</td>
+<td>WWC/SH/ES &lt; 70% przez &gt; 2h</td>
+<td>Pilna interwencja</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="rekomendacje-automatyczne">9. Rekomendacje automatyczne</h2>
+<h3 id="drzewo-diagnostyczne">9.1 Drzewo diagnostyczne</h3>
+<pre><code>SE &lt; 80%?
+├── NIE → Monitoring, brak działań
+└── TAK → Sprawdź KW i SS
+    │
+    ├── KW &lt; 80%? (problem z wymiennikiem)
+    │   │
+    │   ├── WWC najniższe
+    │   │   └── &quot;Regulacja MTCV - woda wraca za ciepła&quot;
+    │   │
+    │   ├── SH najniższe
+    │   │   └── &quot;Równoważenie hydrauliczne pionów&quot;
+    │   │
+    │   └── ES najniższe
+    │       └── &quot;Optymalizacja pompy w godzinach szczytu&quot;
+    │
+    └── SS &gt; 20%? (problem z cyrkulacją)
+        │
+        ├── night_ratio &gt; 0.25
+        │   └── &quot;Zmniejsz cyrkulację nocną&quot;
+        │
+        └── night_ratio ≤ 0.25
+            └── &quot;Sprawdź izolację rur cyrkulacyjnych&quot;</code></pre>
+<h3 id="szacowana-poprawa">9.2 Szacowana poprawa</h3>
+<table>
+<thead>
+<tr>
+<th>Działanie</th>
+<th>Szacowana poprawa SE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regulacja MTCV</td>
+<td>+3-7 punktów</td>
+</tr>
+<tr>
+<td>Równoważenie hydrauliczne</td>
+<td>+5-10 punktów</td>
+</tr>
+<tr>
+<td>Optymalizacja pompy</td>
+<td>+1-3 punkty</td>
+</tr>
+<tr>
+<td>Poprawa izolacji</td>
+<td>+2-5 punktów</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="gwarancje-i-ograniczenia">10. Gwarancje i ograniczenia</h2>
+<h3 id="co-system-gwarantuje">10.1 Co system gwarantuje</h3>
+<ol type="1">
+<li><strong>Identyfikacja problemów:</strong>
+<ul>
+<li>Węzły o niskiej sprawności (SE)</li>
+<li>Problemy z wymiennikiem (niski KW)</li>
+<li>Nadmierne straty cyrkulacyjne (wysoki SS)</li>
+</ul></li>
+<li><strong>Konkretne rekomendacje:</strong>
+<ul>
+<li>Wskazanie, czy problem leży w wymienniku czy cyrkulacji</li>
+<li>Identyfikacja czynnika ograniczającego (WWC/SH/ES)</li>
+</ul></li>
+<li><strong>Ranking i benchmarking:</strong>
+<ul>
+<li>Porównanie węzłów między sobą</li>
+<li>Śledzenie trendów w czasie</li>
+</ul></li>
+</ol>
+<h3 id="co-system-nie-gwarantuje">10.2 Co system NIE gwarantuje</h3>
+<ol type="1">
+<li><strong>Dokładność bezwzględna:</strong>
+<ul>
+<li>T_zimna jest szacowane (nie mierzone)</li>
+<li>Wskaźniki operacyjne zależą od jakości danych SCADA</li>
+</ul></li>
+<li><strong>Korelacja z kosztami:</strong>
+<ul>
+<li>Poprawa SE nie przekłada się liniowo na oszczędności PLN</li>
+<li>System nie służy do weryfikacji faktur</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="format-wymiany-danych">11. Format wymiany danych</h2>
+<blockquote>
+<p><strong>Uwaga:</strong> Pełna specyfikacja API znajduje się w
+<code>api-specification.md</code>. Poniżej skrócone przykłady.</p>
+</blockquote>
+<h3 id="endpoint-dane-bieżące-z-mec">11.1 Endpoint: Dane bieżące z
+MEC</h3>
+<pre><code>GET /nodes/{node_id}/measurements/current</code></pre>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;timestamp&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-14T08:15:00Z&quot;</span><span class="fu">,</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;measurements&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;T_zas&quot;</span><span class="fu">:</span> <span class="fl">68.5</span><span class="fu">,</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;T_pow&quot;</span><span class="fu">:</span> <span class="fl">52.3</span><span class="fu">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;Q_flow&quot;</span><span class="fu">:</span> <span class="fl">2.45</span><span class="fu">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;delta_GJ&quot;</span><span class="fu">:</span> <span class="fl">0.142</span><span class="fu">,</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;delta_m3&quot;</span><span class="fu">:</span> <span class="fl">0.58</span><span class="fu">,</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;P_zas&quot;</span><span class="fu">:</span> <span class="fl">4.2</span><span class="fu">,</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;P_pow&quot;</span><span class="fu">:</span> <span class="fl">2.8</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;quality&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;valid&quot;</span><span class="fu">,</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;missing_sensors&quot;</span><span class="fu">:</span> <span class="ot">[]</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h3 id="endpoint-agregacja-dobowa-z-mec">11.2 Endpoint: Agregacja dobowa
+z MEC</h3>
+<pre><code>GET /nodes/{node_id}/measurements/daily?date=2025-01-13</code></pre>
+<p><strong>Response:</strong></p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;node_id&quot;</span><span class="fu">:</span> <span class="st">&quot;WC-001&quot;</span><span class="fu">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2025-01-13&quot;</span><span class="fu">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;indicators&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;wwc&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">81</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;good&quot;</span> <span class="fu">},</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;sh&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">79</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;warning&quot;</span> <span class="fu">},</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;es&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">90</span><span class="fu">,</span> <span class="dt">&quot;status&quot;</span><span class="fu">:</span> <span class="st">&quot;optimal&quot;</span> <span class="fu">}</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;aggregated&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;kw&quot;</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">&quot;value&quot;</span><span class="fu">:</span> <span class="dv">83</span><span class="fu">,</span> <span class="dt">&quot;limiting_factor&quot;</span><span class="fu">:</span> <span class="st">&quot;sh&quot;</span> <span class="fu">},</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;se_daily&quot;</span><span class="fu">:</span> <span class="dv">78</span><span class="fu">,</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;ss&quot;</span><span class="fu">:</span> <span class="dv">6</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;raw_stats&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;avg_delta_T&quot;</span><span class="fu">:</span> <span class="fl">16.2</span><span class="fu">,</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;flow_mean&quot;</span><span class="fu">:</span> <span class="fl">2.45</span><span class="fu">,</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;flow_std&quot;</span><span class="fu">:</span> <span class="fl">0.52</span><span class="fu">,</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total_GJ&quot;</span><span class="fu">:</span> <span class="fl">4.8</span><span class="fu">,</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;total_m3&quot;</span><span class="fu">:</span> <span class="fl">19.2</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<hr />
+<h2 id="słownik-pojęć">12. Słownik pojęć</h2>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 28%" />
+<col style="width: 34%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr>
+<th>Skrót</th>
+<th>Polska nazwa</th>
+<th>Angielska nazwa</th>
+<th>Definicja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SE</td>
+<td>Sprawność Energetyczna</td>
+<td>Energy Efficiency</td>
+<td>Q_teor / Q_rzecz × 100%</td>
+</tr>
+<tr>
+<td>KW</td>
+<td>Kondycja Wymiennika</td>
+<td>Exchanger Condition</td>
+<td>∛(WWC × SH × ES)</td>
+</tr>
+<tr>
+<td>SS</td>
+<td>Straty Systemowe</td>
+<td>System Losses</td>
+<td>100 × (1 - SE/KW)</td>
+</tr>
+<tr>
+<td>WWC</td>
+<td>Wydajność Wymiany Ciepła</td>
+<td>Heat Exchange Index</td>
+<td>ΔT_rzecz / ΔT_opt × 100%</td>
+</tr>
+<tr>
+<td>SH</td>
+<td>Stabilność Hydrauliczna</td>
+<td>Hydraulic Stability</td>
+<td>100 - CV(Q) × 100%</td>
+</tr>
+<tr>
+<td>ES</td>
+<td>Efektywność Szczytowa</td>
+<td>Peak Efficiency</td>
+<td>SE_szczyt / SE_średnia × 100%</td>
+</tr>
+<tr>
+<td>ΔT</td>
+<td>Delta T</td>
+<td>Temperature Difference</td>
+<td>T_zas - T_pow</td>
+</tr>
+<tr>
+<td>CV</td>
+<td>Współczynnik zmienności</td>
+<td>Coefficient of Variation</td>
+<td>σ / μ</td>
+</tr>
+<tr>
+<td>MTCV</td>
+<td>-</td>
+<td>-</td>
+<td>Termostatyczny zawór cyrkulacyjny</td>
+</tr>
+<tr>
+<td>CWU</td>
+<td>Ciepła Woda Użytkowa</td>
+<td>Domestic Hot Water</td>
+<td>-</td>
+</tr>
+<tr>
+<td>SCADA</td>
+<td>-</td>
+<td>Supervisory Control and Data Acquisition</td>
+<td>System nadzoru i zbierania danych</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="historia-zmian">13. Historia zmian</h2>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 27%" />
+<col style="width: 36%" />
+</colgroup>
+<thead>
+<tr>
+<th>Wersja</th>
+<th>Data</th>
+<th>Zmiany</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>2025-01-10</td>
+<td>Wersja początkowa</td>
+</tr>
+<tr>
+<td>2.0</td>
+<td>2025-01-12</td>
+<td>Dodano hierarchię SE/KW/SS</td>
+</tr>
+<tr>
+<td>2.2</td>
+<td>2025-01-13</td>
+<td>Rozszerzono o WWC/SH/ES</td>
+</tr>
+<tr>
+<td>3.0</td>
+<td>2025-01-14</td>
+<td>Pełna dokumentacja dwóch źródeł danych (KSM + MEC)</td>
+</tr>
+<tr>
+<td>3.1</td>
+<td>2025-01-14</td>
+<td>Dodano progi KW, ujednolicono endpointy z api-specification.md</td>
+</tr>
+<tr>
+<td>3.2</td>
+<td>2025-01-14</td>
+<td>Dodano sekcję Oświadczenia stron</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="oświadczenia-stron">14. Oświadczenia stron</h2>
+<h3 id="mec-koszalin-oświadcza">14.1 MEC Koszalin oświadcza:</h3>
+<ul>
+<li>Udostępniane dane pochodzą z systemu SCADA i odzwierciedlają
+rzeczywiste pomiary</li>
+<li>Dane służą wyłącznie celom optymalizacyjnym, nie rozliczeniowym</li>
+<li>MEC nie ponosi odpowiedzialności za decyzje podjęte na podstawie
+wskaźników</li>
+<li>Wszelkie dane surowe (absolutne wartości GJ, m³) pozostają
+własnością MEC</li>
+</ul>
+<h3 id="ksm-przylesie-oświadcza">14.2 KSM Przylesie oświadcza:</h3>
+<ul>
+<li>Dane z systemu nie będą wykorzystywane do kwestionowania rozliczeń z
+MEC</li>
+<li>Wszelkie wątpliwości rozliczeniowe będą rozwiązywane standardową
+ścieżką (odczyty liczników)</li>
+<li>Dane nie będą udostępniane stronom trzecim bez pisemnej zgody
+MEC</li>
+<li>System służy wyłącznie do optymalizacji pracy węzłów cieplnych</li>
+</ul>
+<h3 id="ograniczenie-odpowiedzialności">14.3 Ograniczenie
+odpowiedzialności</h3>
+<ol type="1">
+<li><strong>Wskaźniki są orientacyjne</strong> — służą do identyfikacji
+trendów i problemów, nie do dokładnych obliczeń</li>
+<li><strong>Rekomendacje są sugestiami</strong> — decyzje o działaniach
+podejmuje KSM na własną odpowiedzialność</li>
+<li><strong>Brak gwarancji oszczędności</strong> — poprawa wskaźników
+nie przekłada się liniowo na oszczędności finansowe</li>
+</ol>
+<hr />
+<h2 id="podpisy">Podpisy</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MEC Koszalin</th>
+<th>KSM Przylesie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imię i nazwisko</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Stanowisko</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Data</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Podpis</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<div class="doc-footer">
+  CWU Monitor • KSM Przylesie • Koszalin • Wersja dokumentacji: 2025-01-14
+</div>
+
+<script>
+// Automatyczne wykrywanie diagramów ASCII i formuł matematycznych
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre code').forEach(function(block) {
+    var text = block.textContent;
+    var pre = block.parentElement;
+
+    // Wykryj diagramy ASCII (box-drawing characters)
+    var isDiagram = text.includes('┌') || text.includes('│') || text.includes('└') ||
+                    text.includes('├') || text.includes('┬') || text.includes('─') ||
+                    text.includes('▼') || text.includes('▲') || text.includes('►') ||
+                    text.includes('═') || text.includes('║') || text.includes('╔');
+
+    if (isDiagram) {
+      pre.classList.add('diagram');
+      return;
+    }
+
+    // Wykryj formuły matematyczne
+    var hasEquals = text.includes('=');
+    var hasMathSymbols = text.includes('×') || text.includes('÷') ||
+                         text.includes('∛') || text.includes('√');
+    var hasCode = text.includes('function') || text.includes('const ') ||
+                  text.includes('interface') || text.includes('async') ||
+                  text.includes('return ') || text.includes('import ') ||
+                  text.includes('//') || text.includes('=>');
+    var lines = text.trim().split('\n');
+    var isShort = lines.length <= 15;
+
+    // Dodatkowe sygnały że to wzór fizyczny
+    var hasPhysicsTerms = text.includes('gdzie:') || text.includes('Q_') ||
+                          text.includes('T_') || text.includes('ΔT') ||
+                          text.includes('[GJ]') || text.includes('[m³]') ||
+                          text.includes('[K]') || text.includes('[°C]');
+
+    if (((hasEquals || hasMathSymbols) && !hasCode && isShort) ||
+        (hasPhysicsTerms && hasEquals && !hasCode)) {
+      pre.classList.add('math-formula');
+    }
+  });
+});
+</script>
+</body>
+</html>

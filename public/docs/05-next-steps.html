@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Następne Kroki</title>
+  <style>
+    @page {
+      margin: 2cm 2cm;
+      size: A4;
+    }
+
+    @page:first {
+      margin-top: 1cm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      color: #1a1a1a;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 32px 40px;
+      background: white;
+    }
+
+    /* Header dokumentu */
+    .doc-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      color: white;
+      padding: 24px 32px;
+      border-radius: 12px;
+      margin: -32px -40px 32px -40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .doc-header-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc-header-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .doc-header-text h1 {
+      font-size: 22pt;
+      margin: 0;
+      border: none;
+      padding: 0;
+      color: white;
+    }
+
+    .doc-header-text p {
+      margin: 4px 0 0 0;
+      opacity: 0.85;
+      font-size: 11pt;
+    }
+
+    /* Nagłówki */
+    h1 {
+      font-size: 22pt;
+      color: #1e3a5f;
+      border-bottom: 3px solid #3b82f6;
+      padding-bottom: 10px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 15pt;
+      color: #1e3a5f;
+      border-bottom: 2px solid #bfdbfe;
+      padding-bottom: 6px;
+      margin-top: 32px;
+      margin-bottom: 14px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 12pt;
+      color: #1d4ed8;
+      margin-top: 24px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 11pt;
+      color: #2563eb;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+
+    /* Tabele */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 16px 0;
+      font-size: 9.5pt;
+      page-break-inside: avoid;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    th {
+      background: #1e3a5f;
+      color: white;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 9pt;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9fafb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Kolorowanie statusów w tabelach */
+    td:contains("optimal"), td:contains("Optimal"), td:contains("OPTIMAL") {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Status badges - ręczne znaczniki w tabelach */
+    .status-optimal { color: #059669; font-weight: 600; }
+    .status-good { color: #0284c7; font-weight: 600; }
+    .status-warning { color: #d97706; font-weight: 600; }
+    .status-critical { color: #dc2626; font-weight: 600; }
+
+    /* Kod inline */
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+      font-size: 9pt;
+      background-color: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Bloki kodu - domyślne */
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 9pt;
+      line-height: 1.5;
+      page-break-inside: avoid;
+      margin: 16px 0;
+      border-left: 4px solid #3b82f6;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: inherit;
+      border: none;
+      font-size: 9pt;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    }
+
+    /* ============================================================
+       DIAGRAMY ASCII - Technical Blueprint Style
+       Inspiracja: schematy inżynierskie, terminale CRT, NASA docs
+       ============================================================ */
+
+    pre.diagram {
+      /* Tło - ciemny granat z subtelną siatką */
+      background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, #020617 0%, #0a1628 50%, #0f172a 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+
+      /* Wymiary i spacing */
+      padding: 28px 32px 24px 32px;
+      margin: 24px 0;
+      border-radius: 8px;
+      overflow-x: auto;
+
+      /* Obramowanie - podwójna linia techniczna */
+      border: 1px solid #1e3a5f;
+      box-shadow:
+        inset 0 0 0 1px rgba(56, 189, 248, 0.1),
+        0 0 0 1px #0f172a,
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(56, 189, 248, 0.05);
+
+      /* Pozycjonowanie dla etykiety */
+      position: relative;
+    }
+
+
+    /* Tekst w diagramie */
+    pre.diagram code {
+      /* Font - czytelny monospace */
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 10pt;
+      line-height: 1.4;
+      letter-spacing: 0;
+
+      /* Kolor bazowy - jasny niebieskoszary */
+      color: #cbd5e1;
+
+      /* Wyłącz domyślne style */
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    /* ============================================================
+       DIAGRAMY - jednolity kolor tekstu, bez podświetleń
+       ============================================================ */
+
+    /* Formuły matematyczne */
+    pre.math-formula {
+      background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+      color: #854d0e;
+      border: 2px solid #fbbf24;
+      border-left: 4px solid #f59e0b;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 10pt;
+      text-align: center;
+    }
+
+    pre.math-formula code {
+      color: #713f12;
+      font-size: 10pt;
+      font-weight: 500;
+    }
+
+    /* Cytaty i uwagi */
+    blockquote {
+      border-left: 4px solid #3b82f6;
+      margin: 16px 0;
+      padding: 12px 20px;
+      background: #eff6ff;
+      color: #1e40af;
+      font-style: normal;
+      border-radius: 0 6px 6px 0;
+    }
+
+    blockquote p {
+      margin: 0;
+    }
+
+    blockquote strong {
+      color: #1d4ed8;
+    }
+
+    /* Listy */
+    ul, ol {
+      padding-left: 24px;
+      margin: 12px 0;
+    }
+
+    li {
+      margin: 6px 0;
+    }
+
+    li > ul, li > ol {
+      margin: 6px 0;
+    }
+
+    /* Linki */
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Linie poziome */
+    hr {
+      border: none;
+      border-top: 2px solid #e5e7eb;
+      margin: 28px 0;
+    }
+
+    /* Paragraf */
+    p {
+      margin: 10px 0;
+    }
+
+    /* Strong */
+    strong {
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    /* Pierwsza tabela - meta info */
+    body > table:first-of-type,
+    h2#informacje-o-dokumencie + table {
+      background: #f8fafc;
+      border: 2px solid #3b82f6;
+    }
+
+    body > table:first-of-type th,
+    h2#informacje-o-dokumencie + table th {
+      background: #3b82f6;
+    }
+
+    /* Stopka */
+    .doc-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #e5e7eb;
+      text-align: center;
+      color: #64748b;
+      font-size: 9pt;
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        padding: 0;
+        max-width: none;
+        font-size: 10pt;
+      }
+
+      .doc-header {
+        margin: 0 0 24px 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+      }
+
+      table, pre, blockquote {
+        page-break-inside: avoid;
+      }
+
+      pre {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      a {
+        color: #1e3a5f;
+      }
+
+      a[href^="http"]:after {
+        content: none;
+      }
+    }
+
+    /* Spis treści */
+    nav#TOC {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+    }
+
+    nav#TOC > ul {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    nav#TOC > ul > li {
+      margin: 8px 0;
+    }
+
+    nav#TOC > ul > li > a {
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    nav#TOC ul ul {
+      padding-left: 20px;
+      margin-top: 4px;
+    }
+
+    nav#TOC ul ul li {
+      margin: 4px 0;
+    }
+
+    nav#TOC ul ul a {
+      color: #475569;
+      font-size: 9.5pt;
+    }
+
+    /* Kategorie kolorów - dla tabel z kategoriami */
+    tr td:first-child:contains("A"),
+    td.cat-a {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("B"),
+    td.cat-b {
+      color: #d97706;
+      font-weight: 600;
+    }
+
+    tr td:first-child:contains("C"),
+    td.cat-c {
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="doc-header-icon">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div class="doc-header-text">
+    <h1>Następne Kroki</h1>
+    <p>CWU Monitor — KSM Przylesie</p>
+  </div>
+</div>
+
+<nav id="TOC">
+<ul>
+<li><a href="#next-steps-backlog-projektu-cwu-monitor"
+id="toc-next-steps-backlog-projektu-cwu-monitor">Next Steps — Backlog
+projektu CWU Monitor</a>
+<ul>
+<li><a href="#informacje-o-dokumencie"
+id="toc-informacje-o-dokumencie">Informacje o dokumencie</a></li>
+<li><a href="#stan-obecny" id="toc-stan-obecny">Stan obecny</a>
+<ul>
+<li><a href="#co-jest-zrobione" id="toc-co-jest-zrobione">Co jest
+zrobione</a></li>
+<li><a href="#co-jest-symulowane-wymaga-danych-mec"
+id="toc-co-jest-symulowane-wymaga-danych-mec">Co jest symulowane (wymaga
+danych MEC)</a></li>
+</ul></li>
+<li><a href="#backlog" id="toc-backlog">Backlog</a>
+<ul>
+<li><a href="#faza-1-integracja-z-mec-api-priorytet-krytyczny"
+id="toc-faza-1-integracja-z-mec-api-priorytet-krytyczny">Faza 1:
+Integracja z MEC API (Priorytet: Krytyczny)</a></li>
+<li><a href="#faza-2-ulepszenia-uiux-priorytet-wysoki"
+id="toc-faza-2-ulepszenia-uiux-priorytet-wysoki">Faza 2: Ulepszenia
+UI/UX (Priorytet: Wysoki)</a></li>
+<li><a href="#faza-3-backend-i-infrastruktura-priorytet-średni"
+id="toc-faza-3-backend-i-infrastruktura-priorytet-średni">Faza 3:
+Backend i infrastruktura (Priorytet: Średni)</a></li>
+<li><a href="#faza-4-jakość-i-testy-priorytet-średni"
+id="toc-faza-4-jakość-i-testy-priorytet-średni">Faza 4: Jakość i testy
+(Priorytet: Średni)</a></li>
+<li><a href="#faza-5-dodatkowe-funkcje-priorytet-niski"
+id="toc-faza-5-dodatkowe-funkcje-priorytet-niski">Faza 5: Dodatkowe
+funkcje (Priorytet: Niski)</a></li>
+</ul></li>
+<li><a href="#priorytety-i-zależności"
+id="toc-priorytety-i-zależności">Priorytety i zależności</a></li>
+<li><a href="#najbliższe-kroki-top-10"
+id="toc-najbliższe-kroki-top-10">Najbliższe kroki (Top 10)</a></li>
+<li><a href="#ryzyka" id="toc-ryzyka">Ryzyka</a></li>
+<li><a href="#definicje-statusów" id="toc-definicje-statusów">Definicje
+statusów</a></li>
+<li><a href="#historia-zmian" id="toc-historia-zmian">Historia
+zmian</a></li>
+<li><a href="#kontakt" id="toc-kontakt">Kontakt</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="next-steps-backlog-projektu-cwu-monitor">Next Steps — Backlog
+projektu CWU Monitor</h1>
+<h2 id="informacje-o-dokumencie">Informacje o dokumencie</h2>
+<table>
+<thead>
+<tr>
+<th>Parametr</th>
+<th>Wartość</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wersja</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>2025-01-14</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Aktywny</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="stan-obecny">Stan obecny</h2>
+<h3 id="co-jest-zrobione">Co jest zrobione</h3>
+<table>
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 34%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th>Element</th>
+<th>Status</th>
+<th>Opis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Architektura</td>
+<td><strong>Gotowe</strong></td>
+<td>Next.js + TypeScript + Tailwind</td>
+</tr>
+<tr>
+<td>Model danych</td>
+<td><strong>Gotowe</strong></td>
+<td>Typy dla hierarchii SE/KW/SS/WWC/SH/ES</td>
+</tr>
+<tr>
+<td>Logika obliczeniowa</td>
+<td><strong>Częściowo</strong></td>
+<td>SE z KSM gotowe, WWC/SH/ES symulowane</td>
+</tr>
+<tr>
+<td>UI Dashboard</td>
+<td><strong>Gotowe</strong></td>
+<td>Tabela węzłów, statystyki, alerty</td>
+</tr>
+<tr>
+<td>UI Szczegóły węzła</td>
+<td><strong>Gotowe</strong></td>
+<td>SEGauge, hierarchia, operacyjne</td>
+</tr>
+<tr>
+<td>Dane KSM</td>
+<td><strong>Gotowe</strong></td>
+<td>40 węzłów z historią miesięczną</td>
+</tr>
+<tr>
+<td>Dane MEC</td>
+<td><strong>Brak</strong></td>
+<td>Wymaga integracji API</td>
+</tr>
+<tr>
+<td>Dokumentacja</td>
+<td><strong>Gotowe</strong></td>
+<td>data-contract, calculation-guide, techniczna</td>
+</tr>
+</tbody>
+</table>
+<h3 id="co-jest-symulowane-wymaga-danych-mec">Co jest symulowane (wymaga
+danych MEC)</h3>
+<table>
+<thead>
+<tr>
+<th>Wskaźnik</th>
+<th>Obecna implementacja</th>
+<th>Docelowa implementacja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WWC</td>
+<td><code>iez + random()</code></td>
+<td><code>100 × (ΔT / 20)</code> z T_zas, T_pow</td>
+</tr>
+<tr>
+<td>SH</td>
+<td><code>iez + random()</code></td>
+<td><code>100 - CV(Q_flow)</code> z 96 pomiarów</td>
+</tr>
+<tr>
+<td>ES</td>
+<td><code>iez + random()</code></td>
+<td><code>SE_szczyt / SE_średnia</code> z agregacji</td>
+</tr>
+<tr>
+<td>night_ratio</td>
+<td>Szacowane z SE</td>
+<td><code>Q_noc / Q_dzień</code> z pomiarów</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="backlog">Backlog</h2>
+<h3 id="faza-1-integracja-z-mec-api-priorytet-krytyczny">Faza 1:
+Integracja z MEC API (Priorytet: Krytyczny)</h3>
+<h4 id="uzgodnienie-kontraktu-z-mec">1.1 Uzgodnienie kontraktu z
+MEC</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MEC-001</td>
+<td>Spotkanie z MEC</td>
+<td>Prezentacja data-contract.md, uzgodnienie formatu</td>
+<td>-</td>
+</tr>
+<tr>
+<td>MEC-002</td>
+<td>Dostęp do API</td>
+<td>Uzyskanie API key i dokumentacji</td>
+<td>MEC-001</td>
+</tr>
+<tr>
+<td>MEC-003</td>
+<td>Środowisko testowe</td>
+<td>Dostęp do testowego API z przykładowymi danymi</td>
+<td>MEC-002</td>
+</tr>
+<tr>
+<td>MEC-004</td>
+<td>Walidacja danych</td>
+<td>Weryfikacja czy dane MEC odpowiadają kontraktowi</td>
+<td>MEC-003</td>
+</tr>
+</tbody>
+</table>
+<h4 id="implementacja-klienta-api">1.2 Implementacja klienta API</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API-001</td>
+<td>Klient HTTP</td>
+<td>Stworzenie <code>lib/mec-api.ts</code> z fetchami</td>
+<td>MEC-002</td>
+</tr>
+<tr>
+<td>API-002</td>
+<td>Typy danych MEC</td>
+<td>Definicje TypeScript dla odpowiedzi API</td>
+<td>MEC-002</td>
+</tr>
+<tr>
+<td>API-003</td>
+<td>Obsługa błędów</td>
+<td>Retry, timeout, fallback do danych KSM</td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>API-004</td>
+<td>Cache</td>
+<td>Cache odpowiedzi API (TTL 15 min)</td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>API-005</td>
+<td>Rate limiting</td>
+<td>Kontrola liczby zapytań (max 1000/dzień)</td>
+<td>API-001</td>
+</tr>
+</tbody>
+</table>
+<h4 id="refaktoryzacja-obliczeń">1.3 Refaktoryzacja obliczeń</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CALC-001</td>
+<td>WWC z danych rzeczywistych</td>
+<td>Zamiana symulacji na <code>calculateWWC(T_zas, T_pow)</code></td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>CALC-002</td>
+<td>SH z danych rzeczywistych</td>
+<td>Zamiana symulacji na <code>calculateSH(Q_flow[])</code></td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>CALC-003</td>
+<td>ES z danych rzeczywistych</td>
+<td>Zamiana symulacji na <code>calculateES(SE_15min[])</code></td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>CALC-004</td>
+<td>SE bieżące</td>
+<td>Obliczanie SE z delta_GJ, delta_m3</td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>CALC-005</td>
+<td>night_ratio rzeczywisty</td>
+<td>Obliczanie z pomiarów nocnych/dziennych</td>
+<td>API-001</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="faza-2-ulepszenia-uiux-priorytet-wysoki">Faza 2: Ulepszenia
+UI/UX (Priorytet: Wysoki)</h3>
+<h4 id="dashboard">2.1 Dashboard</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI-001</td>
+<td>Mapa węzłów</td>
+<td>Wizualizacja lokalizacji węzłów na mapie</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-002</td>
+<td>Filtry zaawansowane</td>
+<td>Filtrowanie po kategorii, trend, SE</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-003</td>
+<td>Eksport CSV</td>
+<td>Przycisk eksportu tabeli do CSV</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-004</td>
+<td>Widok kafelkowy</td>
+<td>Alternatywny widok węzłów (grid)</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="szczegóły-węzła">2.2 Szczegóły węzła</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI-005</td>
+<td>Wykres real-time</td>
+<td>Odświeżanie co 15 min (dane MEC)</td>
+<td>API-001</td>
+</tr>
+<tr>
+<td>UI-006</td>
+<td>Porównanie węzłów</td>
+<td>Wybór 2-3 węzłów do porównania</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-007</td>
+<td>Eksport PDF</td>
+<td>Raport PDF dla pojedynczego węzła</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-008</td>
+<td>Historia roczna</td>
+<td>Wykres SE z pełnego roku</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-009</td>
+<td>Heatmapa dobowa</td>
+<td>Wizualizacja SE 24h × 7 dni</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h4 id="alerty-i-powiadomienia">2.3 Alerty i powiadomienia</h4>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI-010</td>
+<td>Panel alertów</td>
+<td>Dedykowana strona /alerts</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-011</td>
+<td>Potwierdzanie alertów</td>
+<td>Możliwość “acknowledge”</td>
+<td>-</td>
+</tr>
+<tr>
+<td>UI-012</td>
+<td>Historia alertów</td>
+<td>Lista zamkniętych alertów</td>
+<td>UI-011</td>
+</tr>
+<tr>
+<td>UI-013</td>
+<td>Powiadomienia email</td>
+<td>Wysyłanie alertów na email</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="faza-3-backend-i-infrastruktura-priorytet-średni">Faza 3:
+Backend i infrastruktura (Priorytet: Średni)</h3>
+<h4 id="baza-danych">3.1 Baza danych</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DB-001</td>
+<td>Wybór bazy</td>
+<td>PostgreSQL / SQLite / Supabase</td>
+<td>-</td>
+</tr>
+<tr>
+<td>DB-002</td>
+<td>Schemat danych</td>
+<td>Tabele: nodes, readings, alerts, users</td>
+<td>DB-001</td>
+</tr>
+<tr>
+<td>DB-003</td>
+<td>Migracje</td>
+<td>System migracji (Prisma / Drizzle)</td>
+<td>DB-002</td>
+</tr>
+<tr>
+<td>DB-004</td>
+<td>Seeding</td>
+<td>Import danych z nodes-data.json</td>
+<td>DB-003</td>
+</tr>
+</tbody>
+</table>
+<h4 id="autentykacja">3.2 Autentykacja</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AUTH-001</td>
+<td>NextAuth setup</td>
+<td>Konfiguracja NextAuth.js</td>
+<td>-</td>
+</tr>
+<tr>
+<td>AUTH-002</td>
+<td>Provider credentials</td>
+<td>Login email/hasło</td>
+<td>AUTH-001</td>
+</tr>
+<tr>
+<td>AUTH-003</td>
+<td>Role użytkowników</td>
+<td>admin, engineer, viewer</td>
+<td>AUTH-002</td>
+</tr>
+<tr>
+<td>AUTH-004</td>
+<td>Middleware</td>
+<td>Ochrona stron przed niezalogowanymi</td>
+<td>AUTH-002</td>
+</tr>
+</tbody>
+</table>
+<h4 id="api-routes">3.3 API Routes</h4>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROUTE-001</td>
+<td>/api/nodes</td>
+<td>Lista węzłów</td>
+<td>DB-002</td>
+</tr>
+<tr>
+<td>ROUTE-002</td>
+<td>/api/nodes/[id]</td>
+<td>Szczegóły węzła</td>
+<td>DB-002</td>
+</tr>
+<tr>
+<td>ROUTE-003</td>
+<td>/api/alerts</td>
+<td>CRUD alertów</td>
+<td>DB-002</td>
+</tr>
+<tr>
+<td>ROUTE-004</td>
+<td>/api/export</td>
+<td>Generowanie CSV/PDF</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="faza-4-jakość-i-testy-priorytet-średni">Faza 4: Jakość i testy
+(Priorytet: Średni)</h3>
+<h4 id="testy">4.1 Testy</h4>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TEST-001</td>
+<td>Unit testy obliczeń</td>
+<td>Testy calculateSE, calculateWWC, etc.</td>
+<td>-</td>
+</tr>
+<tr>
+<td>TEST-002</td>
+<td>Testy komponentów</td>
+<td>React Testing Library</td>
+<td>-</td>
+</tr>
+<tr>
+<td>TEST-003</td>
+<td>E2E testy</td>
+<td>Playwright / Cypress</td>
+<td>-</td>
+</tr>
+<tr>
+<td>TEST-004</td>
+<td>Testy API</td>
+<td>Testy endpointów API</td>
+<td>ROUTE-001</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cicd">4.2 CI/CD</h4>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CICD-001</td>
+<td>GitHub Actions</td>
+<td>Workflow lint + build + test</td>
+<td>-</td>
+</tr>
+<tr>
+<td>CICD-002</td>
+<td>Preview deployments</td>
+<td>Vercel preview dla PR</td>
+<td>CICD-001</td>
+</tr>
+<tr>
+<td>CICD-003</td>
+<td>Auto-deploy</td>
+<td>Deploy na main merge</td>
+<td>CICD-001</td>
+</tr>
+</tbody>
+</table>
+<h4 id="monitoring">4.3 Monitoring</h4>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MON-001</td>
+<td>Error tracking</td>
+<td>Sentry integration</td>
+<td>-</td>
+</tr>
+<tr>
+<td>MON-002</td>
+<td>Analytics</td>
+<td>Vercel Analytics / Plausible</td>
+<td>-</td>
+</tr>
+<tr>
+<td>MON-003</td>
+<td>Uptime monitoring</td>
+<td>Ping /api/health</td>
+<td>ROUTE-001</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="faza-5-dodatkowe-funkcje-priorytet-niski">Faza 5: Dodatkowe
+funkcje (Priorytet: Niski)</h3>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 29%" />
+<col style="width: 19%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Opis</th>
+<th>Zależności</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FEAT-001</td>
+<td>Dark mode</td>
+<td>Przełącznik jasny/ciemny motyw</td>
+<td>-</td>
+</tr>
+<tr>
+<td>FEAT-002</td>
+<td>PWA</td>
+<td>Instalowalna aplikacja mobilna</td>
+<td>-</td>
+</tr>
+<tr>
+<td>FEAT-003</td>
+<td>Wielojęzyczność</td>
+<td>PL / EN</td>
+<td>-</td>
+</tr>
+<tr>
+<td>FEAT-004</td>
+<td>Dashboard customizacja</td>
+<td>Drag &amp; drop widgetów</td>
+<td>-</td>
+</tr>
+<tr>
+<td>FEAT-005</td>
+<td>Raporty automatyczne</td>
+<td>Tygodniowy/miesięczny email</td>
+<td>DB-001</td>
+</tr>
+<tr>
+<td>FEAT-006</td>
+<td>API dla KSM</td>
+<td>REST API do integracji z innymi systemami</td>
+<td>ROUTE-001</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="priorytety-i-zależności">Priorytety i zależności</h2>
+<pre><code>                    ┌─────────────────────────────────────────┐
+                    │         FAZA 1: INTEGRACJA MEC          │
+                    │              (KRYTYCZNA)                │
+                    │                                         │
+                    │  MEC-001 → MEC-002 → MEC-003 → MEC-004  │
+                    │              │                          │
+                    │              ▼                          │
+                    │  API-001 → API-002 → API-003/004/005    │
+                    │              │                          │
+                    │              ▼                          │
+                    │  CALC-001 → CALC-002 → CALC-003/004/005 │
+                    └─────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FAZA 2: UI/UX                                   │
+│                          (WYSOKA)                                       │
+│                                                                         │
+│   UI-001..004 (Dashboard)     UI-005..009 (Szczegóły)    UI-010..013   │
+│      (równolegle)               (zależy od API)            (Alerty)    │
+└─────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FAZA 3: BACKEND                                 │
+│                          (ŚREDNIA)                                      │
+│                                                                         │
+│         DB-001..004          AUTH-001..004          ROUTE-001..004      │
+│         (równolegle z Fazą 2)                                           │
+└─────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FAZA 4: JAKOŚĆ                                  │
+│                          (ŚREDNIA)                                      │
+│                                                                         │
+│   TEST-001..004        CICD-001..003         MON-001..003               │
+│   (równolegle)                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         FAZA 5: DODATKOWE                               │
+│                           (NISKA)                                       │
+│                                                                         │
+│                     FEAT-001..006 (opcjonalne)                          │
+└─────────────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="najbliższe-kroki-top-10">Najbliższe kroki (Top 10)</h2>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 16%" />
+<col style="width: 30%" />
+<col style="width: 16%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>ID</th>
+<th>Zadanie</th>
+<th>Kto</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>MEC-001</td>
+<td>Spotkanie z MEC - prezentacja kontraktu</td>
+<td>PM/Dev</td>
+<td>Do zrobienia</td>
+</tr>
+<tr>
+<td>2</td>
+<td>MEC-002</td>
+<td>Uzyskanie dostępu do API MEC</td>
+<td>PM</td>
+<td>Oczekuje na MEC-001</td>
+</tr>
+<tr>
+<td>3</td>
+<td>API-001</td>
+<td>Implementacja klienta MEC API</td>
+<td>Dev</td>
+<td>Oczekuje na MEC-002</td>
+</tr>
+<tr>
+<td>4</td>
+<td>CALC-001</td>
+<td>WWC z rzeczywistych pomiarów ΔT</td>
+<td>Dev</td>
+<td>Oczekuje na API-001</td>
+</tr>
+<tr>
+<td>5</td>
+<td>CALC-002</td>
+<td>SH z rzeczywistych pomiarów przepływu</td>
+<td>Dev</td>
+<td>Oczekuje na API-001</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CALC-003</td>
+<td>ES z agregacji godzinowej SE</td>
+<td>Dev</td>
+<td>Oczekuje na API-001</td>
+</tr>
+<tr>
+<td>7</td>
+<td>UI-003</td>
+<td>Eksport CSV z dashboardu</td>
+<td>Dev</td>
+<td>Gotowe do pracy</td>
+</tr>
+<tr>
+<td>8</td>
+<td>UI-010</td>
+<td>Dedykowana strona alertów</td>
+<td>Dev</td>
+<td>Gotowe do pracy</td>
+</tr>
+<tr>
+<td>9</td>
+<td>TEST-001</td>
+<td>Unit testy logiki obliczeniowej</td>
+<td>Dev</td>
+<td>Gotowe do pracy</td>
+</tr>
+<tr>
+<td>10</td>
+<td>CICD-001</td>
+<td>GitHub Actions workflow</td>
+<td>Dev</td>
+<td>Gotowe do pracy</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ryzyka">Ryzyka</h2>
+<table>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 42%" />
+<col style="width: 15%" />
+<col style="width: 24%" />
+</colgroup>
+<thead>
+<tr>
+<th>Ryzyko</th>
+<th>Prawdopodobieństwo</th>
+<th>Wpływ</th>
+<th>Mitygacja</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MEC nie udostępni API</td>
+<td>Średnie</td>
+<td>Krytyczny</td>
+<td>Eskalacja do zarządu, alternatywne źródła</td>
+</tr>
+<tr>
+<td>Format danych MEC niezgodny</td>
+<td>Wysokie</td>
+<td>Wysoki</td>
+<td>Adapter/transformer, wczesna walidacja</td>
+</tr>
+<tr>
+<td>Opóźnienia w integracji</td>
+<td>Wysokie</td>
+<td>Średni</td>
+<td>MVP z danymi KSM, stopniowa integracja</td>
+</tr>
+<tr>
+<td>Jakość danych SCADA</td>
+<td>Średnie</td>
+<td>Średni</td>
+<td>Walidacja, obsługa brakujących danych</td>
+</tr>
+<tr>
+<td>Performance przy 40 węzłach</td>
+<td>Niskie</td>
+<td>Niski</td>
+<td>Caching, lazy loading</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="definicje-statusów">Definicje statusów</h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Znaczenie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Do zrobienia</td>
+<td>Zadanie w backlogu, nie rozpoczęte</td>
+</tr>
+<tr>
+<td>W trakcie</td>
+<td>Aktywnie realizowane</td>
+</tr>
+<tr>
+<td>Zablokowane</td>
+<td>Oczekuje na zależność lub decyzję</td>
+</tr>
+<tr>
+<td>Do review</td>
+<td>Gotowe do przeglądu</td>
+</tr>
+<tr>
+<td>Gotowe</td>
+<td>Zakończone i wdrożone</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="historia-zmian">Historia zmian</h2>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Zmiany</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2025-01-14</td>
+<td>Utworzenie backlogu</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kontakt">Kontakt</h2>
+<p><strong>Pytania dotyczące backlogu:</strong> - Product Owner: [KSM] -
+Tech Lead: [Dev]</p>
+
+<div class="doc-footer">
+  CWU Monitor • KSM Przylesie • Koszalin • Wersja dokumentacji: 2025-01-14
+</div>
+
+<script>
+// Automatyczne wykrywanie diagramów ASCII i formuł matematycznych
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('pre code').forEach(function(block) {
+    var text = block.textContent;
+    var pre = block.parentElement;
+
+    // Wykryj diagramy ASCII (box-drawing characters)
+    var isDiagram = text.includes('┌') || text.includes('│') || text.includes('└') ||
+                    text.includes('├') || text.includes('┬') || text.includes('─') ||
+                    text.includes('▼') || text.includes('▲') || text.includes('►') ||
+                    text.includes('═') || text.includes('║') || text.includes('╔');
+
+    if (isDiagram) {
+      pre.classList.add('diagram');
+      return;
+    }
+
+    // Wykryj formuły matematyczne
+    var hasEquals = text.includes('=');
+    var hasMathSymbols = text.includes('×') || text.includes('÷') ||
+                         text.includes('∛') || text.includes('√');
+    var hasCode = text.includes('function') || text.includes('const ') ||
+                  text.includes('interface') || text.includes('async') ||
+                  text.includes('return ') || text.includes('import ') ||
+                  text.includes('//') || text.includes('=>');
+    var lines = text.trim().split('\n');
+    var isShort = lines.length <= 15;
+
+    // Dodatkowe sygnały że to wzór fizyczny
+    var hasPhysicsTerms = text.includes('gdzie:') || text.includes('Q_') ||
+                          text.includes('T_') || text.includes('ΔT') ||
+                          text.includes('[GJ]') || text.includes('[m³]') ||
+                          text.includes('[K]') || text.includes('[°C]');
+
+    if (((hasEquals || hasMathSymbols) && !hasCode && isShort) ||
+        (hasPhysicsTerms && hasEquals && !hasCode)) {
+      pre.classList.add('math-formula');
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -8,6 +8,7 @@ const navItems = [
   { href: '/dashboard', label: 'Przegląd' },
   { href: '/nodes', label: 'Węzły' },
   { href: '/alerts', label: 'Alerty' },
+  { href: '/docs', label: 'Dokumentacja' },
 ];
 
 export function Navigation() {
@@ -111,6 +112,7 @@ export function Navigation() {
                   {item.href === '/dashboard' && '📊'}
                   {item.href === '/nodes' && '🏢'}
                   {item.href === '/alerts' && '🔔'}
+                  {item.href === '/docs' && '📄'}
                 </span>
                 <span className="text-xs">{item.label}</span>
                 {isAlerts && activeAlerts > 0 && (
