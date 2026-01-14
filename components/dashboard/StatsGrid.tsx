@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, CardBody } from '@/components/ui/Card';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { DashboardStats } from '@/lib/types';
 
 interface StatCardProps {
@@ -15,7 +16,7 @@ interface StatCardProps {
   delay?: number;
 }
 
-function StatCard({ label, value, subtext, trend, color = 'default', delay = 0 }: StatCardProps) {
+function StatCard({ label, value, subtext, trend, color = 'default', delay = 0, tooltip }: StatCardProps & { tooltip?: React.ReactNode }) {
   const valueColors = {
     default: 'text-foreground',
     efficiency: 'text-efficiency',
@@ -32,7 +33,10 @@ function StatCard({ label, value, subtext, trend, color = 'default', delay = 0 }
   return (
     <Card className="animate-in" style={{ animationDelay: `${delay}ms` }}>
       <CardBody>
-        <p className="text-foreground-muted text-sm mb-1">{label}</p>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-foreground-muted text-sm">{label}</p>
+          {tooltip && <InfoTooltip content={tooltip} />}
+        </div>
         <p className={`text-4xl font-bold font-mono tracking-tight ${valueColors[color]}`}>
           {value}
         </p>
@@ -99,6 +103,49 @@ function HeroStatCard({ value, delay = 0 }: { value: number; delay?: number }) {
                 Sprawność Energetyczna
               </span>
               <span className="data-badge">SE</span>
+              <InfoTooltip content={
+                <div className="space-y-4">
+                  <div>
+                    <p className="font-semibold text-foreground text-base">Sprawność Energetyczna (SE)</p>
+                    <p className="text-foreground-subtle text-xs mt-1">Główny wskaźnik systemu • Poziom 1</p>
+                  </div>
+
+                  <p className="text-foreground-muted text-sm leading-relaxed">
+                    Określa jaki procent zakupionej energii cieplnej faktycznie dociera do mieszkańców jako użyteczna ciepła woda.
+                  </p>
+
+                  <div className="bg-surface-elevated rounded-lg p-3 font-mono text-xs">
+                    <p className="text-efficiency mb-1">SE = (Q_teoretyczne / Q_rzeczywiste) × 100</p>
+                    <p className="text-foreground-subtle">gdzie Q_teor = V × c × ΔT × k_straty</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <p className="text-xs font-medium text-foreground">Kategorie:</p>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-success" />
+                        <span className="text-foreground-muted">≥80% — Kat. A (Optymalna)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-efficiency" />
+                        <span className="text-foreground-muted">≥70% — Kat. B (Dobra)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-warning" />
+                        <span className="text-foreground-muted">≥60% — Kat. C (Ostrzegawcza)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-critical" />
+                        <span className="text-foreground-muted">&lt;60% — Krytyczna</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-[10px] text-foreground-subtle border-t border-border-subtle pt-3">
+                    Źródło: dane KSM (miesięczne) lub MEC SCADA (bieżące)
+                  </p>
+                </div>
+              } />
             </div>
             <div className="flex items-baseline gap-3">
               <span
@@ -193,6 +240,28 @@ export function StatsGrid({ stats }: StatsGridProps) {
         color={stats.activeAlerts > 2 ? 'warning' : 'default'}
         subtext={stats.activeAlerts > 0 ? 'Wymaga uwagi' : 'Brak alertów'}
         delay={100}
+        tooltip={
+          <div className="space-y-3">
+            <p className="font-semibold text-foreground">System Alertów</p>
+            <p className="text-foreground-muted text-sm">
+              Alerty generowane są automatycznie gdy wskaźniki przekraczają ustalone progi.
+            </p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-critical" />
+                <span className="text-foreground-muted"><strong>Krytyczny</strong> — wymaga pilnej interwencji</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-warning" />
+                <span className="text-foreground-muted"><strong>Ostrzeżenie</strong> — wymaga uwagi</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-info" />
+                <span className="text-foreground-muted"><strong>Info</strong> — do wiadomości</span>
+              </div>
+            </div>
+          </div>
+        }
       />
       <StatCard
         label="Węzły kat. A"
@@ -203,6 +272,31 @@ export function StatsGrid({ stats }: StatsGridProps) {
           text: `${Math.round((stats.categoryACount / stats.totalNodes) * 100)}% wszystkich`,
         }}
         delay={150}
+        tooltip={
+          <div className="space-y-3">
+            <p className="font-semibold text-foreground">System Kategorii</p>
+            <p className="text-foreground-muted text-sm">
+              Węzły są kategoryzowane według średniej Sprawności Energetycznej (SE).
+            </p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-xs font-bold bg-success/20 text-success">A</span>
+                <span className="text-foreground-muted">SE ≥ 80% — Praca optymalna</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-xs font-bold bg-warning/20 text-warning">B</span>
+                <span className="text-foreground-muted">SE 70-79% — Wymaga optymalizacji</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded text-xs font-bold bg-critical/20 text-critical">C</span>
+                <span className="text-foreground-muted">SE &lt; 70% — Wymaga interwencji</span>
+              </div>
+            </div>
+            <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border-subtle">
+              Cel: maksymalizacja węzłów kategorii A
+            </p>
+          </div>
+        }
       />
     </div>
   );

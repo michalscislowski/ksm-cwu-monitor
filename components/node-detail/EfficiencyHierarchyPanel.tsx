@@ -133,12 +133,14 @@ function MiniIndicator({
   label,
   shortLabel,
   value,
-  status
+  status,
+  tooltip
 }: {
   label: string;
   shortLabel: string;
   value: number;
   status: IndicatorStatus;
+  tooltip?: React.ReactNode;
 }) {
   const colors = statusColors[status];
   const barWidth = Math.min(100, Math.max(0, value));
@@ -151,6 +153,7 @@ function MiniIndicator({
             {shortLabel}
           </span>
           <span className="text-xs text-foreground-muted group-hover:text-foreground transition-colors">{label}</span>
+          {tooltip && <InfoTooltip content={tooltip} />}
         </div>
         <span className={`text-sm font-mono font-bold ${colors.text}`}>{value}%</span>
       </div>
@@ -178,6 +181,7 @@ function ComponentCard({
   interpretation,
   children,
   action,
+  tooltip,
 }: {
   title: string;
   shortTitle: string;
@@ -186,6 +190,7 @@ function ComponentCard({
   interpretation: string;
   children?: React.ReactNode;
   action?: string;
+  tooltip?: React.ReactNode;
 }) {
   const colors = statusColors[status];
 
@@ -204,6 +209,7 @@ function ComponentCard({
             <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${colors.bg} ${colors.text}`}>
               {shortTitle}
             </span>
+            {tooltip && <InfoTooltip content={tooltip} />}
           </div>
           <p className="text-xs text-foreground-muted max-w-[200px]">{interpretation}</p>
         </div>
@@ -337,24 +343,84 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
             value={kw.value}
             status={kw.status}
             interpretation={kw.interpretation}
+            tooltip={
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold text-foreground">Kondycja Wymiennika (KW)</p>
+                  <p className="text-foreground-subtle text-xs mt-0.5">Wskaźnik poziomu 2 • Agregacja operacyjna</p>
+                </div>
+                <p className="text-foreground-muted text-sm">
+                  Pokazuje jak sprawnie pracuje wymiennik ciepła i instalacja przy wymienniku.
+                  Jest średnią geometryczną trzech wskaźników operacyjnych.
+                </p>
+                <div className="bg-surface-elevated rounded-lg p-2.5 font-mono text-xs">
+                  <p className="text-efficiency">KW = ∛(WWC × SH × ES)</p>
+                </div>
+                <div className="space-y-1.5 text-xs">
+                  <p className="font-medium text-foreground">Składniki:</p>
+                  <p className="text-foreground-muted">• <strong>WWC</strong> — Sprawność wymiany ciepła</p>
+                  <p className="text-foreground-muted">• <strong>SH</strong> — Stabilność przepływów</p>
+                  <p className="text-foreground-muted">• <strong>ES</strong> — Efektywność w szczytach</p>
+                </div>
+                <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border-subtle">
+                  Niski KW → problem z wymiennikiem lub regulacją
+                </p>
+              </div>
+            }
           >
             <MiniIndicator
               label="Wymiana ciepła"
               shortLabel="WWC"
               value={indicators.wwc.value}
               status={indicators.wwc.status}
+              tooltip={
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground text-sm">Współczynnik Wymiany Ciepła (WWC)</p>
+                  <p className="text-foreground-muted text-xs">
+                    Mierzy jak efektywnie energia jest przekazywana z wody sieciowej do CWU.
+                    Bazuje na różnicy temperatur zasilania i powrotu.
+                  </p>
+                  <p className="text-[10px] text-foreground-subtle pt-1 border-t border-border-subtle">
+                    Niski WWC → osady, zanieczyszczenia lub niewłaściwy przepływ
+                  </p>
+                </div>
+              }
             />
             <MiniIndicator
               label="Stabilność hydraul."
               shortLabel="SH"
               value={indicators.sh.value}
               status={indicators.sh.status}
+              tooltip={
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground text-sm">Stabilność Hydrauliczna (SH)</p>
+                  <p className="text-foreground-muted text-xs">
+                    Ocenia stabilność przepływów w czasie. Wahania wskazują na problemy
+                    z regulacją, pompami lub zaworem trójdrożnym.
+                  </p>
+                  <p className="text-[10px] text-foreground-subtle pt-1 border-t border-border-subtle">
+                    Niski SH → problemy z regulacją lub pompą cyrkulacyjną
+                  </p>
+                </div>
+              }
             />
             <MiniIndicator
               label="Efektywność szczyt."
               shortLabel="ES"
               value={indicators.es.value}
               status={indicators.es.status}
+              tooltip={
+                <div className="space-y-2">
+                  <p className="font-semibold text-foreground text-sm">Efektywność Szczytowa (ES)</p>
+                  <p className="text-foreground-muted text-xs">
+                    Sprawność systemu w godzinach największego poboru (6-9 i 17-22).
+                    Pokazuje czy wymiennik nadąża z podgrzewaniem wody w szczytach.
+                  </p>
+                  <p className="text-[10px] text-foreground-subtle pt-1 border-t border-border-subtle">
+                    Niski ES → wymiennik za mały lub źle dobrany
+                  </p>
+                </div>
+              }
             />
           </ComponentCard>
 
@@ -366,6 +432,30 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
             status={ss.status}
             interpretation={ss.interpretation}
             action={ss.action}
+            tooltip={
+              <div className="space-y-3">
+                <div>
+                  <p className="font-semibold text-foreground">Straty Systemowe (SS)</p>
+                  <p className="text-foreground-subtle text-xs mt-0.5">Wskaźnik poziomu 2 • Diagnostyka strat</p>
+                </div>
+                <p className="text-foreground-muted text-sm">
+                  Straty energii występujące poza wymiennikiem — w cyrkulacji CWU, rurach
+                  rozprowadzających i izolacji termicznej.
+                </p>
+                <div className="bg-surface-elevated rounded-lg p-2.5 font-mono text-xs">
+                  <p className="text-efficiency">SS = 100 × (1 − SE/KW)</p>
+                </div>
+                <div className="space-y-1.5 text-xs">
+                  <p className="font-medium text-foreground">Składniki strat:</p>
+                  <p className="text-foreground-muted">• <strong>Cyrkulacja</strong> — ciągły przepływ CWU w pętli</p>
+                  <p className="text-foreground-muted">• <strong>Rury</strong> — straty przez izolację i długość</p>
+                  <p className="text-foreground-muted">• <strong>Wskaźnik nocny</strong> — zużycie w godzinach 0-5</p>
+                </div>
+                <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border-subtle">
+                  Wysokie SS przy dobrym KW → problem z cyrkulacją/rurami
+                </p>
+              </div>
+            }
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
