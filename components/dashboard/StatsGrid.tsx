@@ -60,15 +60,15 @@ function StatCard({ label, value, subtext, trend, color = 'default', delay = 0, 
 
 // Hero stat card for the main SE indicator
 function HeroStatCard({ value, delay = 0 }: { value: number; delay?: number }) {
+  // Color matches category convention (A=green, B=yellow, C=red)
   const getStatus = () => {
-    if (value >= 80) return { color: 'text-success', label: 'Optymalna', bgColor: 'bg-success/10', borderColor: 'border-success/30' };
-    if (value >= 70) return { color: 'text-efficiency', label: 'Dobra', bgColor: 'bg-efficiency/10', borderColor: 'border-efficiency/30' };
-    if (value >= 60) return { color: 'text-warning', label: 'Wymaga uwagi', bgColor: 'bg-warning/10', borderColor: 'border-warning/30' };
-    return { color: 'text-critical', label: 'Krytyczna', bgColor: 'bg-critical/10', borderColor: 'border-critical/30' };
+    if (value >= 80) return { color: 'text-success', label: 'Kategoria A', bgColor: 'bg-success/10', borderColor: 'border-success/30' };
+    if (value >= 70) return { color: 'text-warning', label: 'Kategoria B', bgColor: 'bg-warning/10', borderColor: 'border-warning/30' };
+    return { color: 'text-critical', label: 'Kategoria C', bgColor: 'bg-critical/10', borderColor: 'border-critical/30' };
   };
 
   const status = getStatus();
-  const strokeColor = value >= 80 ? '#10b981' : value >= 70 ? '#14b8a6' : value >= 60 ? '#f59e0b' : '#ef4444';
+  const strokeColor = value >= 80 ? '#22c55e' : value >= 70 ? '#eab308' : '#ef4444';
 
   return (
     <div
@@ -103,22 +103,18 @@ function HeroStatCard({ value, delay = 0 }: { value: number; delay?: number }) {
 
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-foreground">Kategorie:</p>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="space-y-1.5 text-xs">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-success" />
-                        <span className="text-foreground-muted">≥80% — Kat. A</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-efficiency" />
-                        <span className="text-foreground-muted">≥70% — Kat. B</span>
+                        <span className="text-foreground-muted">≥80% — Kategoria A</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-warning" />
-                        <span className="text-foreground-muted">≥60% — Kat. C</span>
+                        <span className="text-foreground-muted">70-79% — Kategoria B</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-critical" />
-                        <span className="text-foreground-muted">&lt;60% — Krytyczna</span>
+                        <span className="text-foreground-muted">&lt;70% — Kategoria C</span>
                       </div>
                     </div>
                   </div>

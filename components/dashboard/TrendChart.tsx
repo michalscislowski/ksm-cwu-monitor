@@ -65,15 +65,18 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
     <Card className="animate-in stagger-4">
       <CardHeader
         action={
-          <div className="flex items-center gap-4 text-xs">
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-sm bg-success" /> ≥80%
+          <div className="flex items-center gap-4 text-xs text-foreground-muted">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-success" />
+              <span>A ≥80%</span>
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-sm bg-efficiency" /> ≥70%
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-warning" />
+              <span>B ≥70%</span>
             </span>
-            <span className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-sm bg-warning" /> ≥60%
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-critical" />
+              <span>C &lt;70%</span>
             </span>
           </div>
         }

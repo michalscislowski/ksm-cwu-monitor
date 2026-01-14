@@ -30,11 +30,10 @@ const SETooltipContent = () => (
       </p>
 
       <p>
-        <span className="font-medium text-foreground">Interpretacja:</span><br />
-        • <span className="text-success">SE ≥80%</span> — bardzo dobra sprawność<br />
-        • <span className="text-efficiency">SE 70-79%</span> — dobra sprawność<br />
-        • <span className="text-warning">SE 60-69%</span> — wymaga optymalizacji<br />
-        • <span className="text-critical">SE &lt;60%</span> — wymaga pilnej interwencji
+        <span className="font-medium text-foreground">Interpretacja (kategorie):</span><br />
+        • <span className="text-success">SE ≥80%</span> — Kategoria A (bardzo dobra)<br />
+        • <span className="text-warning">SE 70-79%</span> — Kategoria B (do optymalizacji)<br />
+        • <span className="text-critical">SE &lt;70%</span> — Kategoria C (wymaga uwagi)
       </p>
 
       <p>
@@ -59,12 +58,11 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
   // Calculate the angle for the gauge (0-100 maps to 0-270 degrees)
   const angle = Math.min(Math.max((value / 100) * 270, 0), 270);
 
-  // Determine color based on value - uses CSS variables for theme support
+  // Determine color based on value - matches category convention (A=green, B=yellow, C=red)
   const getColorConfig = (val: number) => {
-    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };
-    if (val >= 70) return { css: 'var(--color-efficiency)', class: 'text-efficiency' };
-    if (val >= 60) return { css: 'var(--color-warning)', class: 'text-warning' };
-    return { css: 'var(--color-critical)', class: 'text-critical' };
+    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };    // Category A
+    if (val >= 70) return { css: 'var(--color-warning)', class: 'text-warning' };    // Category B
+    return { css: 'var(--color-critical)', class: 'text-critical' };                 // Category C
   };
 
   const colorConfig = getColorConfig(value);
@@ -181,11 +179,11 @@ interface MiniGaugeProps {
 }
 
 export function MiniGauge({ value, size = 'md' }: MiniGaugeProps) {
+  // Color matches category convention (A=green, B=yellow, C=red)
   const getColorConfig = (val: number) => {
-    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };
-    if (val >= 70) return { css: 'var(--color-efficiency)', class: 'text-efficiency' };
-    if (val >= 60) return { css: 'var(--color-warning)', class: 'text-warning' };
-    return { css: 'var(--color-critical)', class: 'text-critical' };
+    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };    // Category A
+    if (val >= 70) return { css: 'var(--color-warning)', class: 'text-warning' };    // Category B
+    return { css: 'var(--color-critical)', class: 'text-critical' };                 // Category C
   };
 
   const colorConfig = getColorConfig(value);
@@ -247,11 +245,11 @@ interface ArcGaugeProps {
 }
 
 export function ArcGauge({ value, label, size = 'md', showLabel = true }: ArcGaugeProps) {
+  // Color matches category convention (A=green, B=yellow, C=red)
   const getColorConfig = (val: number) => {
-    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };
-    if (val >= 70) return { css: 'var(--color-efficiency)', class: 'text-efficiency' };
-    if (val >= 60) return { css: 'var(--color-warning)', class: 'text-warning' };
-    return { css: 'var(--color-critical)', class: 'text-critical' };
+    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };    // Category A
+    if (val >= 70) return { css: 'var(--color-warning)', class: 'text-warning' };    // Category B
+    return { css: 'var(--color-critical)', class: 'text-critical' };                 // Category C
   };
 
   const colorConfig = getColorConfig(value);

@@ -151,7 +151,7 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
         <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="p-3 bg-surface-elevated rounded-lg">
             <p className="text-xs text-foreground-subtle">Średnia SE</p>
-            <p className={`font-mono font-bold text-lg ${avgSe >= 80 ? 'text-success' : avgSe >= 70 ? 'text-efficiency' : avgSe >= 60 ? 'text-warning' : 'text-critical'}`}>
+            <p className={`font-mono font-bold text-lg ${avgSe >= 80 ? 'text-success' : avgSe >= 70 ? 'text-warning' : 'text-critical'}`}>
               {avgSe}%
             </p>
           </div>
