@@ -76,6 +76,61 @@ export interface OperationalIndicators {
   weekly_trend: number;         // % change vs last week
 }
 
+// ============================================================================
+// HIERARCHIA WSKAŹNIKÓW EFEKTYWNOŚCI
+// ============================================================================
+
+// SE - Sprawność Energetyczna (Energy Efficiency) - MAIN INDICATOR
+// Shows what fraction of purchased energy reaches residents as useful hot water
+export interface EnergyEfficiency {
+  value: number;              // 0-100%, higher = better
+  status: IndicatorStatus;
+  losses_percent: number;     // 100 - value = total losses
+  q_theoretical: number;      // GJ theoretical (calculated)
+  q_actual: number;           // GJ actual (from meter)
+  t_cold_estimated: number;   // Estimated cold water inlet temp
+  interpretation: string;
+}
+
+// KW - Kondycja Wymiennika (Heat Exchanger Condition)
+// Geometric mean of WWC, SH, ES - shows exchanger performance
+export interface ExchangerCondition {
+  value: number;              // 0-100%, geometric mean of WWC×SH×ES
+  status: IndicatorStatus;
+  limiting_factor: 'wwc' | 'sh' | 'es';  // Which component is weakest
+  interpretation: string;
+}
+
+// SS - Straty Systemowe (System Losses)
+// Losses outside the heat exchanger - circulation, pipes, etc.
+export interface SystemLosses {
+  value: number;              // 0-100%, percentage of energy lost
+  status: IndicatorStatus;
+  estimated_circulation: number;  // Estimated % from circulation
+  estimated_pipes: number;        // Estimated % from pipe losses
+  night_ratio: number;            // Q_night / Q_day ratio (indicator of circulation)
+  interpretation: string;
+  action?: string;
+}
+
+// Combined efficiency hierarchy
+export interface EfficiencyHierarchy {
+  // Level 1 - Main indicator
+  se: EnergyEfficiency;           // Sprawność Energetyczna
+
+  // Level 2 - Components
+  kw: ExchangerCondition;         // Kondycja Wymiennika (from WWC/SH/ES)
+  ss: SystemLosses;               // Straty Systemowe
+
+  // Level 3 - Details (in OperationalIndicators)
+  // wwc, sh, es are already there
+
+  // Diagnostic
+  primary_issue: 'exchanger' | 'circulation' | 'balanced' | 'unknown';
+  savings_potential_percent: number;  // Estimated savings if optimized
+  savings_potential_gj: number;       // Annual GJ savings potential
+}
+
 // Monthly forecast based on current indicators
 export interface MonthlyForecast {
   predicted_wskaznik: number;   // Predicted GJ/m³ for current month
@@ -95,7 +150,8 @@ export interface Benchmark {
 export interface EfficiencyData {
   timestamp: string;
   iez: IEZ;
-  indicators: OperationalIndicators;  // New operational indicators from MEC
+  indicators: OperationalIndicators;  // WWC, SH, ES details
+  hierarchy: EfficiencyHierarchy;     // SE → KW + SS hierarchy
   forecast: MonthlyForecast;          // Predicted monthly wskaźnik
   benchmark: Benchmark;
 }

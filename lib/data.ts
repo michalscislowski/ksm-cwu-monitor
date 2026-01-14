@@ -16,10 +16,39 @@ import type {
   IndicatorStatus,
   OperationalIndicators,
   MonthlyForecast,
+  EfficiencyHierarchy,
+  EnergyEfficiency,
+  ExchangerCondition,
+  SystemLosses,
 } from './types';
 
 // Constants
 const OPTIMAL_WSKAZNIK = 0.22; // Optimal GJ/m3 indicator
+const T_CWU = 55; // Target hot water temperature (°C)
+const SPECIFIC_HEAT = 0.004186; // GJ/(m³·K) - water specific heat
+const MIN_LOSSES_FACTOR = 1.05; // 5% minimum unavoidable losses
+
+// Seasonal cold water temperature table for Koszalin region
+const SEASONAL_T_COLD: Record<number, number> = {
+  1: 5,   // January
+  2: 5,   // February
+  3: 7,   // March
+  4: 10,  // April
+  5: 13,  // May
+  6: 16,  // June
+  7: 18,  // July
+  8: 18,  // August
+  9: 15,  // September
+  10: 12, // October
+  11: 9,  // November
+  12: 6,  // December
+};
+
+// Get current month's estimated cold water temperature
+function getEstimatedTCold(): number {
+  const month = new Date().getMonth() + 1;
+  return SEASONAL_T_COLD[month] || 10;
+}
 
 // Type for raw node data from JSON
 interface RawNode {
@@ -124,6 +153,210 @@ function getESInterpretation(value: number, worstHours: number[]): { interpretat
   }
 }
 
+// ============================================================================
+// EFFICIENCY HIERARCHY CALCULATIONS (SE → KW + SS)
+// ============================================================================
+
+// Calculate KW (Kondycja Wymiennika) - geometric mean of WWC, SH, ES
+function calculateExchangerCondition(wwc: number, sh: number, es: number): ExchangerCondition {
+  const value = Math.round(Math.pow(wwc * sh * es, 1/3));
+
+  // Determine limiting factor
+  const min = Math.min(wwc, sh, es);
+  const limiting_factor: 'wwc' | 'sh' | 'es' =
+    min === wwc ? 'wwc' : min === sh ? 'sh' : 'es';
+
+  const limitingNames = {
+    wwc: 'wymiana ciepła',
+    sh: 'stabilność hydrauliczna',
+    es: 'efektywność szczytowa'
+  };
+
+  let interpretation: string;
+  if (value >= 90) {
+    interpretation = 'Wymiennik pracuje bardzo dobrze';
+  } else if (value >= 80) {
+    interpretation = `Wymiennik sprawny, ogranicza: ${limitingNames[limiting_factor]}`;
+  } else if (value >= 70) {
+    interpretation = `Wymiennik wymaga uwagi — słaba ${limitingNames[limiting_factor]}`;
+  } else {
+    interpretation = `Wymiennik w stanie krytycznym — ${limitingNames[limiting_factor]} na niskim poziomie`;
+  }
+
+  return {
+    value,
+    status: getIndicatorStatus(value),
+    limiting_factor,
+    interpretation,
+  };
+}
+
+// Calculate SS (Straty Systemowe) - losses outside heat exchanger
+function calculateSystemLosses(
+  seValue: number,
+  kwValue: number,
+  nightRatio: number
+): SystemLosses {
+  // SS = losses not explained by exchanger condition
+  // If SE = 70% and KW = 85%, then system loses additional 15% beyond exchanger
+  const exchangerEfficiency = kwValue / 100;
+  const totalEfficiency = seValue / 100;
+
+  // System losses = 1 - (SE / KW) when KW > SE
+  // This represents losses happening after the exchanger
+  const systemLossRatio = kwValue > 0 ? Math.max(0, 1 - (seValue / kwValue)) : 0;
+  const value = Math.round(systemLossRatio * 100);
+
+  // Estimate breakdown (circulation typically 60-80% of system losses)
+  const circulationShare = 0.7 + (nightRatio - 0.15) * 0.5; // Higher night ratio = more circulation
+  const estimated_circulation = Math.round(value * Math.min(0.9, Math.max(0.5, circulationShare)));
+  const estimated_pipes = value - estimated_circulation;
+
+  let interpretation: string;
+  let action: string | undefined;
+
+  if (value <= 10) {
+    interpretation = 'Minimalne straty systemowe';
+  } else if (value <= 20) {
+    interpretation = 'Umiarkowane straty w cyrkulacji i rurach';
+    action = 'Monitoruj zużycie nocne';
+  } else if (value <= 30) {
+    interpretation = 'Znaczące straty cyrkulacyjne';
+    action = 'Sprawdź harmonogram pompy i izolację rur';
+  } else {
+    interpretation = 'Bardzo wysokie straty systemowe';
+    action = 'Pilna optymalizacja cyrkulacji i izolacji';
+  }
+
+  return {
+    value,
+    status: value <= 10 ? 'optimal' : value <= 20 ? 'good' : value <= 30 ? 'warning' : 'critical',
+    estimated_circulation,
+    estimated_pipes,
+    night_ratio: nightRatio,
+    interpretation,
+    action,
+  };
+}
+
+// Calculate SE (Sprawność Energetyczna) - main indicator
+function calculateEnergyEfficiency(
+  node: RawNode,
+  kwValue: number
+): EnergyEfficiency {
+  // Get recent readings for calculation
+  const recentReadings = node.readings.slice(-6);
+  if (recentReadings.length === 0) {
+    return {
+      value: 0,
+      status: 'critical',
+      losses_percent: 100,
+      q_theoretical: 0,
+      q_actual: 0,
+      t_cold_estimated: getEstimatedTCold(),
+      interpretation: 'Brak danych do obliczeń',
+    };
+  }
+
+  // Calculate average actual energy and consumption
+  const avgGJ = recentReadings.reduce((s, r) => s + r.gj, 0) / recentReadings.length;
+  const avgM3 = recentReadings.reduce((s, r) => s + r.m3, 0) / recentReadings.length;
+
+  // Estimated cold water temperature
+  const t_cold = getEstimatedTCold();
+
+  // Theoretical minimum energy: Q = V × c × ΔT × (1 + min_losses)
+  const deltaT = T_CWU - t_cold;
+  const q_theoretical_per_m3 = SPECIFIC_HEAT * deltaT * MIN_LOSSES_FACTOR;
+  const q_theoretical = avgM3 * q_theoretical_per_m3;
+
+  // Actual energy
+  const q_actual = avgGJ;
+
+  // Energy efficiency: what fraction of purchased energy is useful
+  const value = Math.round((q_theoretical / q_actual) * 100);
+  const losses_percent = 100 - value;
+
+  let interpretation: string;
+  if (value >= 80) {
+    interpretation = `${value}% energii trafia do mieszkańców — bardzo dobra sprawność`;
+  } else if (value >= 70) {
+    interpretation = `${value}% energii wykorzystane, ${losses_percent}% strat w systemie`;
+  } else if (value >= 60) {
+    interpretation = `Tylko ${value}% energii dociera do odbiorców — znaczne straty`;
+  } else {
+    interpretation = `Krytycznie niska sprawność — ${losses_percent}% energii tracone`;
+  }
+
+  return {
+    value: Math.min(100, Math.max(0, value)),
+    status: getIndicatorStatus(value),
+    losses_percent: Math.max(0, losses_percent),
+    q_theoretical: Math.round(q_theoretical * 100) / 100,
+    q_actual: Math.round(q_actual * 100) / 100,
+    t_cold_estimated: t_cold,
+    interpretation,
+  };
+}
+
+// Generate complete efficiency hierarchy
+function generateEfficiencyHierarchy(
+  node: RawNode,
+  indicators: OperationalIndicators
+): EfficiencyHierarchy {
+  const seed = parseInt(node.id.replace('WC-', ''), 10);
+
+  // Level 2: KW from WWC, SH, ES
+  const kw = calculateExchangerCondition(
+    indicators.wwc.value,
+    indicators.sh.value,
+    indicators.es.value
+  );
+
+  // Level 1: SE (main indicator)
+  const se = calculateEnergyEfficiency(node, kw.value);
+
+  // Simulated night ratio (Q_night / Q_day) - in real system this would come from MEC
+  // Typical range: 0.10 (good) to 0.40 (bad)
+  const baseNightRatio = 0.15 + (100 - se.value) / 200; // Worse efficiency = higher night ratio
+  const nightRatio = Math.min(0.45, Math.max(0.08, baseNightRatio + (seededRandom(seed * 10) * 0.1 - 0.05)));
+
+  // Level 2: SS (system losses)
+  const ss = calculateSystemLosses(se.value, kw.value, nightRatio);
+
+  // Diagnostic: determine primary issue
+  let primary_issue: 'exchanger' | 'circulation' | 'balanced' | 'unknown';
+  if (se.value >= 75 && kw.value >= 80) {
+    primary_issue = 'balanced'; // Both OK
+  } else if (kw.value < 75) {
+    primary_issue = 'exchanger'; // Exchanger is main problem
+  } else if (ss.value > 20) {
+    primary_issue = 'circulation'; // Circulation is main problem
+  } else {
+    primary_issue = 'unknown';
+  }
+
+  // Calculate savings potential
+  // If optimized to SE=80%, how much could be saved?
+  const targetEfficiency = 80;
+  const currentLosses = se.losses_percent;
+  const targetLosses = 100 - targetEfficiency;
+  const savings_potential_percent = Math.max(0, currentLosses - targetLosses);
+
+  // Estimate annual GJ savings
+  const avgAnnualGJ = node.readings.slice(-12).reduce((s, r) => s + r.gj, 0);
+  const savings_potential_gj = Math.round((savings_potential_percent / 100) * avgAnnualGJ);
+
+  return {
+    se,
+    kw,
+    ss,
+    primary_issue,
+    savings_potential_percent: Math.round(savings_potential_percent),
+    savings_potential_gj,
+  };
+}
+
 // Generate pseudo-random number from seed
 function seededRandom(seed: number): number {
   const x = Math.sin(seed) * 10000;
@@ -219,8 +452,11 @@ function generateEfficiencyData(node: RawNode): EfficiencyData {
   const position = allIez.findIndex(v => v <= iez);
   const percentile = Math.round(((rawNodes.length - position) / rawNodes.length) * 100);
 
-  // Generate operational indicators
+  // Generate operational indicators (WWC, SH, ES)
   const indicators = generateOperationalIndicators(node);
+
+  // Generate efficiency hierarchy (SE → KW + SS)
+  const hierarchy = generateEfficiencyHierarchy(node, indicators);
 
   // Generate monthly forecast
   const forecast = generateMonthlyForecast(node, indicators);
@@ -233,6 +469,7 @@ function generateEfficiencyData(node: RawNode): EfficiencyData {
       trend_change: node.stats.trend_change,
     },
     indicators,
+    hierarchy,
     forecast,
     benchmark: {
       percentile,
