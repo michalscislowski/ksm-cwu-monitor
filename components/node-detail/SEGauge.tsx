@@ -30,10 +30,17 @@ const SETooltipContent = () => (
       </p>
 
       <p>
-        <span className="font-medium text-foreground">Interpretacja (kategorie):</span><br />
-        • <span className="text-success">SE ≥80%</span> — Kategoria A (bardzo dobra)<br />
-        • <span className="text-warning">SE 70-79%</span> — Kategoria B (do optymalizacji)<br />
-        • <span className="text-critical">SE &lt;70%</span> — Kategoria C (wymaga uwagi)
+        <span className="font-medium text-foreground">Interpretacja wartości SE:</span><br />
+        • <span className="text-success">SE ≥80%</span> — bardzo dobra sprawność<br />
+        • <span className="text-warning">SE 70-79%</span> — wymaga poprawy<br />
+        • <span className="text-critical">SE &lt;70%</span> — niska sprawność
+      </p>
+
+      <p>
+        <span className="font-medium text-foreground">Kategoria węzła (A/B/C):</span><br />
+        Kategoria zależy od <strong>najsłabszego</strong> wskaźnika operacyjnego
+        (WWC, SH lub ES), nie bezpośrednio od SE. Węzeł z SE 85% może mieć
+        kategorię B, jeśli np. ES wynosi 76%.
       </p>
 
       <p>

@@ -2,6 +2,7 @@
 
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { DashboardStats } from '@/lib/types';
 
 interface CategoriesChartProps {
@@ -14,21 +15,21 @@ export function CategoriesChart({ stats }: CategoriesChartProps) {
   const categories = [
     {
       label: 'Kategoria A',
-      sublabel: 'SE ≥ 80%',
+      sublabel: 'wszystkie wskaźniki ≥80%',
       count: stats.categoryACount,
       percent: Math.round((stats.categoryACount / total) * 100),
       status: 'optimal' as const,
     },
     {
       label: 'Kategoria B',
-      sublabel: 'SE 70-79%',
+      sublabel: 'najsłabszy wskaźnik 70-79%',
       count: stats.categoryBCount,
       percent: Math.round((stats.categoryBCount / total) * 100),
       status: 'warning' as const,
     },
     {
       label: 'Kategoria C',
-      sublabel: 'SE < 70%',
+      sublabel: 'najsłabszy wskaźnik <70%',
       count: stats.categoryCCount,
       percent: Math.round((stats.categoryCCount / total) * 100),
       status: 'critical' as const,
@@ -43,6 +44,29 @@ export function CategoriesChart({ stats }: CategoriesChartProps) {
             <path d="M2 14V8M6 14V5M10 14V7M14 14V2" />
           </svg>
           Rozkład kategorii
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Rozkład kategorii węzłów</p>
+              <div className="text-foreground-muted text-sm space-y-2">
+                <p>
+                  <span className="font-medium text-foreground">Jak ustalana jest kategoria?</span><br />
+                  Kategoria węzła zależy od <strong>najsłabszego</strong> wskaźnika
+                  operacyjnego: WWC (wymiana ciepła), SH (stabilność hydrauliczna)
+                  lub ES (efektywność szczytowa).
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Progi kategorii:</span><br />
+                  • <span className="text-success">A</span> — wszystkie wskaźniki ≥80%<br />
+                  • <span className="text-warning">B</span> — najsłabszy 70-79%<br />
+                  • <span className="text-critical">C</span> — najsłabszy &lt;70%
+                </p>
+                <p className="text-xs text-foreground-subtle">
+                  Przykład: węzeł z SE 85% może mieć kategorię B,
+                  jeśli jego ES wynosi tylko 76%.
+                </p>
+              </div>
+            </div>
+          } />
         </span>
       </CardHeader>
       <CardBody>

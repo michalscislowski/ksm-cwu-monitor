@@ -2,6 +2,7 @@
 
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge } from '@/components/ui/Badge';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { Benchmark } from '@/lib/types';
 
 interface BenchmarkPanelProps {
@@ -22,6 +23,30 @@ export function BenchmarkPanel({ benchmark }: BenchmarkPanelProps) {
             <path d="M2 14V8M6 14V4M10 14V6M14 14V2" />
           </svg>
           Benchmark
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Benchmark — pozycja węzła</p>
+              <div className="text-foreground-muted text-sm space-y-2">
+                <p>
+                  <span className="font-medium text-foreground">Co pokazuje percentyl?</span><br />
+                  Percentyl określa pozycję węzła na tle wszystkich węzłów w sieci MEC.
+                  Np. percentyl 75 oznacza, że węzeł jest lepszy od 75% innych węzłów.
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Skala kolorów:</span><br />
+                  • <span className="text-critical">Czerwony (0-33%)</span> — dolna tercja, wymaga poprawy<br />
+                  • <span className="text-warning">Żółty (34-66%)</span> — średnia wydajność<br />
+                  • <span className="text-success">Zielony (67-100%)</span> — górna tercja, dobra efektywność
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Jak poprawić pozycję?</span><br />
+                  Optymalizacja wskaźników operacyjnych (WWC, SH, ES) bezpośrednio
+                  wpływa na pozycję w rankingu. Skup się na wskaźnikach ze statusem
+                  „wymaga uwagi" lub „krytyczny".
+                </p>
+              </div>
+            </div>
+          } />
         </span>
       </CardHeader>
       <CardBody className="text-center">

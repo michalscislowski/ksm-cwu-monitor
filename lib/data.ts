@@ -70,12 +70,22 @@ function calculateSE(wskaznik: number): number {
   return Math.round((OPTIMAL_WSKAZNIK / wskaznik) * 100);
 }
 
-// Get category from SE (Sprawność Energetyczna)
+// Get category from SE value (for historical data display)
 // Thresholds per data-contract.md §Załącznik C
 function getCategory(se: number): Category {
   if (se >= 80) return 'A';  // Optymalna
   if (se >= 70) return 'B';  // Dobra
   return 'C';                 // Ostrzegawcza (≥60) lub Krytyczna (<60)
+}
+
+// Get node category based on WORST operational indicator (WWC, SH, ES)
+// This is the primary categorization method for nodes
+// Thresholds: A = all ≥80%, B = worst 70-79%, C = worst <70%
+function getCategoryFromIndicators(wwc: number, sh: number, es: number): Category {
+  const worstIndicator = Math.min(wwc, sh, es);
+  if (worstIndicator >= 80) return 'A';
+  if (worstIndicator >= 70) return 'B';
+  return 'C';
 }
 
 // Get indicator status for WWC (thresholds: 95/85/70)
@@ -470,6 +480,13 @@ function generateEfficiencyData(node: RawNode): EfficiencyData {
   // Generate monthly forecast
   const forecast = generateMonthlyForecast(node, indicators);
 
+  // Calculate category from operational indicators (not from SE directly)
+  const calculatedCategory = getCategoryFromIndicators(
+    indicators.wwc.value,
+    indicators.sh.value,
+    indicators.es.value
+  );
+
   return {
     timestamp: new Date().toISOString(),
     iez: {
@@ -482,7 +499,7 @@ function generateEfficiencyData(node: RawNode): EfficiencyData {
     forecast,
     benchmark: {
       percentile,
-      category: node.stats.category,
+      category: calculatedCategory,
     },
   };
 }
@@ -763,13 +780,20 @@ export function getRecommendations(nodeId: string): Recommendation[] {
 
 // Get ranking
 export function getRanking(): RankingEntry[] {
-  // Calculate SE for each node for ranking
+  // Calculate SE and category for each node
   const nodesWithSE = rawNodes.map(node => {
     const indicators = generateOperationalIndicators(node);
     const hierarchy = generateEfficiencyHierarchy(node, indicators);
+    // Calculate category from operational indicators
+    const category = getCategoryFromIndicators(
+      indicators.wwc.value,
+      indicators.sh.value,
+      indicators.es.value
+    );
     return {
       node,
       se: hierarchy.se.value,
+      category,
     };
   });
 
@@ -780,7 +804,7 @@ export function getRanking(): RankingEntry[] {
     position: index + 1,
     node_id: item.node.id,
     name: item.node.name,
-    category: item.node.stats.category,
+    category: item.category,
     avg_iez: item.node.stats.avg_iez,
     avg_se: item.se,
     trend: item.node.stats.trend,
@@ -827,17 +851,24 @@ export function getDashboardStats(): DashboardStats {
     rawNodes.reduce((sum, node) => sum + node.stats.avg_iez, 0) / rawNodes.length
   );
 
-  // Calculate average SE across all nodes
-  const seValues = rawNodes.map(node => {
+  // Calculate SE and categories from operational indicators for all nodes
+  const nodesData = rawNodes.map(node => {
     const indicators = generateOperationalIndicators(node);
     const hierarchy = generateEfficiencyHierarchy(node, indicators);
-    return hierarchy.se.value;
+    const category = getCategoryFromIndicators(
+      indicators.wwc.value,
+      indicators.sh.value,
+      indicators.es.value
+    );
+    return { se: hierarchy.se.value, category };
   });
-  const avgSe = Math.round(seValues.reduce((sum, se) => sum + se, 0) / seValues.length);
 
-  const categoryACount = rawNodes.filter(n => n.stats.category === 'A').length;
-  const categoryBCount = rawNodes.filter(n => n.stats.category === 'B').length;
-  const categoryCCount = rawNodes.filter(n => n.stats.category === 'C').length;
+  const avgSe = Math.round(nodesData.reduce((sum, d) => sum + d.se, 0) / nodesData.length);
+
+  // Count categories based on calculated values (from indicators)
+  const categoryACount = nodesData.filter(d => d.category === 'A').length;
+  const categoryBCount = nodesData.filter(d => d.category === 'B').length;
+  const categoryCCount = nodesData.filter(d => d.category === 'C').length;
 
   return {
     totalNodes: rawNodes.length,

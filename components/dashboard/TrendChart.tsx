@@ -133,22 +133,22 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
                 Wykres pokazuje zmiany średniej Sprawności Energetycznej (SE) wszystkich węzłów w czasie.
               </p>
               <div className="space-y-2 text-sm">
-                <p className="text-xs font-medium text-foreground">Interpretacja kolorów:</p>
+                <p className="text-xs font-medium text-foreground">Kolor punktu zależy od wartości SE:</p>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-1 rounded bg-success" />
-                  <span className="text-foreground-muted">Kategoria A — SE ≥80%</span>
+                  <span className="text-foreground-muted">SE ≥80% — bardzo dobra</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-1 rounded bg-warning" />
-                  <span className="text-foreground-muted">Kategoria B — SE 70-79%</span>
+                  <span className="text-foreground-muted">SE 70-79% — wymaga poprawy</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-1 rounded bg-critical" />
-                  <span className="text-foreground-muted">Kategoria C — SE &lt;70%</span>
+                  <span className="text-foreground-muted">SE &lt;70% — niska</span>
                 </div>
               </div>
               <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border">
-                Linie przerywane oznaczają progi kategorii
+                Linie przerywane oznaczają progi wartości SE
               </p>
             </div>
           } />
@@ -298,7 +298,34 @@ export function DailyProfileChart({ hours }: DailyProfileChartProps) {
           </div>
         }
       >
-        Profil dobowy sprawności
+        <span className="flex items-center gap-2">
+          Profil dobowy sprawności
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Profil dobowy sprawności</p>
+              <div className="text-foreground-muted text-sm space-y-2">
+                <p>
+                  <span className="font-medium text-foreground">Co pokazuje wykres?</span><br />
+                  Średnią Sprawność Energetyczną (SE) węzła w każdej godzinie doby.
+                  Pozwala zidentyfikować problematyczne okresy pracy.
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Poziomy obciążenia:</span><br />
+                  • <span className="text-success">Niskie</span> — 2:00-5:00, minimalne użycie CWU<br />
+                  • <span className="text-efficiency">Średnie</span> — 10:00-16:00, umiarkowane<br />
+                  • <span className="text-warning">Wysokie</span> — poranki i wieczory<br />
+                  • <span className="text-critical">Szczytowe</span> — 7:00-9:00, 18:00-20:00
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Interpretacja:</span><br />
+                  Duży spadek SE w szczycie oznacza, że instalacja nie radzi sobie
+                  z dużym obciążeniem. Sprawdź wskaźnik ES (Efektywność Szczytowa)
+                  oraz nastawy pompy cyrkulacyjnej.
+                </p>
+              </div>
+            </div>
+          } />
+        </span>
       </CardHeader>
       <CardBody>
         <div className="h-48">

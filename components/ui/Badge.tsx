@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react';
 import type { Category } from '@/lib/types';
+import { InfoTooltip } from './Tooltip';
 
 type BadgeVariant = 'default' | 'success' | 'warning' | 'critical' | 'info' | 'efficiency' | 'category-a' | 'category-b' | 'category-c';
 
@@ -64,24 +65,27 @@ interface CategoryBadgeProps {
   showLabel?: boolean;
 }
 
-const categoryConfig: Record<Category, { label: string; color: string; bg: string; border: string }> = {
+const categoryConfig: Record<Category, { label: string; color: string; bg: string; border: string; description: string }> = {
   A: {
     label: 'Bardzo dobra',
     color: 'text-success',
     bg: 'bg-success/15',
-    border: 'border-success/25'
+    border: 'border-success/25',
+    description: 'Wszystkie wskaźniki operacyjne (WWC, SH, ES) ≥80% — węzeł pracuje optymalnie'
   },
   B: {
     label: 'Do optymalizacji',
     color: 'text-warning',
     bg: 'bg-warning/15',
-    border: 'border-warning/25'
+    border: 'border-warning/25',
+    description: 'Co najmniej jeden wskaźnik operacyjny (WWC, SH lub ES) w przedziale 70-79% — sprawdź panel wskaźników operacyjnych'
   },
   C: {
     label: 'Wymaga uwagi',
     color: 'text-critical',
     bg: 'bg-critical/15',
-    border: 'border-critical/25'
+    border: 'border-critical/25',
+    description: 'Co najmniej jeden wskaźnik operacyjny (WWC, SH lub ES) <70% — pilna interwencja wymagana'
   },
 };
 
@@ -111,9 +115,28 @@ export function CategoryBadge({ category, size = 'md', showLabel = false }: Cate
         {category}
       </span>
       {showLabel && (
-        <span className={`text-sm ${config.color}`}>
-          {config.label}
-        </span>
+        <>
+          <span className={`text-sm ${config.color}`}>
+            {config.label}
+          </span>
+          <InfoTooltip content={
+            <div className="space-y-2">
+              <p className="font-semibold text-foreground">Kategoria {category}: {config.label}</p>
+              <p className="text-foreground-muted text-sm">{config.description}</p>
+              <div className="pt-2 border-t border-border text-xs text-foreground-subtle space-y-2">
+                <div>
+                  <p className="font-medium text-foreground mb-1">Jak ustalana jest kategoria?</p>
+                  <p className="text-foreground-muted mb-2">
+                    Kategoria zależy od <strong>najsłabszego</strong> wskaźnika operacyjnego (WWC, SH lub ES):
+                  </p>
+                  <p>• <span className="text-success">A</span> — wszystkie wskaźniki ≥80%</p>
+                  <p>• <span className="text-warning">B</span> — najsłabszy 70-79%</p>
+                  <p>• <span className="text-critical">C</span> — najsłabszy &lt;70%</p>
+                </div>
+              </div>
+            </div>
+          } />
+        </>
       )}
     </span>
   );

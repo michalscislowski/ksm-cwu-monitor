@@ -102,21 +102,24 @@ function HeroStatCard({ value, delay = 0 }: { value: number; delay?: number }) {
                   </div>
 
                   <div className="space-y-2">
-                    <p className="text-xs font-medium text-foreground">Kategorie:</p>
+                    <p className="text-xs font-medium text-foreground">Interpretacja wartości SE:</p>
                     <div className="space-y-1.5 text-xs">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-success" />
-                        <span className="text-foreground-muted">≥80% — Kategoria A</span>
+                        <span className="text-foreground-muted">≥80% — bardzo dobra</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-warning" />
-                        <span className="text-foreground-muted">70-79% — Kategoria B</span>
+                        <span className="text-foreground-muted">70-79% — wymaga poprawy</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-critical" />
-                        <span className="text-foreground-muted">&lt;70% — Kategoria C</span>
+                        <span className="text-foreground-muted">&lt;70% — niska</span>
                       </div>
                     </div>
+                    <p className="text-[10px] text-foreground-subtle mt-2">
+                      Kategoria węzła (A/B/C) zależy od najsłabszego wskaźnika operacyjnego (WWC, SH, ES).
+                    </p>
                   </div>
 
                   <p className="text-[10px] text-foreground-subtle border-t border-border pt-3">

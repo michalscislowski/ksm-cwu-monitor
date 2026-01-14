@@ -1,17 +1,37 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { Card, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, TrendBadge } from '@/components/ui/Badge';
 import { MiniGauge } from '@/components/node-detail/SEGauge';
 import { getNodesWithEfficiency, getDashboardStats } from '@/lib/data';
+import type { Category } from '@/lib/types';
+
+type FilterType = 'all' | Category;
 
 export default function NodesPage() {
+  const [filter, setFilter] = useState<FilterType>('all');
+
   const nodes = getNodesWithEfficiency();
   const stats = getDashboardStats();
 
+  // Filter nodes by category
+  const filteredNodes = filter === 'all'
+    ? nodes
+    : nodes.filter(node => node.efficiency.benchmark.category === filter);
+
   // Sort by SE (worst first to highlight issues)
-  const sortedNodes = [...nodes].sort(
+  const sortedNodes = [...filteredNodes].sort(
     (a, b) => a.efficiency.hierarchy.se.value - b.efficiency.hierarchy.se.value
   );
+
+  const filterButtons: { value: FilterType; label: string; count: number }[] = [
+    { value: 'all', label: 'Wszystkie', count: stats.totalNodes },
+    { value: 'A', label: 'Kategoria A', count: stats.categoryACount },
+    { value: 'B', label: 'Kategoria B', count: stats.categoryBCount },
+    { value: 'C', label: 'Kategoria C', count: stats.categoryCCount },
+  ];
 
   return (
     <div className="space-y-6 pb-20 md:pb-6">
@@ -25,18 +45,19 @@ export default function NodesPage() {
 
       {/* Filter chips */}
       <div className="flex flex-wrap gap-2 animate-in stagger-1">
-        <button className="px-4 py-2 rounded-lg bg-efficiency/10 text-efficiency text-sm font-medium">
-          Wszystkie ({stats.totalNodes})
-        </button>
-        <button className="px-4 py-2 rounded-lg bg-surface-elevated text-foreground-muted text-sm font-medium hover:bg-surface-hover transition-colors">
-          Kategoria A ({stats.categoryACount})
-        </button>
-        <button className="px-4 py-2 rounded-lg bg-surface-elevated text-foreground-muted text-sm font-medium hover:bg-surface-hover transition-colors">
-          Kategoria B ({stats.categoryBCount})
-        </button>
-        <button className="px-4 py-2 rounded-lg bg-surface-elevated text-foreground-muted text-sm font-medium hover:bg-surface-hover transition-colors">
-          Kategoria C ({stats.categoryCCount})
-        </button>
+        {filterButtons.map((btn) => (
+          <button
+            key={btn.value}
+            onClick={() => setFilter(btn.value)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              filter === btn.value
+                ? 'bg-efficiency/10 text-efficiency'
+                : 'bg-surface-elevated text-foreground-muted hover:bg-surface-hover'
+            }`}
+          >
+            {btn.label} ({btn.count})
+          </button>
+        ))}
       </div>
 
       {/* Nodes grid */}
@@ -85,7 +106,7 @@ export default function NodesPage() {
                               : node.efficiency.indicators.wwc.status === 'warning'
                               ? 'bg-warning/20 text-warning'
                               : node.efficiency.indicators.wwc.status === 'good'
-                              ? 'bg-efficiency/20 text-efficiency'
+                              ? 'bg-success/20 text-success'
                               : 'bg-success/20 text-success'
                           }`}
                         >
@@ -98,7 +119,7 @@ export default function NodesPage() {
                               : node.efficiency.indicators.sh.status === 'warning'
                               ? 'bg-warning/20 text-warning'
                               : node.efficiency.indicators.sh.status === 'good'
-                              ? 'bg-efficiency/20 text-efficiency'
+                              ? 'bg-success/20 text-success'
                               : 'bg-success/20 text-success'
                           }`}
                         >
@@ -111,7 +132,7 @@ export default function NodesPage() {
                               : node.efficiency.indicators.es.status === 'warning'
                               ? 'bg-warning/20 text-warning'
                               : node.efficiency.indicators.es.status === 'good'
-                              ? 'bg-efficiency/20 text-efficiency'
+                              ? 'bg-success/20 text-success'
                               : 'bg-success/20 text-success'
                           }`}
                         >
@@ -137,6 +158,15 @@ export default function NodesPage() {
           </Link>
         ))}
       </div>
+
+      {/* Empty state */}
+      {sortedNodes.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-foreground-muted">
+            Brak węzłów w kategorii {filter}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

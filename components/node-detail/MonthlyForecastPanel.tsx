@@ -2,6 +2,7 @@
 
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge } from '@/components/ui/Badge';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { MonthlyForecast, Category } from '@/lib/types';
 
 interface MonthlyForecastPanelProps {
@@ -33,6 +34,34 @@ export function MonthlyForecastPanel({ forecast, lastKnownWskaznik }: MonthlyFor
             <path d="M14 6v5h-5" />
           </svg>
           Prognoza miesięczna
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Prognoza miesięczna wskaźnika</p>
+              <div className="text-foreground-muted text-sm space-y-2">
+                <p>
+                  <span className="font-medium text-foreground">Co to jest wskaźnik GJ/m³?</span><br />
+                  Wskaźnik energochłonności pokazuje ile energii (GJ) potrzeba do podgrzania
+                  1 m³ wody. Im niższy, tym bardziej efektywny węzeł.
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Jak działa prognoza?</span><br />
+                  System analizuje bieżące wskaźniki operacyjne (WWC, SH, ES) oraz
+                  historyczne dane rozliczeniowe, by przewidzieć wskaźnik na koniec miesiąca.
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Poziomy pewności:</span><br />
+                  • <span className="text-success">Wysoka</span> — stabilne warunki, przewidywalna praca<br />
+                  • <span className="text-warning">Średnia</span> — pewne wahania w danych<br />
+                  • <span className="text-critical">Niska</span> — duża zmienność, prognoza orientacyjna
+                </p>
+                <p>
+                  <span className="font-medium text-foreground">Cel kategorii A:</span><br />
+                  Wskaźnik ≤0.22 GJ/m³ oznacza optymalną pracę węzła i najniższą
+                  kategorię rozliczeniową.
+                </p>
+              </div>
+            </div>
+          } />
         </span>
       </CardHeader>
       <CardBody>
