@@ -10,6 +10,7 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { HistoryEntry } from '@/lib/types';
 
 interface TrendChartProps {
@@ -35,9 +36,27 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
     category: entry.category,
   }));
 
-  // Custom active dot that changes color based on value
-  const CustomActiveDot = (props: { cx: number; cy: number; payload: { se: number } }) => {
+  // Custom dot that renders at each data point with category color
+  const CustomDot = (props: { cx?: number; cy?: number; payload?: { se: number } }) => {
     const { cx, cy, payload } = props;
+    if (cx === undefined || cy === undefined || !payload) return null;
+    const color = getSeColor(payload.se);
+    return (
+      <circle
+        cx={cx}
+        cy={cy}
+        r={3}
+        fill={color}
+        stroke={color}
+        strokeWidth={1}
+      />
+    );
+  };
+
+  // Custom active dot (larger, on hover)
+  const CustomActiveDot = (props: { cx?: number; cy?: number; payload?: { se: number } }) => {
+    const { cx, cy, payload } = props;
+    if (cx === undefined || cy === undefined || !payload) return null;
     const color = getSeColor(payload.se);
     return (
       <circle
@@ -51,33 +70,34 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
     );
   };
 
+  // Helper to get category from SE value
+  const getCategory = (value: number): { letter: string; color: string } => {
+    if (value >= 80) return { letter: 'A', color: '#22c55e' };
+    if (value >= 70) return { letter: 'B', color: '#eab308' };
+    return { letter: 'C', color: '#ef4444' };
+  };
+
   // Custom tooltip
   const CustomTooltip = ({ active, payload, label }: {
     active?: boolean;
-    payload?: Array<{ value: number; payload: { category: string } }>;
+    payload?: Array<{ value: number }>;
     label?: string;
   }) => {
     if (!active || !payload || !payload.length) return null;
 
     const value = payload[0].value;
-    const category = payload[0].payload.category;
-
-    const categoryColors: Record<string, string> = {
-      A: '#10b981',
-      B: '#f59e0b',
-      C: '#ef4444',
-    };
+    const category = getCategory(value);
 
     return (
       <div className="bg-surface-elevated border border-border rounded-lg p-3 shadow-lg">
         <p className="text-foreground-muted text-xs mb-1">{label}</p>
-        <p className="text-lg font-mono font-bold" style={{ color: categoryColors[category] }}>
+        <p className="text-lg font-mono font-bold" style={{ color: category.color }}>
           SE: {value}%
         </p>
         <p className="text-xs mt-1">
           Kategoria:{' '}
-          <span className="font-semibold" style={{ color: categoryColors[category] }}>
-            {category}
+          <span className="font-semibold" style={{ color: category.color }}>
+            {category.letter}
           </span>
         </p>
       </div>
@@ -104,7 +124,35 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
           </div>
         }
       >
-        {title}
+        <span className="flex items-center gap-2">
+          {title}
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Trend Sprawności Energetycznej</p>
+              <p className="text-foreground-muted text-sm">
+                Wykres pokazuje zmiany średniej Sprawności Energetycznej (SE) wszystkich węzłów w czasie.
+              </p>
+              <div className="space-y-2 text-sm">
+                <p className="text-xs font-medium text-foreground">Interpretacja kolorów:</p>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-1 rounded bg-success" />
+                  <span className="text-foreground-muted">Kategoria A — SE ≥80%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-1 rounded bg-warning" />
+                  <span className="text-foreground-muted">Kategoria B — SE 70-79%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-1 rounded bg-critical" />
+                  <span className="text-foreground-muted">Kategoria C — SE &lt;70%</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border">
+                Linie przerywane oznaczają progi kategorii
+              </p>
+            </div>
+          } />
+        </span>
       </CardHeader>
       <CardBody>
         <div className="h-64">
@@ -114,24 +162,17 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             >
               <defs>
-                {/* Gradient for fill - color bands based on SE thresholds */}
-                {/* Y-axis domain is [50, 100], so: 80=40%, 70=60% from top */}
-                <linearGradient id="colorSeFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.3} />
-                  <stop offset="40%" stopColor="#22c55e" stopOpacity={0.25} />
-                  <stop offset="40%" stopColor="#eab308" stopOpacity={0.25} />
-                  <stop offset="60%" stopColor="#eab308" stopOpacity={0.2} />
-                  <stop offset="60%" stopColor="#ef4444" stopOpacity={0.2} />
-                  <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
-                </linearGradient>
-                {/* Gradient for stroke */}
-                <linearGradient id="colorSeStroke" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#22c55e" />
-                  <stop offset="40%" stopColor="#22c55e" />
-                  <stop offset="40%" stopColor="#eab308" />
-                  <stop offset="60%" stopColor="#eab308" />
-                  <stop offset="60%" stopColor="#ef4444" />
-                  <stop offset="100%" stopColor="#ef4444" />
+                {/* Gradient aligned to Y-axis domain [50, 100] */}
+                {/* Green (A): ≥80% = top 40% of chart */}
+                {/* Yellow (B): 70-79% = next 20% */}
+                {/* Red (C): <70% = bottom 40% */}
+                <linearGradient id="colorSeFill" x1="0" y1="0%" x2="0" y2="100%">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.35} />
+                  <stop offset="39.9%" stopColor="#22c55e" stopOpacity={0.3} />
+                  <stop offset="40%" stopColor="#eab308" stopOpacity={0.3} />
+                  <stop offset="59.9%" stopColor="#eab308" stopOpacity={0.25} />
+                  <stop offset="60%" stopColor="#ef4444" stopOpacity={0.25} />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
 
@@ -171,11 +212,11 @@ export function TrendChart({ data, title = 'Trend SE (ostatnie 30 dni)' }: Trend
               <Area
                 type="monotone"
                 dataKey="se"
-                stroke="url(#colorSeStroke)"
-                strokeWidth={2}
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth={1.5}
                 fill="url(#colorSeFill)"
-                dot={false}
-                activeDot={<CustomActiveDot cx={0} cy={0} payload={{ se: 0 }} />}
+                dot={<CustomDot />}
+                activeDot={<CustomActiveDot />}
               />
             </AreaChart>
           </ResponsiveContainer>
