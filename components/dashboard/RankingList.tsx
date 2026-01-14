@@ -81,7 +81,9 @@ export function RankingList({ ranking, showTop = 3, showBottom = true }: Ranking
         }
       >
         <span className="flex items-center gap-2">
-          <span className="text-lg">🏆</span>
+          <svg className="w-4 h-4 text-amber-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 2l2 4 4 .5-3 3 .5 4.5L8 12l-3.5 2 .5-4.5-3-3L6 6l2-4z" />
+          </svg>
           Ranking węzłów
         </span>
       </CardHeader>

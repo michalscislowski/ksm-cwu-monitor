@@ -135,7 +135,14 @@ export function HistoricalChart({ readings, nodeId }: HistoricalChartProps) {
         }
       >
         <span className="flex items-center gap-2">
-          <span>📊</span>
+          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 12l3-4 3 2 4-6 2 3" />
+            <circle cx="2" cy="12" r="1" fill="currentColor" />
+            <circle cx="5" cy="8" r="1" fill="currentColor" />
+            <circle cx="8" cy="10" r="1" fill="currentColor" />
+            <circle cx="12" cy="4" r="1" fill="currentColor" />
+            <circle cx="14" cy="7" r="1" fill="currentColor" />
+          </svg>
           Historia ({years[0]}-{years[years.length - 1]})
         </span>
       </CardHeader>

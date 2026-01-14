@@ -125,7 +125,10 @@ export default async function NodeDetailPage({ params }: PageProps) {
       <Card>
         <CardHeader dataSource="ksm">
           <span className="flex items-center gap-2">
-            <span>ℹ️</span>
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="8" cy="8" r="6" />
+              <path d="M8 5v.01M8 7v4" />
+            </svg>
             Informacje o węźle
           </span>
         </CardHeader>

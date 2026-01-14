@@ -9,18 +9,51 @@ interface EfficiencyHierarchyPanelProps {
   indicators: OperationalIndicators;
 }
 
-const statusColors: Record<IndicatorStatus, { text: string; bg: string; glow: string; ring: string }> = {
-  optimal: { text: 'text-success', bg: 'bg-success/10', glow: 'shadow-[0_0_30px_rgba(16,185,129,0.3)]', ring: 'ring-success/40' },
-  good: { text: 'text-efficiency', bg: 'bg-efficiency/10', glow: 'shadow-[0_0_30px_rgba(20,184,166,0.3)]', ring: 'ring-efficiency/40' },
-  warning: { text: 'text-warning', bg: 'bg-warning/10', glow: 'shadow-[0_0_30px_rgba(245,158,11,0.3)]', ring: 'ring-warning/40' },
-  critical: { text: 'text-critical', bg: 'bg-critical/10', glow: 'shadow-[0_0_30px_rgba(239,68,68,0.4)]', ring: 'ring-critical/40' },
+const statusColors: Record<IndicatorStatus, { text: string; bg: string; border: string }> = {
+  optimal: { text: 'text-success', bg: 'bg-success/10', border: 'border-success/30' },
+  good: { text: 'text-efficiency', bg: 'bg-efficiency/10', border: 'border-efficiency/30' },
+  warning: { text: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/30' },
+  critical: { text: 'text-critical', bg: 'bg-critical/10', border: 'border-critical/30' },
 };
 
-const issueLabels: Record<string, { label: string; icon: string; color: string }> = {
-  exchanger: { label: 'Problem z wymiennikiem', icon: '⚙', color: 'text-warning' },
-  circulation: { label: 'Straty cyrkulacyjne', icon: '↻', color: 'text-warning' },
-  balanced: { label: 'System zrównoważony', icon: '✓', color: 'text-success' },
-  unknown: { label: 'Wymaga diagnostyki', icon: '?', color: 'text-foreground-muted' },
+// SVG icons for issue types
+function IssueIcon({ type, className }: { type: string; className?: string }) {
+  if (type === 'exchanger') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="8" cy="8" r="3" />
+        <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.5 1.5M11 11l1.5 1.5M3.5 12.5l1.5-1.5M11 5l1.5-1.5" />
+      </svg>
+    );
+  }
+  if (type === 'circulation') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 8a6 6 0 0 1 6-6M14 8a6 6 0 0 1-6 6" />
+        <path d="M8 2l2-2M8 2L6 0M8 14l2 2M8 14l-2 2" />
+      </svg>
+    );
+  }
+  if (type === 'balanced') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 8l4 4 6-8" />
+      </svg>
+    );
+  }
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 5v4M8 11v.01" />
+    </svg>
+  );
+}
+
+const issueLabels: Record<string, { label: string; type: string; color: string }> = {
+  exchanger: { label: 'Problem z wymiennikiem', type: 'exchanger', color: 'text-warning' },
+  circulation: { label: 'Straty cyrkulacyjne', type: 'circulation', color: 'text-warning' },
+  balanced: { label: 'System zrównoważony', type: 'balanced', color: 'text-success' },
+  unknown: { label: 'Wymaga diagnostyki', type: 'unknown', color: 'text-foreground-muted' },
 };
 
 // Arc Gauge Component - the hero visualization
@@ -52,28 +85,13 @@ function ArcGauge({
   return (
     <div className="relative">
       <svg viewBox={viewBox} className={size === 'lg' ? 'w-full h-auto' : 'w-24 h-auto'}>
-        {/* Glow filter */}
-        <defs>
-          <filter id={`glow-${status}`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <linearGradient id={`gradient-${status}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={getColor()} stopOpacity="0.3"/>
-            <stop offset="100%" stopColor={getColor()} stopOpacity="1"/>
-          </linearGradient>
-        </defs>
-
         {/* Background arc */}
         <path
           d={`M ${-radius} 0 A ${radius} ${radius} 0 0 1 ${radius} 0`}
           fill="none"
           stroke="currentColor"
           strokeWidth={strokeWidth}
-          className="text-surface-elevated"
+          className="text-surface-hover"
           strokeLinecap="round"
         />
 
@@ -81,12 +99,11 @@ function ArcGauge({
         <path
           d={`M ${-radius} 0 A ${radius} ${radius} 0 0 1 ${radius} 0`}
           fill="none"
-          stroke={`url(#gradient-${status})`}
+          stroke={getColor()}
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={`${progress} ${circumference}`}
-          filter={`url(#glow-${status})`}
-          className="transition-all duration-1000 ease-out"
+          className="transition-all duration-700 ease-out"
         />
 
         {/* Tick marks */}
@@ -113,14 +130,12 @@ function ArcGauge({
       {/* Value display */}
       {size === 'lg' && (
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-          <span
-            className={`text-6xl font-mono font-black tracking-tighter ${colors.text}`}
-            style={{ textShadow: status !== 'optimal' && status !== 'good' ? 'none' : '0 0 30px rgba(20, 184, 166, 0.5)' }}
-          >
+          <span className={`text-5xl font-mono font-bold tracking-tight ${colors.text}`}>
             {value}
+            <span className="text-2xl opacity-60">%</span>
           </span>
-          <span className="text-foreground-subtle text-sm font-medium tracking-widest uppercase">
-            sprawność %
+          <span className="text-foreground-muted text-xs font-medium tracking-wide uppercase mt-1">
+            sprawność
           </span>
         </div>
       )}
@@ -149,21 +164,21 @@ function MiniIndicator({
     <div className="group">
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
-          <span className={`text-[10px] font-bold font-mono px-1.5 py-0.5 rounded ${colors.bg} ${colors.text} ring-1 ${colors.ring}`}>
+          <span className={`text-[10px] font-bold font-mono px-1.5 py-0.5 rounded ${colors.bg} ${colors.text}`}>
             {shortLabel}
           </span>
-          <span className="text-xs text-foreground-muted group-hover:text-foreground transition-colors">{label}</span>
+          <span className="text-xs text-foreground-muted">{label}</span>
           {tooltip && <InfoTooltip content={tooltip} />}
         </div>
-        <span className={`text-sm font-mono font-bold ${colors.text}`}>{value}%</span>
+        <span className={`text-sm font-mono font-semibold ${colors.text}`}>{value}%</span>
       </div>
-      <div className="h-1.5 bg-surface rounded-full overflow-hidden">
+      <div className="h-1 bg-surface-hover rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all duration-700 ease-out ${
-            status === 'optimal' ? 'bg-gradient-to-r from-success/60 to-success' :
-            status === 'good' ? 'bg-gradient-to-r from-efficiency/60 to-efficiency' :
-            status === 'warning' ? 'bg-gradient-to-r from-warning/60 to-warning' :
-            'bg-gradient-to-r from-critical/60 to-critical'
+          className={`h-full rounded-full transition-all duration-500 ease-out ${
+            status === 'optimal' ? 'bg-success' :
+            status === 'good' ? 'bg-efficiency' :
+            status === 'warning' ? 'bg-warning' :
+            'bg-critical'
           }`}
           style={{ width: `${barWidth}%` }}
         />
@@ -195,41 +210,36 @@ function ComponentCard({
   const colors = statusColors[status];
 
   return (
-    <div className={`relative p-5 rounded-xl border transition-all duration-300 ${
-      status === 'critical' ? 'bg-gradient-to-br from-critical/5 to-transparent border-critical/30' :
-      status === 'warning' ? 'bg-gradient-to-br from-warning/5 to-transparent border-warning/20' :
-      status === 'good' ? 'bg-gradient-to-br from-efficiency/5 to-transparent border-efficiency/20' :
-      'bg-gradient-to-br from-success/5 to-transparent border-success/20'
-    }`}>
+    <div className={`relative p-4 rounded-lg border bg-surface ${colors.border}`}>
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-semibold text-foreground">{title}</span>
-            <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${colors.bg} ${colors.text}`}>
+            <span className="text-sm font-medium text-foreground">{title}</span>
+            <span className={`text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded ${colors.bg} ${colors.text}`}>
               {shortTitle}
             </span>
             {tooltip && <InfoTooltip content={tooltip} />}
           </div>
           <p className="text-xs text-foreground-muted max-w-[200px]">{interpretation}</p>
         </div>
-        <div className={`text-3xl font-mono font-black ${colors.text}`}>
+        <div className={`text-2xl font-mono font-bold ${colors.text}`}>
           {value}%
         </div>
       </div>
 
       {/* Children (sub-indicators) */}
       {children && (
-        <div className="space-y-3 pt-4 border-t border-border-subtle">
+        <div className="space-y-3 pt-3 border-t border-border">
           {children}
         </div>
       )}
 
       {/* Action */}
       {action && (
-        <div className={`mt-4 pt-3 border-t border-border-subtle flex items-center gap-2 text-xs font-medium ${colors.text}`}>
-          <span className={`w-2 h-2 rounded-full ${
-            status === 'critical' ? 'bg-critical animate-pulse' :
+        <div className={`mt-3 pt-3 border-t border-border flex items-center gap-2 text-xs font-medium ${colors.text}`}>
+          <span className={`w-1.5 h-1.5 rounded-full ${
+            status === 'critical' ? 'bg-critical' :
             status === 'warning' ? 'bg-warning' :
             'bg-success'
           }`} />
@@ -288,17 +298,8 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
       </CardHeader>
       <CardBody className="p-0">
         {/* Hero Section - Main SE Gauge */}
-        <div className="relative bg-gradient-to-b from-surface-elevated/50 to-transparent px-6 pt-6 pb-8">
-          {/* Decorative grid lines */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: `
-              linear-gradient(to right, currentColor 1px, transparent 1px),
-              linear-gradient(to bottom, currentColor 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px'
-          }} />
-
-          <div className="relative max-w-xs mx-auto">
+        <div className="px-6 pt-6 pb-6">
+          <div className="max-w-xs mx-auto">
             <ArcGauge value={se.value} status={se.status} size="lg" />
           </div>
 
@@ -309,12 +310,12 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
 
           {/* Loss indicator */}
           <div className="flex justify-center mt-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border-subtle">
-              <span className="text-foreground-subtle text-xs">Straty w systemie:</span>
-              <span className={`font-mono font-bold text-sm ${
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-surface-hover border border-border text-xs">
+              <span className="text-foreground-muted">Straty w systemie:</span>
+              <span className={`font-mono font-semibold ${
                 se.losses_percent > 30 ? 'text-critical' :
                 se.losses_percent > 20 ? 'text-warning' :
-                'text-foreground-muted'
+                'text-foreground-secondary'
               }`}>
                 {se.losses_percent}%
               </span>
@@ -323,14 +324,14 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
         </div>
 
         {/* Hierarchy Flow Visualization */}
-        <div className="px-6 py-4 border-t border-border-subtle">
-          <div className="flex items-center justify-center gap-2 text-xs text-foreground-subtle mb-4">
-            <span className="font-mono font-bold text-efficiency">SE</span>
+        <div className="px-6 py-3 border-t border-border">
+          <div className="flex items-center justify-center gap-2 text-xs text-foreground-muted">
+            <span className="font-mono font-semibold text-foreground">SE</span>
             <span>=</span>
             <span className="font-mono">KW</span>
             <span>−</span>
             <span className="font-mono">SS</span>
-            <span className="text-foreground-muted ml-2">(Sprawność = Wymiennik − Straty)</span>
+            <span className="ml-2">(Sprawność = Wymiennik − Straty)</span>
           </div>
         </div>
 
@@ -545,13 +546,13 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
         </div>
 
         {/* Diagnostic Summary */}
-        <div className="mx-6 mb-6 p-4 rounded-xl bg-surface-elevated border border-border-subtle">
+        <div className="mx-6 mb-6 p-4 rounded-lg bg-surface border border-border">
           <div className="flex items-start justify-between gap-4">
             <div className="flex items-start gap-3">
-              <span className={`text-2xl ${issue.color}`}>{issue.icon}</span>
+              <IssueIcon type={issue.type} className={`w-5 h-5 ${issue.color}`} />
               <div>
-                <span className={`font-semibold ${issue.color}`}>{issue.label}</span>
-                <p className="text-sm text-foreground-muted mt-1">
+                <span className={`text-sm font-medium ${issue.color}`}>{issue.label}</span>
+                <p className="text-xs text-foreground-muted mt-1">
                   {primary_issue === 'circulation' && 'Wymiennik pracuje dobrze, ale duże straty w cyrkulacji i rurach.'}
                   {primary_issue === 'exchanger' && 'Główny problem to sprawność wymiennika ciepła.'}
                   {primary_issue === 'balanced' && 'System pracuje efektywnie, brak pilnych interwencji.'}
@@ -562,10 +563,10 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
 
             {savings_potential_percent > 0 && (
               <div className="text-right shrink-0">
-                <p className="text-[10px] text-foreground-subtle uppercase tracking-wider">Potencjał oszczędności</p>
-                <p className="text-2xl font-mono font-black text-efficiency">{savings_potential_percent}%</p>
+                <p className="text-[10px] text-foreground-muted uppercase tracking-wide">Potencjał oszczędności</p>
+                <p className="text-xl font-mono font-bold text-success">{savings_potential_percent}%</p>
                 <p className="text-xs text-foreground-muted font-mono">~{savings_potential_gj} GJ/rok</p>
-                <p className="text-xs text-foreground-subtle">~{savingsPLN.toLocaleString()} PLN</p>
+                <p className="text-[10px] text-foreground-subtle">~{savingsPLN.toLocaleString()} PLN</p>
               </div>
             )}
           </div>

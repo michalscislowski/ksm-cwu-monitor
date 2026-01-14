@@ -102,8 +102,11 @@ export default function DocsPage() {
 
       <div className="p-4 bg-surface-elevated rounded-xl border border-border-subtle">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-info/10 flex items-center justify-center">
-            <span className="text-sm">💡</span>
+          <div className="w-8 h-8 rounded-lg bg-info/10 flex items-center justify-center text-info">
+            <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 14h4M7 14v-2M9 14v-2" />
+              <path d="M5 10a5 5 0 1 1 6 0c0 1-1 2-1 2H6s-1-1-1-2z" />
+            </svg>
           </div>
           <div>
             <p className="text-sm text-foreground">

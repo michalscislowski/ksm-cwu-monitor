@@ -4,11 +4,37 @@ import { Badge } from '@/components/ui/Badge';
 import { getAllAlerts, getRelativeTime, getSeverityBg } from '@/lib/data';
 import type { Alert, AlertSeverity } from '@/lib/types';
 
+// SVG icons for alert severity
+function AlertSeverityIcon({ severity, className }: { severity: AlertSeverity; className?: string }) {
+  if (severity === 'critical') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M8 2L1 14h14L8 2z" />
+        <path d="M8 6v4M8 12v.01" />
+      </svg>
+    );
+  }
+  if (severity === 'warning') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M8 5v4M8 11v.01" />
+        <circle cx="8" cy="8" r="6" />
+      </svg>
+    );
+  }
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 5v4M8 11v.01" />
+    </svg>
+  );
+}
+
 function AlertCard({ alert }: { alert: Alert }) {
-  const severityConfig: Record<AlertSeverity, { label: string; icon: string }> = {
-    critical: { label: 'Krytyczny', icon: '⚠️' },
-    warning: { label: 'Ostrzeżenie', icon: '⚡' },
-    info: { label: 'Informacja', icon: 'ℹ️' },
+  const severityConfig: Record<AlertSeverity, { label: string; textColor: string }> = {
+    critical: { label: 'Krytyczny', textColor: 'text-critical' },
+    warning: { label: 'Ostrzeżenie', textColor: 'text-warning' },
+    info: { label: 'Informacja', textColor: 'text-info' },
   };
 
   const config = severityConfig[alert.severity];
@@ -21,13 +47,13 @@ function AlertCard({ alert }: { alert: Alert }) {
             {/* Severity icon */}
             <div
               className={`
-                w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0
-                ${alert.severity === 'critical' ? 'bg-critical/20' : ''}
-                ${alert.severity === 'warning' ? 'bg-warning/20' : ''}
-                ${alert.severity === 'info' ? 'bg-info/20' : ''}
+                w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0
+                ${alert.severity === 'critical' ? 'bg-critical/15 text-critical' : ''}
+                ${alert.severity === 'warning' ? 'bg-warning/15 text-warning' : ''}
+                ${alert.severity === 'info' ? 'bg-info/15 text-info' : ''}
               `}
             >
-              {config.icon}
+              <AlertSeverityIcon severity={alert.severity} className="w-5 h-5" />
             </div>
 
             {/* Content */}
@@ -115,7 +141,9 @@ export default function AlertsPage() {
         <Card>
           <CardBody>
             <div className="text-center py-12">
-              <span className="text-5xl mb-4 block">✓</span>
+              <svg className="w-12 h-12 text-success mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12l6 6 10-12" />
+              </svg>
               <h3 className="text-lg font-semibold text-success mb-2">
                 Brak aktywnych alertów
               </h3>

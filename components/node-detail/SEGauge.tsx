@@ -59,20 +59,20 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
   // Calculate the angle for the gauge (0-100 maps to 0-270 degrees)
   const angle = Math.min(Math.max((value / 100) * 270, 0), 270);
 
-  // Determine color based on value
-  const getColor = (val: number) => {
-    if (val >= 80) return { main: '#10b981', glow: 'rgba(16,185,129,0.3)' }; // success
-    if (val >= 70) return { main: '#14b8a6', glow: 'rgba(20,184,166,0.3)' }; // efficiency
-    if (val >= 60) return { main: '#f59e0b', glow: 'rgba(245,158,11,0.3)' }; // warning
-    return { main: '#ef4444', glow: 'rgba(239,68,68,0.3)' }; // critical
+  // Determine color based on value - uses CSS variables for theme support
+  const getColorConfig = (val: number) => {
+    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };
+    if (val >= 70) return { css: 'var(--color-efficiency)', class: 'text-efficiency' };
+    if (val >= 60) return { css: 'var(--color-warning)', class: 'text-warning' };
+    return { css: 'var(--color-critical)', class: 'text-critical' };
   };
 
-  const color = getColor(value);
+  const colorConfig = getColorConfig(value);
 
   const sizeConfig = {
-    sm: { outer: 120, inner: 90, stroke: 8, fontSize: '2rem' },
-    md: { outer: 160, inner: 120, stroke: 10, fontSize: '2.5rem' },
-    lg: { outer: 200, inner: 150, stroke: 12, fontSize: '3.5rem' },
+    sm: { outer: 120, inner: 90, stroke: 8, fontSize: '1.75rem', labelSize: '0.75rem' },
+    md: { outer: 160, inner: 120, stroke: 10, fontSize: '2.25rem', labelSize: '0.8125rem' },
+    lg: { outer: 200, inner: 150, stroke: 12, fontSize: '3rem', labelSize: '0.875rem' },
   };
 
   const cfg = sizeConfig[size];
@@ -95,7 +95,7 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
             cy={cfg.outer / 2}
             r={radius}
             fill="none"
-            stroke="#1a1e26"
+            stroke="var(--color-surface-hover)"
             strokeWidth={cfg.stroke}
             strokeLinecap="round"
             strokeDasharray={`${circumference} ${circumference * 0.33}`}
@@ -116,8 +116,9 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="#3a404c"
+                stroke="var(--color-border)"
                 strokeWidth={2}
+                strokeLinecap="round"
                 className="transform rotate-[135deg] origin-center"
               />
             );
@@ -129,28 +130,13 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
             cy={cfg.outer / 2}
             r={radius}
             fill="none"
-            stroke={color.main}
+            stroke={colorConfig.css}
             strokeWidth={cfg.stroke}
             strokeLinecap="round"
             strokeDasharray={`${(angle / 270) * circumference} ${circumference}`}
             style={{
-              filter: `drop-shadow(0 0 6px ${color.glow})`,
-              transition: 'stroke-dasharray 1s ease-out, stroke 0.3s ease',
+              transition: 'stroke-dasharray 0.8s ease-out, stroke 0.2s ease',
             }}
-          />
-
-          {/* Glow effect */}
-          <circle
-            cx={cfg.outer / 2}
-            cy={cfg.outer / 2}
-            r={radius}
-            fill="none"
-            stroke={color.main}
-            strokeWidth={cfg.stroke + 4}
-            strokeLinecap="round"
-            strokeDasharray={`${(angle / 270) * circumference} ${circumference}`}
-            opacity={0.15}
-            style={{ transition: 'stroke-dasharray 1s ease-out' }}
           />
         </svg>
 
@@ -160,16 +146,19 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
           style={{ paddingTop: size === 'lg' ? '10px' : '5px' }}
         >
           <span
-            className="font-mono font-bold tracking-tight"
+            className={`font-mono font-bold tracking-tighter ${colorConfig.class}`}
             style={{
               fontSize: cfg.fontSize,
-              color: color.main,
-              textShadow: `0 0 20px ${color.glow}`,
+              lineHeight: 1,
             }}
           >
-            {value}%
+            {value}
+            <span className="text-[0.5em] font-semibold opacity-70">%</span>
           </span>
-          <span className="text-foreground-muted text-sm -mt-1 flex items-center gap-1">
+          <span
+            className="text-foreground-muted flex items-center gap-1 mt-1"
+            style={{ fontSize: cfg.labelSize }}
+          >
             sprawności
             {showTooltip && <InfoTooltip content={<SETooltipContent />} />}
           </span>
@@ -188,47 +177,148 @@ export function SEGauge({ value, trend, trend_change, size = 'lg', showTooltip =
 // Mini gauge for lists - shows SE percentage
 interface MiniGaugeProps {
   value: number;
+  size?: 'sm' | 'md';
 }
 
-export function MiniGauge({ value }: MiniGaugeProps) {
-  const getColor = (val: number) => {
-    if (val >= 80) return '#10b981';
-    if (val >= 70) return '#14b8a6';
-    if (val >= 60) return '#f59e0b';
-    return '#ef4444';
+export function MiniGauge({ value, size = 'md' }: MiniGaugeProps) {
+  const getColorConfig = (val: number) => {
+    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };
+    if (val >= 70) return { css: 'var(--color-efficiency)', class: 'text-efficiency' };
+    if (val >= 60) return { css: 'var(--color-warning)', class: 'text-warning' };
+    return { css: 'var(--color-critical)', class: 'text-critical' };
   };
 
-  const color = getColor(value);
+  const colorConfig = getColorConfig(value);
   const percentage = Math.min(Math.max(value, 0), 100);
 
+  const dimensions = size === 'sm' ? 32 : 40;
+  const strokeWidth = size === 'sm' ? 2.5 : 3;
+  const fontSize = size === 'sm' ? '10px' : '12px';
+  const radius = (dimensions - strokeWidth * 2) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percentage / 100) * circumference;
+
   return (
-    <div className="relative w-10 h-10">
-      <svg viewBox="0 0 36 36" className="w-10 h-10 -rotate-90">
+    <div className="relative" style={{ width: dimensions, height: dimensions }}>
+      <svg
+        viewBox={`0 0 ${dimensions} ${dimensions}`}
+        style={{ width: dimensions, height: dimensions }}
+        className="-rotate-90"
+      >
+        {/* Background track */}
         <circle
-          cx="18"
-          cy="18"
-          r="15"
+          cx={dimensions / 2}
+          cy={dimensions / 2}
+          r={radius}
           fill="none"
-          stroke="#1a1e26"
-          strokeWidth="3"
+          stroke="var(--color-surface-hover)"
+          strokeWidth={strokeWidth}
         />
+        {/* Progress arc */}
         <circle
-          cx="18"
-          cy="18"
-          r="15"
+          cx={dimensions / 2}
+          cy={dimensions / 2}
+          r={radius}
           fill="none"
-          stroke={color}
-          strokeWidth="3"
+          stroke={colorConfig.css}
+          strokeWidth={strokeWidth}
           strokeLinecap="round"
-          strokeDasharray={`${percentage * 0.94} 100`}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-all duration-700 ease-out"
         />
       </svg>
       <span
-        className="absolute inset-0 flex items-center justify-center text-xs font-mono font-semibold"
-        style={{ color }}
+        className={`absolute inset-0 flex items-center justify-center font-mono font-semibold tabular-nums ${colorConfig.class}`}
+        style={{ fontSize }}
       >
         {value}
       </span>
+    </div>
+  );
+}
+
+// Arc gauge for hierarchy panel
+interface ArcGaugeProps {
+  value: number;
+  label: string;
+  size?: 'sm' | 'md' | 'lg';
+  showLabel?: boolean;
+}
+
+export function ArcGauge({ value, label, size = 'md', showLabel = true }: ArcGaugeProps) {
+  const getColorConfig = (val: number) => {
+    if (val >= 80) return { css: 'var(--color-success)', class: 'text-success' };
+    if (val >= 70) return { css: 'var(--color-efficiency)', class: 'text-efficiency' };
+    if (val >= 60) return { css: 'var(--color-warning)', class: 'text-warning' };
+    return { css: 'var(--color-critical)', class: 'text-critical' };
+  };
+
+  const colorConfig = getColorConfig(value);
+
+  const sizeConfig = {
+    sm: { dimension: 80, stroke: 6, fontSize: '1.25rem' },
+    md: { dimension: 100, stroke: 7, fontSize: '1.5rem' },
+    lg: { dimension: 120, stroke: 8, fontSize: '1.75rem' },
+  };
+
+  const cfg = sizeConfig[size];
+  const radius = (cfg.dimension - cfg.stroke) / 2;
+  const circumference = 2 * Math.PI * radius * (270 / 360);
+  const angle = Math.min(Math.max((value / 100) * 270, 0), 270);
+
+  return (
+    <div className="flex flex-col items-center">
+      <div className="relative" style={{ width: cfg.dimension, height: cfg.dimension }}>
+        <svg
+          width={cfg.dimension}
+          height={cfg.dimension}
+          viewBox={`0 0 ${cfg.dimension} ${cfg.dimension}`}
+          className="transform -rotate-[135deg]"
+        >
+          {/* Background track */}
+          <circle
+            cx={cfg.dimension / 2}
+            cy={cfg.dimension / 2}
+            r={radius}
+            fill="none"
+            stroke="var(--color-surface-hover)"
+            strokeWidth={cfg.stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${circumference} ${circumference * 0.33}`}
+          />
+
+          {/* Value arc */}
+          <circle
+            cx={cfg.dimension / 2}
+            cy={cfg.dimension / 2}
+            r={radius}
+            fill="none"
+            stroke={colorConfig.css}
+            strokeWidth={cfg.stroke}
+            strokeLinecap="round"
+            strokeDasharray={`${(angle / 270) * circumference} ${circumference}`}
+            style={{ transition: 'stroke-dasharray 0.8s ease-out' }}
+          />
+        </svg>
+
+        {/* Center value */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span
+            className={`font-mono font-bold tracking-tight ${colorConfig.class}`}
+            style={{ fontSize: cfg.fontSize }}
+          >
+            {value}
+            <span className="text-[0.5em] opacity-60">%</span>
+          </span>
+        </div>
+      </div>
+
+      {showLabel && (
+        <span className="mt-2 text-xs font-medium text-foreground-muted uppercase tracking-wide">
+          {label}
+        </span>
+      )}
     </div>
   );
 }

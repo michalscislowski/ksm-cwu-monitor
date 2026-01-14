@@ -18,7 +18,9 @@ export function BenchmarkPanel({ benchmark }: BenchmarkPanelProps) {
     <Card>
       <CardHeader dataSource="mec">
         <span className="flex items-center gap-2">
-          <span>📊</span>
+          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 14V8M6 14V4M10 14V6M14 14V2" />
+          </svg>
           Benchmark
         </span>
       </CardHeader>

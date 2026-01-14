@@ -47,7 +47,9 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
         <CardHeader>{title}</CardHeader>
         <CardBody>
           <div className="text-center py-8 text-foreground-muted">
-            <span className="text-success text-2xl block mb-2">✓</span>
+            <svg className="w-8 h-8 text-success mx-auto mb-2" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 8l4 4 6-8" />
+            </svg>
             <p>Wszystkie węzły pracują optymalnie</p>
           </div>
         </CardBody>
@@ -99,18 +101,27 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
                     <td className="px-5 py-4">
                       {worst.status !== 'optimal' ? (
                         <span
-                          className={`text-xs px-2 py-0.5 rounded ${
-                            worst.status === 'critical'
-                              ? 'bg-critical/20 text-critical'
+                          className={`
+                            inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-md
+                            ${worst.status === 'critical'
+                              ? 'bg-critical/10 text-critical border border-critical/20'
                               : worst.status === 'warning'
-                              ? 'bg-warning/20 text-warning'
-                              : 'bg-efficiency/20 text-efficiency'
-                          }`}
+                              ? 'bg-warning/10 text-warning border border-warning/20'
+                              : 'bg-efficiency/10 text-efficiency border border-efficiency/20'
+                            }
+                          `}
                         >
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            worst.status === 'critical' ? 'bg-critical' :
+                            worst.status === 'warning' ? 'bg-warning' : 'bg-efficiency'
+                          }`} />
                           {worst.shortLabel}
                         </span>
                       ) : (
-                        <span className="text-success text-xs">✓ OK</span>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-success">
+                          <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                          OK
+                        </span>
                       )}
                     </td>
                     <td className="px-5 py-4">

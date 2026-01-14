@@ -14,24 +14,24 @@ export function CategoriesChart({ stats }: CategoriesChartProps) {
   const categories = [
     {
       label: 'Kategoria A',
-      sublabel: 'Bardzo dobra',
+      sublabel: 'SE ≥ 80%',
       count: stats.categoryACount,
       percent: Math.round((stats.categoryACount / total) * 100),
       status: 'optimal' as const,
     },
     {
       label: 'Kategoria B',
-      sublabel: 'Dobra',
+      sublabel: 'SE 70-79%',
       count: stats.categoryBCount,
       percent: Math.round((stats.categoryBCount / total) * 100),
-      status: 'good' as const,
+      status: 'warning' as const,
     },
     {
       label: 'Kategoria C',
-      sublabel: 'Wymaga uwagi',
+      sublabel: 'SE < 70%',
       count: stats.categoryCCount,
       percent: Math.round((stats.categoryCCount / total) * 100),
-      status: 'warning' as const,
+      status: 'critical' as const,
     },
   ];
 
@@ -39,7 +39,9 @@ export function CategoriesChart({ stats }: CategoriesChartProps) {
     <Card className="animate-in stagger-5">
       <CardHeader>
         <span className="flex items-center gap-2">
-          <span>📈</span>
+          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 14V8M6 14V5M10 14V7M14 14V2" />
+          </svg>
           Rozkład kategorii
         </span>
       </CardHeader>

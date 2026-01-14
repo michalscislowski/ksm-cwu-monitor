@@ -3,12 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getAllAlerts } from '@/lib/data';
+import { ThemeToggle } from './ThemeProvider';
 
 const navItems = [
-  { href: '/dashboard', label: 'Przegląd' },
-  { href: '/nodes', label: 'Węzły' },
-  { href: '/alerts', label: 'Alerty' },
-  { href: '/docs', label: 'Dokumentacja' },
+  { href: '/dashboard', label: 'Przegląd', icon: DashboardIcon },
+  { href: '/nodes', label: 'Węzły', icon: NodesIcon },
+  { href: '/alerts', label: 'Alerty', icon: AlertsIcon },
+  { href: '/docs', label: 'Dokumentacja', icon: DocsIcon },
 ];
 
 export function Navigation() {
@@ -19,51 +20,45 @@ export function Navigation() {
   return (
     <>
       {/* Header */}
-      <header className="border-b border-border-subtle bg-surface/90 backdrop-blur-xl sticky top-0 z-50 shadow-lg shadow-black/10">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
             {/* Logo */}
-            <Link href="/dashboard" className="flex items-center gap-3 group">
-              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-efficiency via-efficiency to-info flex items-center justify-center shadow-lg shadow-efficiency/30 group-hover:shadow-efficiency/50 group-hover:scale-105 transition-all duration-300">
-                <span className="text-white font-bold text-sm tracking-tight">KSM</span>
-                <div className="absolute inset-0 rounded-xl bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <Link href="/dashboard" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+                <span className="text-white font-semibold text-xs">KSM</span>
               </div>
-              <div className="transition-transform group-hover:translate-x-0.5 duration-300">
-                <h1 className="font-semibold text-foreground leading-tight tracking-tight">
-                  Monitor CWU
-                </h1>
-                <p className="text-xs text-foreground-subtle leading-tight">
-                  KSM Przylesie
-                </p>
+              <div>
+                <span className="font-semibold text-foreground text-sm">Monitor CWU</span>
               </div>
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-1 p-1 rounded-xl bg-surface-elevated/50">
+            <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
                 const isAlerts = item.href === '/alerts';
+                const Icon = item.icon;
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     className={`
-                      relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                      relative flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium
+                      transition-colors duration-150
                       ${isActive
-                        ? 'text-efficiency bg-efficiency/15 shadow-sm shadow-efficiency/20'
+                        ? 'text-foreground bg-surface-hover'
                         : 'text-foreground-muted hover:text-foreground hover:bg-surface-hover'
                       }
                     `}
                   >
-                    {item.label}
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
                     {isAlerts && activeAlerts > 0 && (
-                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-gradient-to-br from-critical to-red-600 text-white text-xs flex items-center justify-center font-bold shadow-lg shadow-critical/40 animate-pulse">
+                      <span className="ml-1 min-w-[18px] h-[18px] px-1 rounded-full bg-critical text-white text-[11px] flex items-center justify-center font-medium">
                         {activeAlerts}
                       </span>
-                    )}
-                    {isActive && (
-                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-transparent via-efficiency to-transparent rounded-full" />
                     )}
                   </Link>
                 );
@@ -71,19 +66,14 @@ export function Navigation() {
             </nav>
 
             {/* Right side */}
-            <div className="flex items-center gap-3">
-              {/* Status indicator */}
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-elevated/80 border border-success/20 shadow-inner">
-                <span className="relative w-2 h-2">
-                  <span className="absolute inset-0 rounded-full bg-success animate-ping opacity-75" />
-                  <span className="relative block w-2 h-2 rounded-full bg-success" />
-                </span>
-                <span className="text-xs text-success font-medium">Online</span>
-              </div>
+            <div className="flex items-center gap-2">
+              {/* Theme toggle */}
+              <ThemeToggle />
 
-              {/* Version badge */}
-              <div className="hidden lg:block text-[10px] text-foreground-subtle font-mono px-2 py-1 rounded bg-surface-elevated/50 border border-border-subtle">
-                v3.2
+              {/* Status indicator */}
+              <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md border border-border text-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-success" />
+                <span className="text-foreground-muted">Online</span>
               </div>
             </div>
           </div>
@@ -91,40 +81,32 @@ export function Navigation() {
       </header>
 
       {/* Mobile nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-xl border-t border-border-subtle z-50 pb-safe">
-        <div className="flex justify-around py-2 px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border pb-safe">
+        <div className="flex justify-around items-center py-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             const isAlerts = item.href === '/alerts';
+            const Icon = item.icon;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`
-                  relative flex flex-col items-center gap-0.5 px-4 py-2 rounded-xl transition-all duration-200
+                  relative flex flex-col items-center gap-1 px-3 py-1.5 rounded-md min-w-[60px]
+                  transition-colors duration-150
                   ${isActive
-                    ? 'text-efficiency bg-efficiency/10'
-                    : 'text-foreground-muted active:scale-95'
+                    ? 'text-foreground'
+                    : 'text-foreground-muted'
                   }
                 `}
               >
-                <span className={`text-lg transition-transform ${isActive ? 'scale-110' : ''}`}>
-                  {item.href === '/dashboard' && '📊'}
-                  {item.href === '/nodes' && '🏢'}
-                  {item.href === '/alerts' && '🔔'}
-                  {item.href === '/docs' && '📄'}
-                </span>
-                <span className={`text-[10px] font-medium ${isActive ? 'text-efficiency' : ''}`}>
-                  {item.label}
-                </span>
+                <Icon className="w-5 h-5" />
+                <span className="text-[10px] font-medium">{item.label}</span>
                 {isAlerts && activeAlerts > 0 && (
-                  <span className="absolute top-0.5 right-1.5 w-4 h-4 rounded-full bg-gradient-to-br from-critical to-red-600 text-white text-[9px] flex items-center justify-center font-bold shadow-md shadow-critical/30">
+                  <span className="absolute top-0 right-1 min-w-[16px] h-[16px] px-1 rounded-full bg-critical text-white text-[10px] flex items-center justify-center font-medium">
                     {activeAlerts}
                   </span>
-                )}
-                {isActive && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-efficiency" />
                 )}
               </Link>
             );
@@ -132,5 +114,52 @@ export function Navigation() {
         </div>
       </nav>
     </>
+  );
+}
+
+// Clean, consistent icon components (stroke-based, 1.5px width)
+function DashboardIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="9" rx="1" />
+      <rect x="14" y="3" width="7" height="5" rx="1" />
+      <rect x="14" y="12" width="7" height="9" rx="1" />
+      <rect x="3" y="16" width="7" height="5" rx="1" />
+    </svg>
+  );
+}
+
+function NodesIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 21h18" />
+      <path d="M5 21V7l8-4v18" />
+      <path d="M19 21V11l-6-4" />
+      <path d="M9 9v.01" />
+      <path d="M9 12v.01" />
+      <path d="M9 15v.01" />
+      <path d="M9 18v.01" />
+    </svg>
+  );
+}
+
+function AlertsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </svg>
+  );
+}
+
+function DocsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+      <path d="M16 13H8" />
+      <path d="M16 17H8" />
+      <path d="M10 9H8" />
+    </svg>
   );
 }

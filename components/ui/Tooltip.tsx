@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import { useState, useRef, useEffect, ReactNode, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 
 interface InfoPanelProps {
@@ -14,43 +14,56 @@ export function InfoTooltip({ content }: InfoPanelProps) {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
+    setIsMobile(window.innerWidth < 640);
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    if (isOpen && triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const panelWidth = 380;
-      const panelHeight = 400;
-      const padding = 16;
+  const calculatePosition = useCallback(() => {
+    if (!triggerRef.current) return;
 
-      // Check if panel fits to the right
+    const rect = triggerRef.current.getBoundingClientRect();
+    const panelWidth = 380;
+    const panelHeight = 400;
+    const padding = 16;
+
+    if (window.innerWidth < 640) {
+      // Mobile: bottom sheet mode
+      setPosition({ top: 0, left: 0 });
+    } else {
+      // Desktop positioning
       const fitsRight = rect.right + panelWidth + padding < window.innerWidth;
-      // Check if panel fits below
-      const fitsBelow = rect.bottom + panelHeight + padding < window.innerHeight;
 
       let top: number;
       let left: number;
 
-      if (window.innerWidth < 640) {
-        // Mobile: bottom sheet mode - handled separately
-        top = 0;
-        left = 0;
-      } else if (fitsRight) {
-        // Desktop: position to the right
+      if (fitsRight) {
         top = Math.max(padding, Math.min(rect.top - 20, window.innerHeight - panelHeight - padding));
         left = rect.right + 12;
       } else {
-        // Fallback: position below
         top = rect.bottom + 12;
         left = Math.max(padding, Math.min(rect.left - panelWidth / 2, window.innerWidth - panelWidth - padding));
       }
 
       setPosition({ top, left });
     }
-  }, [isOpen]);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      calculatePosition();
+    }
+  }, [isOpen, calculatePosition]);
 
   // Close on outside click
   useEffect(() => {
@@ -81,15 +94,48 @@ export function InfoTooltip({ content }: InfoPanelProps) {
 
   // Prevent scroll when mobile sheet is open
   useEffect(() => {
-    if (isOpen && window.innerWidth < 640) {
+    if (isOpen && isMobile) {
       document.body.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = '';
       };
     }
-  }, [isOpen]);
+  }, [isOpen, isMobile]);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  // Desktop hover handlers
+  const handleMouseEnter = () => {
+    if (isMobile) return;
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsOpen(true);
+    }, 200);
+  };
+
+  const handleMouseLeave = () => {
+    if (isMobile) return;
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 300);
+  };
+
+  const handlePanelMouseEnter = () => {
+    if (isMobile) return;
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+  };
+
+  const handlePanelMouseLeave = () => {
+    if (isMobile) return;
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 300);
+  };
 
   return (
     <>
@@ -97,14 +143,16 @@ export function InfoTooltip({ content }: InfoPanelProps) {
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => isMobile && setIsOpen(!isOpen)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         className={`
-          inline-flex items-center justify-center w-5 h-5
-          rounded-full text-xs font-semibold font-mono
-          transition-all duration-200
+          inline-flex items-center justify-center w-4 h-4
+          rounded-full text-[10px] font-medium
+          transition-colors duration-150
           ${isOpen
-            ? 'bg-efficiency text-background ring-2 ring-efficiency/30'
-            : 'bg-foreground-subtle/20 text-foreground-muted hover:bg-efficiency/20 hover:text-efficiency'
+            ? 'bg-primary text-white'
+            : 'bg-surface-hover text-foreground-muted hover:bg-surface-active hover:text-foreground'
           }
         `}
         aria-expanded={isOpen}
@@ -119,7 +167,8 @@ export function InfoTooltip({ content }: InfoPanelProps) {
           {/* Mobile: backdrop */}
           {isMobile && (
             <div
-              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100] animate-in fade-in duration-200"
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[100]"
+              style={{ animation: 'fadeIn 0.2s ease-out' }}
               onClick={() => setIsOpen(false)}
             />
           )}
@@ -127,82 +176,71 @@ export function InfoTooltip({ content }: InfoPanelProps) {
           {/* Panel */}
           <div
             ref={panelRef}
+            onMouseEnter={handlePanelMouseEnter}
+            onMouseLeave={handlePanelMouseLeave}
             className={`
               fixed z-[101]
               ${isMobile
-                ? 'inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl animate-in slide-in-from-bottom duration-300'
-                : 'w-[380px] max-h-[80vh] rounded-xl animate-in fade-in slide-in-from-left-2 duration-200'
+                ? 'inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl'
+                : 'w-[380px] max-h-[80vh] rounded-xl'
               }
-              bg-surface-elevated/95 backdrop-blur-xl
+              bg-surface-elevated backdrop-blur-xl
               border border-border
-              shadow-2xl shadow-black/50
+              shadow-xl
               overflow-hidden
               flex flex-col
             `}
-            style={!isMobile ? { top: position.top, left: position.left } : undefined}
+            style={{
+              ...(isMobile ? {} : { top: position.top, left: position.left }),
+              animation: isMobile
+                ? 'slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                : 'fadeInScale 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border-subtle bg-surface/50">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-surface">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-efficiency animate-pulse" />
-                <span className="text-xs font-medium text-foreground-muted uppercase tracking-wider">
-                  Informacja techniczna
+                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                <span className="text-[11px] font-medium text-foreground-muted uppercase tracking-wide">
+                  Informacja
                 </span>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-foreground-muted hover:text-foreground hover:bg-surface-hover transition-colors"
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-foreground-muted hover:text-foreground hover:bg-surface-hover transition-colors btn-press"
                 aria-label="Zamknij"
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M1 1l12 12M13 1L1 13" />
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M1 1l10 10M11 1L1 11" />
                 </svg>
               </button>
             </div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto overscroll-contain">
-              <div className="p-5 space-y-4">
+              <div className="p-5 space-y-4 text-sm">
                 {content}
               </div>
             </div>
 
             {/* Footer hint */}
-            <div className="px-5 py-3 border-t border-border-subtle bg-surface/30">
-              <p className="text-xs text-foreground-subtle text-center">
-                Kliknij poza panel lub naciśnij <kbd className="px-1.5 py-0.5 rounded bg-surface-elevated border border-border-subtle font-mono text-[10px]">ESC</kbd> aby zamknąć
+            <div className="px-5 py-2.5 border-t border-border-subtle bg-surface/30">
+              <p className="text-[11px] text-foreground-subtle text-center">
+                {isMobile ? (
+                  'Dotknij poza panel aby zamknąć'
+                ) : (
+                  <>
+                    Naciśnij{' '}
+                    <kbd className="px-1.5 py-0.5 rounded bg-surface-elevated border border-border-subtle font-mono text-[10px]">
+                      ESC
+                    </kbd>
+                    {' '}aby zamknąć
+                  </>
+                )}
               </p>
             </div>
           </div>
 
-          {/* Desktop: connecting line */}
-          {!isMobile && triggerRef.current && (
-            <svg
-              className="fixed z-[100] pointer-events-none animate-in fade-in duration-200"
-              style={{
-                top: triggerRef.current.getBoundingClientRect().top + triggerRef.current.offsetHeight / 2 - 10,
-                left: triggerRef.current.getBoundingClientRect().right - 2,
-                width: 20,
-                height: 20,
-              }}
-            >
-              <path
-                d="M 2 10 L 18 10"
-                stroke="var(--color-efficiency)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                opacity="0.5"
-              />
-              <circle
-                cx="2"
-                cy="10"
-                r="3"
-                fill="var(--color-efficiency)"
-                opacity="0.5"
-              />
-            </svg>
-          )}
         </>,
         document.body
       )}
@@ -212,3 +250,67 @@ export function InfoTooltip({ content }: InfoPanelProps) {
 
 // Re-export for backwards compatibility
 export const Tooltip = InfoTooltip;
+
+// Simple hover tooltip for small hints
+interface SimpleTooltipProps {
+  content: string;
+  children: ReactNode;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+export function SimpleTooltip({ content, children, position = 'top' }: SimpleTooltipProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const triggerRef = useRef<HTMLSpanElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const showTooltip = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      if (triggerRef.current) {
+        const rect = triggerRef.current.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const y = position === 'top' ? rect.top - 8 : rect.bottom + 8;
+        setCoords({ x, y });
+        setIsVisible(true);
+      }
+    }, 400);
+  };
+
+  const hideTooltip = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsVisible(false);
+  };
+
+  return (
+    <>
+      <span
+        ref={triggerRef}
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
+        className="inline-flex"
+      >
+        {children}
+      </span>
+      {mounted && isVisible && createPortal(
+        <div
+          className="fixed z-[200] px-2.5 py-1.5 text-xs font-medium text-foreground bg-surface-elevated border border-border rounded-lg shadow-lg pointer-events-none"
+          style={{
+            left: coords.x,
+            top: coords.y,
+            transform: `translate(-50%, ${position === 'top' ? '-100%' : '0'})`,
+            animation: 'fadeIn 0.15s ease-out',
+          }}
+        >
+          {content}
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}

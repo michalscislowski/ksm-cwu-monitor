@@ -9,38 +9,47 @@ interface AlertItemProps {
   alert: Alert;
 }
 
+// SVG icons for alert severity
+function AlertIcon({ severity, className }: { severity: AlertSeverity; className?: string }) {
+  if (severity === 'critical' || severity === 'warning') {
+    return (
+      <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M8 5v4M8 11v.01" />
+      </svg>
+    );
+  }
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 5v4M8 11v.01" />
+    </svg>
+  );
+}
+
 function AlertItem({ alert }: AlertItemProps) {
   const severityConfig: Record<AlertSeverity, {
-    icon: string;
     label: string;
-    gradient: string;
     iconBg: string;
     textColor: string;
     borderColor: string;
   }> = {
     critical: {
-      icon: '!',
       label: 'KRYTYCZNY',
-      gradient: 'from-critical/10 via-critical/5 to-transparent',
-      iconBg: 'bg-critical text-white shadow-lg shadow-critical/30',
+      iconBg: 'bg-critical text-white',
       textColor: 'text-critical',
-      borderColor: 'border-critical/40',
+      borderColor: 'border-critical/30',
     },
     warning: {
-      icon: '!',
       label: 'OSTRZEŻENIE',
-      gradient: 'from-warning/10 via-warning/5 to-transparent',
-      iconBg: 'bg-warning text-white shadow-lg shadow-warning/30',
+      iconBg: 'bg-warning text-white',
       textColor: 'text-warning',
-      borderColor: 'border-warning/40',
+      borderColor: 'border-warning/30',
     },
     info: {
-      icon: 'i',
       label: 'INFO',
-      gradient: 'from-info/10 via-info/5 to-transparent',
-      iconBg: 'bg-info text-white shadow-lg shadow-info/30',
+      iconBg: 'bg-info text-white',
       textColor: 'text-info',
-      borderColor: 'border-info/40',
+      borderColor: 'border-info/30',
     },
   };
 
@@ -50,27 +59,23 @@ function AlertItem({ alert }: AlertItemProps) {
     <Link href={alert.node_id ? `/nodes/${alert.node_id}` : '#'}>
       <div
         className={`
-          group relative overflow-hidden
-          flex items-start gap-4 p-4
-          bg-surface-elevated rounded-xl
+          group relative
+          flex items-start gap-3 p-4
+          bg-surface-elevated rounded-lg
           border ${config.borderColor}
-          hover:border-opacity-80 hover:scale-[1.01]
-          transition-all duration-200 cursor-pointer
+          hover:border-foreground-subtle
+          transition-colors duration-150 cursor-pointer
         `}
       >
-        {/* Gradient overlay */}
-        <div className={`absolute inset-0 bg-gradient-to-r ${config.gradient} pointer-events-none`} />
-
         {/* Icon */}
         <div
           className={`
-            relative z-10
-            w-8 h-8 rounded-lg flex items-center justify-center
-            text-sm font-bold flex-shrink-0
+            w-7 h-7 rounded-md flex items-center justify-center
+            flex-shrink-0
             ${config.iconBg}
           `}
         >
-          {config.icon}
+          <AlertIcon severity={alert.severity} className="w-4 h-4" />
         </div>
 
         {/* Content */}
@@ -140,7 +145,9 @@ export function AlertsList({ alerts, maxItems = 5, showHeader = true }: AlertsLi
       <CardBody>
         {displayAlerts.length === 0 ? (
           <div className="text-center py-8 text-foreground-muted">
-            <p className="text-success mb-1">✓</p>
+            <svg className="w-6 h-6 text-success mx-auto mb-2" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 8l4 4 6-8" />
+            </svg>
             <p>Brak aktywnych alertów</p>
           </div>
         ) : (

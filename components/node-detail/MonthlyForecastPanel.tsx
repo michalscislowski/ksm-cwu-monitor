@@ -28,7 +28,10 @@ export function MonthlyForecastPanel({ forecast, lastKnownWskaznik }: MonthlyFor
     <Card>
       <CardHeader dataSource="mec">
         <span className="flex items-center gap-2">
-          <span className="text-warning">📊</span>
+          <svg className="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 10l3-3 3 2 4-5 2 2" />
+            <path d="M14 6v5h-5" />
+          </svg>
           Prognoza miesięczna
         </span>
       </CardHeader>
