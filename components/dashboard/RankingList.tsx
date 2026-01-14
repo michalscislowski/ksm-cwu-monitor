@@ -75,7 +75,7 @@ export function RankingList({ ranking, showTop = 3, showBottom = true }: Ranking
   const bottomEntry = showBottom ? ranking[ranking.length - 1] : null;
 
   return (
-    <Card className="animate-in stagger-3">
+    <Card className="animate-in stagger-3 h-full flex flex-col">
       <CardHeader
         action={
           <span className="text-xs text-foreground-subtle">ostatnie 30 dni</span>
@@ -110,7 +110,7 @@ export function RankingList({ ranking, showTop = 3, showBottom = true }: Ranking
           } />
         </span>
       </CardHeader>
-      <CardBody>
+      <CardBody className="flex-1">
         <div>
           {topEntries.map((entry, i) => (
             <RankingItem
