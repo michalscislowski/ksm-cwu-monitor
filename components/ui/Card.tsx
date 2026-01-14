@@ -14,9 +14,9 @@ export function Card({ children, className = '', hover = false, style }: CardPro
   return (
     <div
       className={`
-        bg-surface rounded-xl border border-border-subtle
-        shadow-card
-        ${hover ? 'transition-all duration-300 hover:border-border hover:shadow-lg hover:bg-surface-elevated' : ''}
+        bg-surface-elevated rounded-xl border border-border-subtle
+        shadow-[0_2px_8px_rgba(0,0,0,0.2),0_1px_2px_rgba(0,0,0,0.1)]
+        ${hover ? 'card-hover cursor-pointer' : 'transition-colors duration-200'}
         ${className}
       `}
       style={style}
