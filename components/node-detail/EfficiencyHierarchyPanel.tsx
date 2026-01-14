@@ -60,27 +60,28 @@ const issueLabels: Record<string, { label: string; type: string; color: string }
 // Arc Gauge Component - the hero visualization
 function ArcGauge({
   value,
-  status,
   size = 'lg'
 }: {
   value: number;
-  status: IndicatorStatus;
   size?: 'sm' | 'lg';
 }) {
-  const colors = statusColors[status];
   const radius = size === 'lg' ? 90 : 40;
   const strokeWidth = size === 'lg' ? 12 : 6;
   const circumference = Math.PI * radius;
   const progress = (Math.min(100, Math.max(0, value)) / 100) * circumference;
   const viewBox = size === 'lg' ? '-100 -100 200 120' : '-50 -50 100 60';
 
+  // Calculate color based on value (category convention: A>=80 green, B>=70 yellow, C<70 red)
   const getColor = () => {
-    switch (status) {
-      case 'optimal': return '#22c55e';
-      case 'good': return '#22c55e';
-      case 'warning': return '#eab308';
-      case 'critical': return '#ef4444';
-    }
+    if (value >= 80) return '#22c55e'; // success - Category A
+    if (value >= 70) return '#eab308'; // warning - Category B
+    return '#ef4444'; // critical - Category C
+  };
+
+  const getTextColorClass = () => {
+    if (value >= 80) return 'text-success';
+    if (value >= 70) return 'text-warning';
+    return 'text-critical';
   };
 
   return (
@@ -131,7 +132,7 @@ function ArcGauge({
       {/* Value display */}
       {size === 'lg' && (
         <div className="absolute inset-0 flex flex-col items-center justify-end pb-2">
-          <span className={`text-5xl font-mono font-bold tracking-tight ${colors.text}`}>
+          <span className={`text-5xl font-mono font-bold tracking-tight ${getTextColorClass()}`}>
             {value}
             <span className="text-2xl opacity-60">%</span>
           </span>
@@ -308,7 +309,7 @@ export function EfficiencyHierarchyPanel({ hierarchy, indicators }: EfficiencyHi
         {/* Hero Section - Main SE Gauge */}
         <div className="px-6 pt-6 pb-6">
           <div className="max-w-xs mx-auto">
-            <ArcGauge value={se.value} status={se.status} size="lg" />
+            <ArcGauge value={se.value} size="lg" />
           </div>
 
           {/* SE Interpretation */}
