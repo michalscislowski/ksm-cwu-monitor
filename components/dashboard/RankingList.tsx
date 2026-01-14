@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, TrendBadge } from '@/components/ui/Badge';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import type { RankingEntry } from '@/lib/types';
 
 interface RankingItemProps {
@@ -85,6 +86,28 @@ export function RankingList({ ranking, showTop = 3, showBottom = true }: Ranking
             <path d="M8 2l2 4 4 .5-3 3 .5 4.5L8 12l-3.5 2 .5-4.5-3-3L6 6l2-4z" />
           </svg>
           Ranking węzłów
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Ranking węzłów</p>
+              <p className="text-foreground-muted text-sm">
+                Zestawienie wszystkich węzłów cieplnych posortowanych według średniej Sprawności Energetycznej (SE) z ostatnich 30 dni.
+              </p>
+              <div className="space-y-2 text-sm">
+                <p className="text-xs font-medium text-foreground">Pozycje:</p>
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-amber-500/20 text-amber-400 text-xs font-bold flex items-center justify-center">1</span>
+                  <span className="text-foreground-muted">Najlepsza sprawność</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-critical/10 text-critical text-xs font-bold flex items-center justify-center">40</span>
+                  <span className="text-foreground-muted">Najgorsza sprawność</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-foreground-subtle pt-2 border-t border-border">
+                Kliknij w węzeł aby zobaczyć szczegóły
+              </p>
+            </div>
+          } />
         </span>
       </CardHeader>
       <CardBody>
@@ -98,9 +121,9 @@ export function RankingList({ ranking, showTop = 3, showBottom = true }: Ranking
           ))}
 
           {ranking.length > showTop + 1 && (
-            <div className="py-3 text-center text-foreground-subtle text-sm">
+            <Link href="/nodes" className="block py-3 text-center text-foreground-subtle text-sm hover:text-efficiency transition-colors">
               ... {ranking.length - showTop - 1} pozostałych węzłów ...
-            </div>
+            </Link>
           )}
 
           {bottomEntry && bottomEntry.position !== showTop && (

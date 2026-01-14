@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
 import { CategoryBadge, TrendBadge } from '@/components/ui/Badge';
+import { InfoTooltip } from '@/components/ui/Tooltip';
 import { MiniGauge } from '@/components/node-detail/SEGauge';
 import type { NodeWithEfficiency, IndicatorStatus } from '@/lib/types';
 
@@ -59,7 +60,54 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
 
   return (
     <Card className="animate-in stagger-5">
-      <CardHeader>{title}</CardHeader>
+      <CardHeader
+        action={
+          <Link href="/nodes" className="text-xs text-foreground-muted hover:text-efficiency transition-colors">
+            Zobacz wszystkie
+          </Link>
+        }
+      >
+        <span className="flex items-center gap-2">
+          {title}
+          <InfoTooltip content={
+            <div className="space-y-3">
+              <p className="font-semibold text-foreground">Węzły wymagające uwagi</p>
+              <p className="text-foreground-muted text-sm">
+                Lista węzłów, które wymagają przeglądu ze względu na niską sprawność lub problematyczne wskaźniki.
+              </p>
+              <div className="space-y-2 text-sm">
+                <p className="text-xs font-medium text-foreground">Wskaźniki:</p>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs">WWC</span>
+                  <span className="text-foreground-muted">— Współczynnik Wymiany Ciepła</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs">SH</span>
+                  <span className="text-foreground-muted">— Stabilność Hydrauliczna</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs">ES</span>
+                  <span className="text-foreground-muted">— Efektywność Szczytowa</span>
+                </div>
+              </div>
+              <div className="space-y-1.5 text-xs pt-2 border-t border-border">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-critical" />
+                  <span className="text-foreground-muted">Krytyczny — wymaga interwencji</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-warning" />
+                  <span className="text-foreground-muted">Ostrzeżenie — wymaga uwagi</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-success" />
+                  <span className="text-foreground-muted">Dobry — w normie</span>
+                </div>
+              </div>
+            </div>
+          } />
+        </span>
+      </CardHeader>
       <CardBody noPadding>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -107,13 +155,13 @@ export function NodesTable({ nodes, title = 'Węzły' }: NodesTableProps) {
                               ? 'bg-critical/10 text-critical border border-critical/20'
                               : worst.status === 'warning'
                               ? 'bg-warning/10 text-warning border border-warning/20'
-                              : 'bg-efficiency/10 text-efficiency border border-efficiency/20'
+                              : 'bg-success/10 text-success border border-success/20'
                             }
                           `}
                         >
                           <span className={`w-1.5 h-1.5 rounded-full ${
                             worst.status === 'critical' ? 'bg-critical' :
-                            worst.status === 'warning' ? 'bg-warning' : 'bg-efficiency'
+                            worst.status === 'warning' ? 'bg-warning' : 'bg-success'
                           }`} />
                           {worst.shortLabel}
                         </span>
