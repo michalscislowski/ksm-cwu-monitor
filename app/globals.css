@@ -72,49 +72,6 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   LIGHT MODE
-   ═══════════════════════════════════════════════════════════════ */
-
-[data-theme="light"] {
-  --color-background: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
-  --color-surface-hover: #f4f4f5;
-  --color-surface-active: #e4e4e7;
-
-  --color-foreground: #09090b;
-  --color-foreground-secondary: #52525b;
-  --color-foreground-muted: #71717a;
-  --color-foreground-subtle: #a1a1aa;
-
-  --color-border: #e4e4e7;
-  --color-border-subtle: #f4f4f5;
-
-  /* Slightly darker status colors for light mode */
-  --color-success: #16a34a;
-  --color-success-muted: rgba(22, 163, 74, 0.1);
-
-  --color-efficiency: #0d9488;
-  --color-efficiency-muted: rgba(13, 148, 136, 0.1);
-
-  --color-warning: #ca8a04;
-  --color-warning-muted: rgba(202, 138, 4, 0.1);
-
-  --color-critical: #dc2626;
-  --color-critical-muted: rgba(220, 38, 38, 0.1);
-
-  --color-info: #2563eb;
-  --color-info-muted: rgba(37, 99, 235, 0.1);
-
-  --color-primary: #0d9488;
-  --color-primary-muted: rgba(13, 148, 136, 0.1);
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* ═══════════════════════════════════════════════════════════════
    BASE STYLES
    ═══════════════════════════════════════════════════════════════ */
 
@@ -125,10 +82,6 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
-}
-
-[data-theme="light"] {
-  color-scheme: light;
 }
 
 body {
@@ -277,35 +230,6 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--color-surface-elevated) !important;
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-md) !important;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   THEME TOGGLE
-   ═══════════════════════════════════════════════════════════════ */
-
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface-elevated);
-  color: var(--color-foreground-muted);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.theme-toggle:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-foreground);
-  border-color: var(--color-foreground-subtle);
-}
-
-.theme-toggle svg {
-  width: 16px;
-  height: 16px;
 }
 
 /* ═══════════════════════════════════════════════════════════════

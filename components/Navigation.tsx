@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { getAllAlerts } from '@/lib/data';
-import { ThemeToggle } from './ThemeProvider';
 
 const navItems = [
   { href: '/dashboard', label: 'Przegląd', icon: DashboardIcon },
@@ -65,16 +64,10 @@ export function Navigation() {
               })}
             </nav>
 
-            {/* Right side */}
-            <div className="flex items-center gap-2">
-              {/* Theme toggle */}
-              <ThemeToggle />
-
-              {/* Status indicator */}
-              <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md border border-border text-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                <span className="text-foreground-muted">Online</span>
-              </div>
+            {/* Right side - Status indicator */}
+            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md border border-border text-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-success" />
+              <span className="text-foreground-muted">Online</span>
             </div>
           </div>
         </div>
