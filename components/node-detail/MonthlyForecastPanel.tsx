@@ -1,9 +1,8 @@
 'use client';
 
 import { Card, CardHeader, CardBody } from '@/components/ui/Card';
-import { CategoryBadge } from '@/components/ui/Badge';
 import { InfoTooltip } from '@/components/ui/Tooltip';
-import type { MonthlyForecast, Category } from '@/lib/types';
+import type { MonthlyForecast } from '@/lib/types';
 
 interface MonthlyForecastPanelProps {
   forecast: MonthlyForecast;
@@ -70,12 +69,9 @@ export function MonthlyForecastPanel({ forecast, lastKnownWskaznik }: MonthlyFor
           <p className="text-xs text-foreground-subtle uppercase tracking-wider mb-1">
             Prognozowany wskaźnik GJ/m³
           </p>
-          <div className="flex items-center justify-center gap-3">
-            <span className="text-4xl font-mono font-bold text-foreground">
-              {forecast.predicted_wskaznik.toFixed(2)}
-            </span>
-            <CategoryBadge category={forecast.predicted_category} size="lg" showLabel />
-          </div>
+          <p className="text-4xl font-mono font-bold text-foreground">
+            {forecast.predicted_wskaznik.toFixed(2)}
+          </p>
           <p className="text-sm text-foreground-muted mt-2">
             <span className={confidenceConfig.color}>Pewność: {confidenceConfig.label}</span>
           </p>
