@@ -65,22 +65,31 @@ interface RawNode {
 
 const rawNodes = nodesData as RawNode[];
 
-// Calculate IEZ from wskaznik
-function calculateIEZ(wskaznik: number): number {
+// Calculate SE from wskaznik (legacy calculation for historical data)
+function calculateSE(wskaznik: number): number {
   return Math.round((OPTIMAL_WSKAZNIK / wskaznik) * 100);
 }
 
-// Get category from IEZ
-function getCategory(iez: number): Category {
-  if (iez >= 90) return 'A';
-  if (iez >= 75) return 'B';
-  return 'C';
+// Get category from SE (Sprawność Energetyczna)
+// Thresholds per data-contract.md §Załącznik C
+function getCategory(se: number): Category {
+  if (se >= 80) return 'A';  // Optymalna
+  if (se >= 70) return 'B';  // Dobra
+  return 'C';                 // Ostrzegawcza (≥60) lub Krytyczna (<60)
 }
 
-// Get indicator status based on percentage
+// Get indicator status for WWC (thresholds: 95/85/70)
 function getIndicatorStatus(percent: number): IndicatorStatus {
   if (percent >= 95) return 'optimal';
   if (percent >= 85) return 'good';
+  if (percent >= 70) return 'warning';
+  return 'critical';
+}
+
+// Get indicator status for SH/ES (thresholds: 90/80/70 per data-contract.md §4.2-4.3)
+function getIndicatorStatusSHES(percent: number): IndicatorStatus {
+  if (percent >= 90) return 'optimal';
+  if (percent >= 80) return 'good';
   if (percent >= 70) return 'warning';
   return 'critical';
 }
@@ -396,13 +405,13 @@ function generateOperationalIndicators(node: RawNode): OperationalIndicators {
     },
     sh: {
       value: shValue,
-      status: getIndicatorStatus(shValue),
+      status: getIndicatorStatusSHES(shValue),  // SH uses 90/80/70 thresholds
       interpretation: shInterp.interpretation,
       action: shInterp.action,
     },
     es: {
       value: esValue,
-      status: getIndicatorStatus(esValue),
+      status: getIndicatorStatusSHES(esValue),  // ES uses 90/80/70 thresholds
       interpretation: esInterp.interpretation,
       action: esInterp.action,
       worst_hours: worstHours,
@@ -489,31 +498,32 @@ function generateDailyProfile(node: RawNode): DailyProfile {
   const worstHours: number[] = [];
 
   for (let h = 0; h < 24; h++) {
-    // Morning peak (6-9), evening peak (17-21)
+    // Morning peak (7-9), evening peak (17-21) per data-contract.md §4.3
     let modifier = 0;
-    if (h >= 6 && h <= 9) modifier = -5 - seededRandom(seed + h) * 8;
+    if (h >= 7 && h <= 9) modifier = -5 - seededRandom(seed + h) * 8;
     else if (h >= 17 && h <= 21) modifier = -8 - seededRandom(seed + h) * 10;
     else if (h >= 1 && h <= 5) modifier = 5 + seededRandom(seed + h) * 5;
     else modifier = seededRandom(seed + h) * 6 - 3;
 
-    const iez = Math.round(baseIez + modifier);
-    minIez = Math.min(minIez, iez);
-    maxIez = Math.max(maxIez, iez);
+    const se = Math.round(baseIez + modifier);
+    minIez = Math.min(minIez, se);
+    maxIez = Math.max(maxIez, se);
 
-    const load = h >= 6 && h <= 9 ? 'peak' :
+    // Load classification per data-contract.md §9.2
+    const load = h >= 7 && h <= 9 ? 'peak' :
                  h >= 17 && h <= 21 ? 'high' :
                  h >= 10 && h <= 16 ? 'medium' : 'low';
 
     hours.push({
       hour: h,
-      iez,
+      iez: se,  // iez field contains SE value for compatibility
       load: load as 'low' | 'medium' | 'high' | 'peak',
       deviation_delta_t: Math.round(seededRandom(seed + h * 2) * 20 - 10),
       deviation_return_temp: Math.round(seededRandom(seed + h * 3) * 15 - 5),
     });
 
-    if (iez >= baseIez + 3) bestHours.push(h);
-    if (iez <= baseIez - 5) worstHours.push(h);
+    if (se >= baseIez + 3) bestHours.push(h);
+    if (se <= baseIez - 5) worstHours.push(h);
   }
 
   return {
@@ -539,7 +549,7 @@ function generateHistory(node: RawNode): HistoryEntry[] {
   recentReadings.forEach((reading, i) => {
     const monthStr = String(reading.month).padStart(2, '0');
     const date = `${reading.year}-${monthStr}-15`;
-    const iez = calculateIEZ(reading.wskaznik);
+    const iez = calculateSE(reading.wskaznik);
 
     entries.push({
       date,
@@ -570,26 +580,29 @@ function generateHistory(node: RawNode): HistoryEntry[] {
   return entries.slice(-60); // Last 60 entries
 }
 
-// Generate alerts based on efficiency
+// Generate alerts based on SE (Sprawność Energetyczna)
+// Thresholds per data-contract.md §7.1
 function generateAlerts(node: RawNode): Alert[] {
   const alerts: Alert[] = [];
-  const iez = node.stats.avg_iez;
+  const se = node.stats.avg_iez;  // avg_iez field contains SE value
   const now = new Date();
 
-  if (iez < 70) {
+  // Critical: SE < 60% (per §7.1)
+  if (se < 60) {
     alerts.push({
       id: `${node.id}-alert-1`,
       type: 'efficiency_drop',
       severity: 'critical',
       created_at: new Date(now.getTime() - 2 * 3600000).toISOString(),
-      message: `Krytycznie niska SE (${iez}%) - wymagana pilna interwencja`,
+      message: `Krytycznie niska SE (${se}%) - wymagana pilna interwencja`,
       status: 'active',
       node_id: node.id,
       node_name: node.name,
     });
   }
 
-  if (node.stats.trend === 'declining' && node.stats.trend_change < -3) {
+  // Warning: negative trend > 5% over 3 days (per §7.4)
+  if (node.stats.trend === 'declining' && node.stats.trend_change < -5) {
     alerts.push({
       id: `${node.id}-alert-2`,
       type: 'trend_negative',
@@ -602,13 +615,14 @@ function generateAlerts(node: RawNode): Alert[] {
     });
   }
 
-  if (iez < 80 && iez >= 70) {
+  // Warning: SE < 70% (per §7.1)
+  if (se < 70 && se >= 60) {
     alerts.push({
       id: `${node.id}-alert-3`,
       type: 'deviation_critical',
       severity: 'warning',
       created_at: new Date(now.getTime() - 48 * 3600000).toISOString(),
-      message: `Wskaźnik GJ/m³ powyżej normy - sprawdź nastawy MTCV`,
+      message: `Niska SE (${se}%) - sprawdź nastawy MTCV`,
       status: 'active',
       node_id: node.id,
       node_name: node.name,
@@ -843,7 +857,7 @@ export function getMonthlyHistory(nodeId: string): { date: string; iez: number; 
 
   return node.readings.map(r => ({
     date: `${r.year}-${String(r.month).padStart(2, '0')}`,
-    iez: calculateIEZ(r.wskaznik),
+    iez: calculateSE(r.wskaznik),
     wskaznik: r.wskaznik,
     gj: r.gj,
     m3: r.m3,
